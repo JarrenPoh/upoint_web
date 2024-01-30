@@ -66,7 +66,7 @@ class _DisignBlockState extends State<DisignBlock> {
                             necessary: false,
                             explain: null,
                             other: null,
-                            body: [],
+                            body: [""],
                           ),
                           !value[index]['selected'],
                           index,

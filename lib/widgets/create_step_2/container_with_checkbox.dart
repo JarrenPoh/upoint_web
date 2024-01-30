@@ -28,6 +28,7 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
     super.initState();
     refresh();
   }
+
   refresh() {
     _valueNotifier = widget.valueNotifier;
     if (widget.fix == true) {
@@ -92,7 +93,8 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
                     fontFamily: "NotoSansRegular",
                   ),
                   decoration: InputDecoration(
-                    contentPadding: EdgeInsets.only(bottom: 0),
+                    isDense: true,
+                    contentPadding: EdgeInsets.only(bottom: 0, top: 0),
                     hintStyle: TextStyle(
                       color: grey300,
                       fontSize: 16,
@@ -104,12 +106,7 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
                   ),
                 ),
               ),
-              // RegularText(
-              //   color: grey500,
-              //   size: 16,
-              //   text: widget.title,
-              // ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 11),
               // 垃圾桶
               if (widget.fix == false)
                 _mouseIcon(

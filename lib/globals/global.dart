@@ -87,6 +87,12 @@ List<Map> schoolFields = [
 
 List<Map> customFields = [
   {
+    "subtitle": "新增標題",
+    "hover": false,
+    "selected": false,
+    "type": "add_title",
+  },
+  {
     "subtitle": "簡答文字",
     "hover": false,
     "selected": false,

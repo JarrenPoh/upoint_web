@@ -51,165 +51,152 @@ class _CreateStep1State extends State<CreateStep1> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 48),
-        child: Container(
-          width: 1076,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: EdgeInsets.symmetric(vertical: 48, horizontal: 64),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // 進度條
-                  ProgressStepWidget(iniStep: widget.iniStep),
-                ],
-              ),
-              // 上傳封面照
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        color: primaryColor,
-                        width: 8,
-                        height: 29,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // 進度條
+            ProgressStepWidget(iniStep: widget.iniStep),
+          ],
+        ),
+        // 上傳封面照
+        Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  color: primaryColor,
+                  width: 8,
+                  height: 29,
+                ),
+                SizedBox(width: 16),
+                MediumText(
+                  color: grey500,
+                  size: 20,
+                  text: '上傳封面照',
+                ),
+              ],
+            ),
+            SizedBox(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 374,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color(0xFFF4F4F4),
+                    ),
+                    child: Center(
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.upload_rounded,
+                          color: Color(0xFF343434),
+                        ),
+                        iconSize: 27,
                       ),
-                      SizedBox(width: 16),
-                      MediumText(
-                        color: grey500,
-                        size: 20,
-                        text: '上傳封面照',
-                      ),
-                    ],
+                    ),
                   ),
-                  SizedBox(height: 24),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 374,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFFF4F4F4),
-                          ),
-                          child: Center(
-                            child: IconButton(
-                              onPressed: () {},
-                              icon: const Icon(
-                                Icons.upload_rounded,
-                                color: Color(0xFF343434),
+                ),
+              ],
+            ),
+          ],
+        ),
+        SizedBox(height: 48),
+        // 活動資訊
+        Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  color: primaryColor,
+                  width: 8,
+                  height: 29,
+                ),
+                SizedBox(width: 16),
+                MediumText(
+                  color: grey500,
+                  size: 20,
+                  text: '活動資訊',
+                ),
+              ],
+            ),
+            Column(
+              children: List.generate(informList.length, (index) {
+                return Column(
+                  children: [
+                    SizedBox(height: 24),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: grey400,
+                                ),
                               ),
-                              iconSize: 27,
+                            ),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: informList[index]['title'],
+                                hintStyle: TextStyle(
+                                  color: grey400,
+                                  fontFamily: 'NotoSansMedium',
+                                  fontSize: 16,
+                                ),
+                                focusedBorder: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              SizedBox(height: 48),
-              // 活動資訊
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        color: primaryColor,
-                        width: 8,
-                        height: 29,
-                      ),
-                      SizedBox(width: 16),
-                      MediumText(
-                        color: grey500,
-                        size: 20,
-                        text: '活動資訊',
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: List.generate(informList.length, (index) {
-                      return Column(
-                        children: [
-                          SizedBox(height: 24),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: grey400,
-                                      ),
-                                    ),
-                                  ),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      hintText: informList[index]['title'],
-                                      hintStyle: TextStyle(
-                                        color: grey400,
-                                        fontFamily: 'NotoSansMedium',
-                                        fontSize: 16,
-                                      ),
-                                      focusedBorder: InputBorder.none,
-                                      enabledBorder: InputBorder.none,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              if (informList[index]['index'] == 'startDate' ||
-                                  informList[index]['index'] == 'endDate')
-                                datePickRow(),
-                            ],
-                          ),
-                        ],
-                      );
-                    }),
-                  ),
-                ],
-              ),
-              SizedBox(height: 48),
-              // 活動詳情
-      
-              // 下一步
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  MaterialButton(
-                    color: primaryColor,
-                    onPressed: () {
-                      Beamer.of(context).beamToNamed('/main/create/step2');
-                    },
-                    hoverColor: secondColor,
-                    height: 39,
-                    minWidth: 216,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 設置圓角半徑
+                        if (informList[index]['index'] == 'startDate' ||
+                            informList[index]['index'] == 'endDate')
+                          datePickRow(),
+                      ],
                     ),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                      child: Center(
-                        child: MediumText(
-                          color: Colors.white,
-                          size: 16,
-                          text: '下一步',
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  ],
+                );
+              }),
+            ),
+          ],
         ),
-      ),
+        SizedBox(height: 48),
+        // 活動詳情
+
+        // 下一步
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            MaterialButton(
+              color: primaryColor,
+              onPressed: () {
+                Beamer.of(context).beamToNamed('/main/create/step2');
+              },
+              hoverColor: secondColor,
+              height: 39,
+              minWidth: 216,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0), // 設置圓角半徑
+              ),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Center(
+                  child: MediumText(
+                    color: Colors.white,
+                    size: 16,
+                    text: '下一步',
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
