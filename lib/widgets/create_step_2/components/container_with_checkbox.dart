@@ -3,7 +3,7 @@ import 'package:upoint_web/color.dart';
 import 'package:upoint_web/models/form_model.dart';
 import 'package:upoint_web/models/option_model.dart';
 import 'package:upoint_web/widgets/create_step_2/components/check_comb.dart';
-import 'package:upoint_web/widgets/create_step_2/chose_components.dart';
+import 'package:upoint_web/widgets/create_step_2/components/chose_components.dart';
 
 class ContainerWithCheckbox extends StatefulWidget {
   final ValueNotifier<List<FormModel>> valueNotifier;

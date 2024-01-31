@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 
 class TapHoverContainer extends StatefulWidget {
@@ -8,13 +7,17 @@ class TapHoverContainer extends StatefulWidget {
   final Color hoverColor;
   final Color borderColor;
   final Color textColor;
+  final Function onTap;
+  final double padding;
   const TapHoverContainer({
     super.key,
     required this.text,
+    required this.padding,
     required this.hoverColor,
     required this.borderColor,
     required this.textColor,
     required this.color,
+    required this.onTap,
   });
 
   @override
@@ -27,21 +30,19 @@ class _TapHoverContainerState extends State<TapHoverContainer> {
   Widget build(BuildContext context) {
     return InkWell(
       onHover: (value) {
-        print('hover');
         setState(() {
           isHover = value;
         });
       },
       onTap: () {
-        print('tap');
+        widget.onTap();
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 84),
+        padding: EdgeInsets.symmetric(horizontal: widget.padding),
         height: 39,
         decoration: BoxDecoration(
           color: isHover ? widget.hoverColor : widget.color,
-          border: Border.all(
-              color: widget.borderColor),
+          border: Border.all(color: widget.borderColor),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Center(

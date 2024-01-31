@@ -59,7 +59,7 @@ class _ProgressStepWidgetState extends State<ProgressStepWidget> {
               RegularText(
                 color: grey500,
                 size: 14,
-                text: '統計報名表單',
+                text: '設計報名表單',
               ),
               RegularText(
                 color: grey500,

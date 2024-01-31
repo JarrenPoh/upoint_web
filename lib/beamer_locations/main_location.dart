@@ -3,12 +3,13 @@
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
+import 'package:upoint_web/layouts/create_step_1_layout.dart';
+import 'package:upoint_web/layouts/create_step_2_layout.dart';
+import 'package:upoint_web/layouts/inform_layout.dart';
 import 'package:upoint_web/models/form_model.dart';
 import 'package:upoint_web/models/option_model.dart';
-import 'package:upoint_web/pages/create_page.dart';
-import 'package:upoint_web/pages/create_step_1.dart';
-import 'package:upoint_web/pages/create_step_2.dart';
 import 'package:upoint_web/widgets/custom_navigation_bar.dart';
+import 'package:reorderables/reorderables.dart';
 
 class MainLocation extends BeamLocation {
   List<String> get pathBlueprints => [
@@ -35,11 +36,11 @@ class MainLocation extends BeamLocation {
       Beamer.of(context).beamToNamed('/main' + url);
     }
 
-    Widget page = Center(child: Text("page not found"));
+    Widget page = const Center(child: Text("page not found"));
     Uri uri = state.toRouteInformation().uri;
     print('uri: $uri');
     if (uri.pathSegments.contains('inform')) {
-      page = Test();
+      page =  InformLayout();
     } else if (uri.pathSegments.contains('center')) {
       page = Container();
     } else if (uri.pathSegments.contains('create')) {
@@ -47,14 +48,10 @@ class MainLocation extends BeamLocation {
       // final step = state.pathParameters['step'] ?? '0';
       switch (step) {
         case 'step1':
-          page =const CreatePage(
-            child: CreateStep1(iniStep: 0),
-          );
+          page =  CreateStep1Layout();
           break;
         case 'step2':
-          page =const CreatePage(
-            child: CreateStep2(iniStep: 1),
-          );
+          page = CreateStep2Layout();
           break;
       }
     }
@@ -211,9 +208,8 @@ class _TestState extends State<Test> {
             }
             // print("lengths: $_lengths");
             print("options: $_options");
-            return ReorderableListView(
+            return ReorderableColumn(
               padding: const EdgeInsets.symmetric(horizontal: 500),
-              shrinkWrap: true,
               onReorder: (oldIndex, newIndex) {
                 if (_lengths.contains(oldIndex)) {
                   print('是標題不能移動');
