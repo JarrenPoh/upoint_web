@@ -70,150 +70,148 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
   Widget build(BuildContext context) {
     refresh();
     titleController = TextEditingController(text: option.subtitle);
-    return Padding(
-      padding: EdgeInsets.only(top: 18),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              if (widget.fix)
-                Text(
-                  '*',
-                  style: TextStyle(
-                    color: grey500,
-                  ),
+    return Column(
+      children: [
+        Row(
+          children: [
+            if (widget.fix)
+              Text(
+                '*',
+                style: TextStyle(
+                  color: grey500,
                 ),
-              IntrinsicWidth(
-                child: TextField(
-                  controller: titleController,
-                  enabled: !enableTitle.contains(option.subtitle),
-                  style: TextStyle(
-                    color: grey500,
+              ),
+            IntrinsicWidth(
+              child: TextFormField(
+                keyboardType: TextInputType.text,
+                controller: titleController,
+                enabled: !enableTitle.contains(option.subtitle),
+                style: TextStyle(
+                  color: grey500,
+                  fontSize: 16,
+                  fontFamily: "NotoSansRegular",
+                ),
+                decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: EdgeInsets.only(bottom: 0, top: 0),
+                  hintStyle: TextStyle(
+                    color: grey300,
                     fontSize: 16,
                     fontFamily: "NotoSansRegular",
                   ),
-                  decoration: InputDecoration(
-                    isDense: true,
-                    contentPadding: EdgeInsets.only(bottom: 0, top: 0),
-                    hintStyle: TextStyle(
-                      color: grey300,
-                      fontSize: 16,
-                      fontFamily: "NotoSansRegular",
-                    ),
-                    enabledBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                  ),
+                  enabledBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
                 ),
               ),
-              const SizedBox(width: 11),
-              // 垃圾桶
-              if (widget.fix == false)
-                _mouseIcon(
-                  Icons.delete_rounded,
-                  () => widget.tapDelete!(lindex, index),
-                ),
-              // 新增 刪除
-              if (valueType.contains(option.type))
-                Row(
-                  children: [
-                    _mouseIcon(
-                      Icons.remove_circle_outline,
-                      () {
-                        _valueNotifier.value[lindex].options[index].body
-                            .removeLast();
-                        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                        _valueNotifier.notifyListeners();
-                      },
-                    ),
-                    _mouseIcon(
-                      Icons.add_circle_outline,
-                      () {
-                        _valueNotifier.value[lindex].options[index].body
-                            .add("");
-                        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                        _valueNotifier.notifyListeners();
-                      },
-                    ),
-                  ],
-                ),
-              // 說明文字
-              if (widget.fix == false)
-                CheckComb(
-                  title: "說明文字",
-                  func: () {
-                    if (_valueNotifier.value[lindex].options[index].explain ==
-                        null) {
-                      _valueNotifier.value[lindex].options[index].explain = "";
-                    } else {
-                      _valueNotifier.value[lindex].options[index].explain =
-                          null;
-                    }
-                    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                    _valueNotifier.notifyListeners();
-                  },
-                ),
-              // 其他開放選項
-              if (option.type == "single" ||
-                  option.type == "multi" ||
-                  option.type == "meal")
-                CheckComb(
-                  title: "其他開放選項",
-                  func: () {
-                    if (_valueNotifier.value[lindex].options[index].other ==
-                        null) {
-                      _valueNotifier.value[lindex].options[index].other =
-                          "其他..";
-                    } else {
-                      _valueNotifier.value[lindex].options[index].other = null;
-                    }
-                    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                    _valueNotifier.notifyListeners();
-                  },
-                ),
-              const Expanded(child: Column(children: [])),
-              // 必選
-              widget.fix
-                  ? Container(
-                      height: 16,
-                      width: 16,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: grey300,
-                        ),
-                        borderRadius: BorderRadius.circular(3),
+            ),
+            const SizedBox(width: 11),
+            // 垃圾桶
+            if (widget.fix == false)
+              _mouseIcon(
+                Icons.delete_rounded,
+                () => widget.tapDelete!(lindex, index),
+              ),
+            // 新增 刪除
+            if (valueType.contains(option.type))
+              Row(
+                children: [
+                  _mouseIcon(
+                    Icons.remove_circle_outline,
+                    () {
+                      _valueNotifier.value[lindex].options[index].body
+                          .removeLast();
+                      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+                      _valueNotifier.notifyListeners();
+                    },
+                  ),
+                  _mouseIcon(
+                    Icons.add_circle_outline,
+                    () {
+                      _valueNotifier.value[lindex].options[index].body
+                          .add("");
+                      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+                      _valueNotifier.notifyListeners();
+                    },
+                  ),
+                ],
+              ),
+            // 說明文字
+            if (widget.fix == false)
+              CheckComb(
+                title: "說明文字",
+                func: () {
+                  if (_valueNotifier.value[lindex].options[index].explain ==
+                      null) {
+                    _valueNotifier.value[lindex].options[index].explain = "";
+                  } else {
+                    _valueNotifier.value[lindex].options[index].explain =
+                        null;
+                  }
+                  // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+                  _valueNotifier.notifyListeners();
+                },
+              ),
+            // 其他開放選項
+            if (option.type == "single" ||
+                option.type == "multi" ||
+                option.type == "meal")
+              CheckComb(
+                title: "其他開放選項",
+                func: () {
+                  if (_valueNotifier.value[lindex].options[index].other ==
+                      null) {
+                    _valueNotifier.value[lindex].options[index].other =
+                        "其他..";
+                  } else {
+                    _valueNotifier.value[lindex].options[index].other = null;
+                  }
+                  // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+                  _valueNotifier.notifyListeners();
+                },
+              ),
+            const Expanded(child: Column(children: [])),
+            // 必選
+            widget.fix
+                ? Container(
+                    height: 16,
+                    width: 16,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: grey300,
                       ),
-                      child: Icon(
-                        Icons.check,
-                        color: grey400,
-                        size: 9,
-                      ),
-                    )
-                  : CheckComb(
-                      title: "必填",
-                      func: () {
-                        if (_valueNotifier
-                                .value[lindex].options[index].necessary ==
-                            false) {
-                          _valueNotifier
-                              .value[lindex].options[index].necessary = true;
-                        } else {
-                          _valueNotifier
-                              .value[lindex].options[index].necessary = false;
-                        }
-                        // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                        _valueNotifier.notifyListeners();
-                      },
+                      borderRadius: BorderRadius.circular(3),
                     ),
-            ],
-          ),
-          // 內容
-          ChoseComponents(
-            valueNotifier: _valueNotifier,
-            option: option,
-          ),
-        ],
-      ),
+                    child: Icon(
+                      Icons.check,
+                      color: grey400,
+                      size: 9,
+                    ),
+                  )
+                : CheckComb(
+                    title: "必填",
+                    func: () {
+                      if (_valueNotifier
+                              .value[lindex].options[index].necessary ==
+                          false) {
+                        _valueNotifier
+                            .value[lindex].options[index].necessary = true;
+                      } else {
+                        _valueNotifier
+                            .value[lindex].options[index].necessary = false;
+                      }
+                      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+                      _valueNotifier.notifyListeners();
+                    },
+                  ),
+          ],
+        ),
+        // 內容
+        ChoseComponents(
+          valueNotifier: _valueNotifier,
+          option: option,
+        ),
+      ],
     );
   }
 

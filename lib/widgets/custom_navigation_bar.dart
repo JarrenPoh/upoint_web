@@ -4,10 +4,12 @@ import 'package:upoint_web/globals/regular_text.dart';
 
 class CustomNavigationBar extends StatefulWidget {
   // final double opacity;
+  final bool isForm;
   final Function onIconTapped;
   const CustomNavigationBar({
     super.key,
     required this.onIconTapped,
+    required this.isForm,
     // required this.opacity,
   });
 
@@ -83,6 +85,15 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                                 fontFamily: 'NotoSansBold',
                               ),
                             ),
+                            if (widget.isForm)
+                              TextSpan(
+                                text: " 報名系統",
+                                style: TextStyle(
+                                  fontSize: 22,
+                                  color: grey500,
+                                  fontFamily: 'NotoSansMedium',
+                                ),
+                              ),
                           ],
                         ),
                       ),
@@ -91,21 +102,22 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                           children: [],
                         ),
                       ),
-                      Row(
-                        children: List.generate(
-                          tapContainerList.length,
-                          (index) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
-                              child: tapContainer(
-                                tapContainerList,
-                                index,
-                              ),
-                            );
-                          },
+                      if (!widget.isForm)
+                        Row(
+                          children: List.generate(
+                            tapContainerList.length,
+                            (index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 20),
+                                child: tapContainer(
+                                  tapContainerList,
+                                  index,
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),

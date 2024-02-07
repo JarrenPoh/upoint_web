@@ -1,10 +1,14 @@
 import 'package:beamer/beamer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:upoint_web/beamer_locations/form_location.dart';
 import 'package:upoint_web/beamer_locations/main_location.dart';
+import 'package:upoint_web/beamer_locations/organizer_location.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/secret.dart';
 import 'package:url_strategy/url_strategy.dart';
+
+import 'globals/user_simple_preference.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +21,7 @@ void main() async {
       projectId: firebaseProjectId,
     ),
   );
+  await UserSimplePreference.init();
   runApp(const MyApp());
 }
 
@@ -30,6 +35,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         useMaterial3: true,
+        colorScheme: ColorScheme.light(
+          primary: primaryColor, // 主要颜色
+        ),
         unselectedWidgetColor: grey300,
         primaryColor: grey500,
         textSelectionTheme: TextSelectionThemeData(
@@ -39,11 +47,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routeInformationParser: BeamerParser(),
       routerDelegate: BeamerDelegate(
-        initialPath: '/main/form',
+        initialPath: '/organizer/inform',
         transitionDelegate: const NoAnimationTransitionDelegate(),
         locationBuilder: BeamerLocationBuilder(
           beamLocations: [
             MainLocation(),
+            FormLocation(),
+            OrganizerLocation(),
           ],
         ),
       ),

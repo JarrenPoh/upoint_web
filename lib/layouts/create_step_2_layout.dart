@@ -7,7 +7,6 @@ import 'package:upoint_web/widgets/create_step_2/layouts/create_step_2_right_lay
 
 class CreateStep2Layout extends StatelessWidget {
   CreateStep2Layout({super.key});
-
   final CreateStep2Bloc _bloc = CreateStep2Bloc();
 
   @override
@@ -23,6 +22,7 @@ class CreateStep2Layout extends StatelessWidget {
     return CreatePage(
       isWeb: false,
       step: 2,
+      addToGlobal:(){},
       child: Column(
         children: [
           //左邊區塊
@@ -39,6 +39,7 @@ class CreateStep2Layout extends StatelessWidget {
     return CreatePage(
       isWeb: true,
       step: 2,
+      addToGlobal:(){},
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

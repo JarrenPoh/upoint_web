@@ -8,11 +8,13 @@ class CreatePage extends StatefulWidget {
   final Widget child;
   final int step;
   final bool isWeb;
+  final Function addToGlobal;
   const CreatePage({
     super.key,
     required this.child,
     required this.step,
     required this.isWeb,
+    required this.addToGlobal,
   });
 
   @override
@@ -25,9 +27,9 @@ class _CreatePageState extends State<CreatePage> {
     super.initState();
     onTap = (BuildContext context) {
       if (widget.step == 1) {
-        return Beamer.of(context).beamToNamed('/main/create/step2');
+        return Beamer.of(context).beamToNamed('/organizer/create/step2');
       } else {
-        return Beamer.of(context).beamToNamed('/main/create/step1');
+        return Beamer.of(context).beamToNamed('/organizer/create/step1');
       }
     };
   }
@@ -35,8 +37,6 @@ class _CreatePageState extends State<CreatePage> {
   late Function(BuildContext context) onTap;
   @override
   Widget build(BuildContext context) {
-    print('這裡');
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -72,7 +72,7 @@ class _CreatePageState extends State<CreatePage> {
                               padding: widget.isWeb ? 84 : 40,
                               onTap: () {
                                 Beamer.of(context)
-                                    .beamToNamed('/main/create/step1');
+                                    .beamToNamed('/organizer/create/step1');
                               },
                               text: "回活動資訊",
                               hoverColor: grey100,
@@ -84,6 +84,7 @@ class _CreatePageState extends State<CreatePage> {
                         padding: widget.isWeb ? 84 : 40,
                         onTap: () {
                           onTap(context);
+                          widget.addToGlobal();
                         },
                         text: "下一步",
                         color: primaryColor,

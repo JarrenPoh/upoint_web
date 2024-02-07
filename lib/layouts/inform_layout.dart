@@ -31,10 +31,16 @@ class InformLayout extends StatelessWidget {
           ),
           const SizedBox(height: 30),
           //基本資料
-          InformCommonLayout(list: _bloc.commonList),
+          InformCommonLayout(
+            list: _bloc.commonList,
+            isWeb: false,
+          ),
           const SizedBox(height: 30),
           //第二列
-          InformContactLayout(list: _bloc.contactList),
+          InformContactLayout(
+            list: _bloc.contactList,
+            isWeb: false,
+          ),
           const SizedBox(height: 40),
         ],
       ),
@@ -54,13 +60,19 @@ class InformLayout extends StatelessWidget {
               const SizedBox(width: 37),
               //基本資料
               Expanded(
-                child: InformCommonLayout(list: _bloc.commonList),
+                child: InformCommonLayout(
+                  list: _bloc.commonList,
+                  isWeb: true,
+                ),
               )
             ],
           ),
           const SizedBox(height: 57),
           //第二列
-          InformContactLayout(list: _bloc.contactList),
+          InformContactLayout(
+            list: _bloc.contactList,
+            isWeb: true,
+          ),
           const SizedBox(height: 96),
         ],
       ),

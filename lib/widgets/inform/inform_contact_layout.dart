@@ -6,9 +6,11 @@ import '../underscore_textfield.dart';
 
 class InformContactLayout extends StatelessWidget {
   final List list;
+  final bool isWeb;
   const InformContactLayout({
     super.key,
     required this.list,
+    required this.isWeb,
   });
 
   @override
@@ -25,7 +27,14 @@ class InformContactLayout extends StatelessWidget {
           Column(
             children: [
               const SizedBox(height: 24),
-              UnderscoreTextField(hintText: i),
+              UnderscoreTextField(
+                text: null,
+                padLeft: isWeb ? 22 : 6,
+                hintText: i,
+                onChanged: (String e) {
+                  print(e);
+                },
+              ),
             ],
           ),
       ],

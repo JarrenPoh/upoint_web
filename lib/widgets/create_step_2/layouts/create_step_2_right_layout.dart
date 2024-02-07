@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:reorderables/reorderables.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:upoint_web/bloc/create_step_2_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/models/option_model.dart';
 import 'package:upoint_web/widgets/create_step_2/components/container_with_checkbox.dart';
+import 'package:upoint_web/widgets/mouse_grab_widget.dart';
 
 class CreateStep2RightLayout extends StatelessWidget {
   final CreateStep2Bloc bloc;
@@ -51,14 +52,17 @@ class CreateStep2RightLayout extends StatelessWidget {
                   children: List.generate(
                     bloc.fixCommon.length,
                     (index) {
-                      return ContainerWithCheckbox(
-                        valueNotifier: bloc.valueNotifier,
-                        option: {
-                          "subtitle": bloc.fixCommon[index]["subtitle"],
-                          "type": bloc.fixCommon[index]["type"],
-                        },
-                        fix: true,
-                        tapDelete: null,
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 18),
+                        child: ContainerWithCheckbox(
+                          valueNotifier: bloc.valueNotifier,
+                          option: {
+                            "subtitle": bloc.fixCommon[index]["subtitle"],
+                            "type": bloc.fixCommon[index]["type"],
+                          },
+                          fix: true,
+                          tapDelete: null,
+                        ),
                       );
                     },
                   ),
@@ -102,16 +106,18 @@ class CreateStep2RightLayout extends StatelessWidget {
                     }
                     // print("lengths: $_lengths");
                     print("_options: $_options");
-                    return ReorderableColumn(
-                      needsLongPressDraggable: false,
-                      ignorePrimaryScrollController:true,
-                      draggedItemBuilder: (context, index) {
-                        return Container(
-                          height: 30,
-                          width: 100,
-                          color: Colors.amber,
-                        );
-                      },
+                    return ReorderableListView(
+                      shrinkWrap: true,
+                      // needsLongPressDraggable: true,
+                      // ignorePrimaryScrollController:true,
+                      // draggedItemBuilder: (context, index) {
+                      //   return Container(
+                      //     height: 30,
+                      //     width: 100,
+                      //     color: Colors.amber,
+                      //   );
+                      // },
+                      buildDefaultDragHandles: false,
                       onReorder: (oldIndex, newIndex) {
                         if (_lengths.contains(oldIndex - 1)) {
                           print('是標題不能移動');
@@ -151,20 +157,35 @@ class CreateStep2RightLayout extends StatelessWidget {
                               ValueKey(index.toString()),
                             );
                           } else {
-                            return ContainerWithCheckbox(
+                            return ListTile(
+                              dense: true,
+                              minVerticalPadding: 0,
+                              contentPadding: EdgeInsets.only(top: 18),
+                              horizontalTitleGap: 0,
                               key: ValueKey(index.toString()),
-                              valueNotifier: bloc.valueNotifier,
-                              option: _options[index],
-                              fix: false,
-                              tapDelete: (lindex, i) {
-                                String type = bloc.valueNotifier
-                                    .value[lindex].options[i].type;
-                                bloc.removeLeftOrangeOuter(type);
-                                bloc.removeFromForm(
-                                  _options[index],
-                                  false,
-                                );
-                              },
+                              titleAlignment: ListTileTitleAlignment.top,
+                              leading: MouseGrabWidget(
+                                child: ReorderableDragStartListener(
+                                  index: index,
+                                  child: SvgPicture.asset(
+                                    "assets/drag-vertical.svg",
+                                  ),
+                                ),
+                              ),
+                              title: ContainerWithCheckbox(
+                                valueNotifier: bloc.valueNotifier,
+                                option: _options[index],
+                                fix: false,
+                                tapDelete: (lindex, i) {
+                                  String type = bloc.valueNotifier.value[lindex]
+                                      .options[i].type;
+                                  bloc.removeLeftOrangeOuter(type);
+                                  bloc.removeFromForm(
+                                    _options[index],
+                                    false,
+                                  );
+                                },
+                              ),
                             );
                           }
                         },
@@ -182,6 +203,8 @@ class CreateStep2RightLayout extends StatelessWidget {
   }
 
   Widget title(String text, ValueKey key) {
+    TextEditingController titleController = TextEditingController(text: text);
+    bool enabled = text == "基本資訊" || text == "學校相關";
     return Column(
       key: key,
       children: [
@@ -194,10 +217,24 @@ class CreateStep2RightLayout extends StatelessWidget {
               color: primaryColor,
             ),
             const SizedBox(width: 12),
-            MediumText(
-              color: grey500,
-              size: 18,
-              text: text,
+            IntrinsicWidth(
+              child: TextFormField(
+                keyboardType: TextInputType.text,
+                controller: titleController,
+                enabled: !enabled,
+                autofocus: !enabled,
+                style: TextStyle(
+                  color: grey500,
+                  fontSize: 18,
+                  fontFamily: "NotoSansMedium",
+                ),
+                decoration: const InputDecoration(
+                  isDense: true,
+                  enabledBorder: InputBorder.none,
+                  disabledBorder: InputBorder.none,
+                  focusedBorder: InputBorder.none,
+                ),
+              ),
             ),
           ],
         ),

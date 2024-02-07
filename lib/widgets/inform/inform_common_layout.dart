@@ -5,9 +5,11 @@ import 'package:upoint_web/widgets/underscore_textfield.dart';
 
 class InformCommonLayout extends StatelessWidget {
   final List list;
+  final bool isWeb;
   const InformCommonLayout({
     super.key,
     required this.list,
+    required this.isWeb,
   });
 
   @override
@@ -25,7 +27,14 @@ class InformCommonLayout extends StatelessWidget {
           Column(
             children: [
               const SizedBox(height: 25),
-              UnderscoreTextField(hintText: i),
+              UnderscoreTextField(
+                text: null,
+                padLeft: isWeb ? 22 : 6,
+                hintText: i,
+                onChanged: (String e) {
+                  print(e);
+                },
+              ),
             ],
           ),
       ],
