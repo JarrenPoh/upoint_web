@@ -22,7 +22,7 @@ class CreateStep2Layout extends StatelessWidget {
     return CreatePage(
       isWeb: false,
       step: 2,
-      addToGlobal:(){},
+      checkFunc:(){},
       child: Column(
         children: [
           //左邊區塊
@@ -39,7 +39,7 @@ class CreateStep2Layout extends StatelessWidget {
     return CreatePage(
       isWeb: true,
       step: 2,
-      addToGlobal:(){},
+      checkFunc:(){},
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:upoint_web/bloc/create_step_1_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/models/post_model.dart';
 import 'package:upoint_web/widgets/create_step_1/capacity_row.dart';
 import 'package:upoint_web/widgets/create_step_1/date_pick_row.dart';
+import 'package:upoint_web/widgets/create_step_1/quill_field.dart';
 import 'package:upoint_web/widgets/underscore_textfield.dart';
 
 class CreateStep1BodyLayout extends StatefulWidget {
@@ -25,11 +25,10 @@ class CreateStep1BodyLayout extends StatefulWidget {
 class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
   @override
   void dispose() {
-    widget.bloc.debounce?.cancel();
+    widget.bloc.debounce01?.cancel();
+    widget.bloc.debounce02?.cancel();
     super.dispose();
   }
-
-  QuillController _controller = QuillController.basic();
 
   @override
   Widget build(BuildContext context) {
@@ -62,36 +61,41 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
                 Row(
                   children: [
                     Expanded(
-                      child: AspectRatio(
-                        aspectRatio: 16 / 9,
-                        child: Container(
-                          height: 374,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Color(0xFFF4F4F4),
-                            image: widget.bloc.valueNotifier.value.photo != null
-                                ? DecorationImage(
-                                    image: MemoryImage(
-                                      base64Decode(
-                                        widget.bloc.valueNotifier.value.photo!,
+                      child: GestureDetector(
+                        onTap: widget.bloc.pickImage,
+                        child: AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: Container(
+                            height: 374,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Color(0xFFF4F4F4),
+                              image:
+                                  widget.bloc.valueNotifier.value.photo != null
+                                      ? DecorationImage(
+                                          image: MemoryImage(
+                                            base64Decode(
+                                              widget.bloc.valueNotifier.value
+                                                  .photo!,
+                                            ),
+                                          ),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
+                            ),
+                            child: widget.bloc.valueNotifier.value.photo == null
+                                ? Center(
+                                    child: IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                        Icons.upload_rounded,
+                                        color: Color(0xFF343434),
                                       ),
+                                      iconSize: 27,
                                     ),
-                                    fit: BoxFit.cover,
                                   )
-                                : null,
+                                : Container(),
                           ),
-                          child: widget.bloc.valueNotifier.value.photo == null
-                              ? Center(
-                                  child: IconButton(
-                                    onPressed: widget.bloc.pickImage,
-                                    icon: const Icon(
-                                      Icons.upload_rounded,
-                                      color: Color(0xFF343434),
-                                    ),
-                                    iconSize: 27,
-                                  ),
-                                )
-                              : Container(),
                         ),
                       ),
                     ),
@@ -154,7 +158,7 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
                           //填名額的
                           if (type == "capacity")
                             CapacityRow(
-                              number: text == null ? null : int.parse(text),
+                              number: text,
                               padLeft: widget.isWeb ? 22 : 6,
                               hintText: widget.bloc.createInformList[index]
                                   ['title'],
@@ -201,32 +205,19 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
                 ),
                 const SizedBox(height: 24),
                 Container(
-                  decoration: BoxDecoration(border: Border.all(color: grey400)),
-                  child: Column(
-                    children: [
-                      QuillToolbar.simple(
-                        configurations: QuillSimpleToolbarConfigurations(
-                          controller: _controller,
-                          sharedConfigurations: const QuillSharedConfigurations(
-                            locale: Locale('en'),
-                          ),
-                        ),
-                      ),
-                      QuillEditor.basic(
-                        configurations: QuillEditorConfigurations(
-                          controller: _controller,
-                          readOnly: false,
-                          sharedConfigurations: const QuillSharedConfigurations(
-                            locale: Locale('en'),
-                          ),
-                        ),
-                      ),
-                    ],
+                  padding: const EdgeInsets.only(bottom: 30),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: grey300),
+                  ),
+                  child: QuillField(
+                    text: widget.bloc.valueNotifier.value.content,
+                    onQuillChanged: (delta) =>
+                        widget.bloc.onQuillChanged(delta),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 48),
+            const SizedBox(height: 0),
           ],
         );
       },
@@ -243,10 +234,7 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
         text = widget.bloc.valueNotifier.value.location;
         break;
       case "capacity":
-        int? capcity = widget.bloc.valueNotifier.value.capacity;
-        text = capcity == null
-            ? null
-            : widget.bloc.valueNotifier.value.capacity.toString();
+        text = widget.bloc.valueNotifier.value.capacity;
         break;
       case "introduction":
         text = widget.bloc.valueNotifier.value.introduction;

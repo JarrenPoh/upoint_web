@@ -4,7 +4,7 @@ import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 
 class CapacityRow extends StatefulWidget {
-  final int? number;
+  final String? number;
   final String hintText;
   final Function(String?) onChanged;
   final double padLeft;
@@ -22,19 +22,19 @@ class CapacityRow extends StatefulWidget {
 
 class _CapacityRowState extends State<CapacityRow> {
   late TextEditingController _textEditingController = TextEditingController();
-  int number = 0;
+  String? number;
   bool _isChecked = false;
   bool _enabaled = true;
   @override
   void initState() {
     super.initState();
-    if (widget.number != null) {
-      number = widget.number!;
-      _textEditingController = TextEditingController(text: number.toString());
-    } else {
+    if (widget.number == "unlimited") {
       _textEditingController.text = "不限人數";
       _isChecked = true;
       _enabaled = false;
+    } else if (widget.number != null&&widget.number != "umlimited") {
+      number = widget.number!;
+      _textEditingController = TextEditingController(text: number.toString());
     }
   }
 
@@ -88,7 +88,7 @@ class _CapacityRowState extends State<CapacityRow> {
               _isChecked = !_isChecked;
             });
             if (ee == true) {
-              widget.onChanged(null);
+              widget.onChanged("unlimited");
               setState(() {
                 _textEditingController.text = "不限人數";
                 _enabaled = false;

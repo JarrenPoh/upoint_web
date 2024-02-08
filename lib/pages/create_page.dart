@@ -8,13 +8,13 @@ class CreatePage extends StatefulWidget {
   final Widget child;
   final int step;
   final bool isWeb;
-  final Function addToGlobal;
+  final Function checkFunc;
   const CreatePage({
     super.key,
     required this.child,
     required this.step,
     required this.isWeb,
-    required this.addToGlobal,
+    required this.checkFunc,
   });
 
   @override
@@ -25,13 +25,6 @@ class _CreatePageState extends State<CreatePage> {
   @override
   void initState() {
     super.initState();
-    onTap = (BuildContext context) {
-      if (widget.step == 1) {
-        return Beamer.of(context).beamToNamed('/organizer/create/step2');
-      } else {
-        return Beamer.of(context).beamToNamed('/organizer/create/step1');
-      }
-    };
   }
 
   late Function(BuildContext context) onTap;
@@ -62,7 +55,7 @@ class _CreatePageState extends State<CreatePage> {
                   const SizedBox(height: 55),
                   widget.child,
                   // 送出報名
-                  const SizedBox(height: 108),
+                  const SizedBox(height: 50),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -83,8 +76,7 @@ class _CreatePageState extends State<CreatePage> {
                       TapHoverContainer(
                         padding: widget.isWeb ? 84 : 40,
                         onTap: () {
-                          onTap(context);
-                          widget.addToGlobal();
+                          widget.checkFunc();
                         },
                         text: "下一步",
                         color: primaryColor,

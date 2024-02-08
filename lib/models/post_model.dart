@@ -10,7 +10,7 @@ class PostModel {
   String? startTime;
   String? endTime;
   String? introduction;
-  int? capacity;
+  String? capacity;
   String? content;
   String? reward;
   String? rewardTagId;
