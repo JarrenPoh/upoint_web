@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/layouts/create_step_1_layout.dart';
-import 'package:upoint_web/layouts/create_step_2_layout.dart';
 import 'package:upoint_web/layouts/inform_layout.dart';
 import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/pages/login_page.dart';
@@ -42,18 +41,7 @@ class OrganizerLocation extends BeamLocation {
     } else if (uri.pathSegments.contains('center')) {
       page = Container();
     } else if (uri.pathSegments.contains('create')) {
-      String step = uri.pathSegments[2];
-      // final step = state.pathParameters['step'] ?? '0';
-      switch (step) {
-        case 'step1':
-          page = CreateStep1Layout(
-          );
-          break;
-        case 'step2':
-          page = CreateStep2Layout(
-          );
-          break;
-      }
+      page = CreateStep1Layout();
     }
     return [
       BeamPage(

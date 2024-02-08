@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:upoint_web/bloc/create_step_2_bloc.dart';
 import 'package:upoint_web/color.dart';
-import 'package:upoint_web/models/form_model.dart';
 import 'package:upoint_web/models/option_model.dart';
 import 'package:upoint_web/widgets/create_step_2/components/drop_down_field.dart';
 import 'package:upoint_web/widgets/create_step_2/components/long_field.dart';
@@ -9,11 +9,15 @@ import 'package:upoint_web/widgets/create_step_2/components/short_field.dart';
 import 'package:upoint_web/widgets/create_step_2/components/time_field.dart';
 
 class ChoseComponents extends StatelessWidget {
-  final ValueNotifier<List<FormModel>> valueNotifier;
+  final CreateStep2Bloc bloc;
+  final int l;
+  final int i;
   final OptionModel option;
   const ChoseComponents({
     super.key,
-    required this.valueNotifier,
+    required this.bloc,
+    required this.i,
+    required this.l,
     required this.option,
   });
 
@@ -50,6 +54,11 @@ class ChoseComponents extends StatelessWidget {
               attribute: attribute,
               index: index,
               option: option,
+              onTextChanged: (e) => bloc.onTextChanged(
+                e,
+                bloc.valueNotifier.value[l].options[i],
+                index,
+              ),
             );
         break;
       case "multi":
@@ -57,6 +66,11 @@ class ChoseComponents extends StatelessWidget {
               attribute: attribute,
               index: index,
               option: option,
+              onTextChanged: (e) => bloc.onTextChanged(
+                e,
+                bloc.valueNotifier.value[l].options[i],
+                index,
+              ),
             );
         break;
       case "drop_down":
@@ -75,6 +89,7 @@ class ChoseComponents extends StatelessWidget {
               attribute: attribute,
               index: index,
               option: option,
+              onTextChanged: (e) {},
             );
         break;
       case "meal":
@@ -82,6 +97,7 @@ class ChoseComponents extends StatelessWidget {
               attribute: attribute,
               index: index,
               option: option,
+              onTextChanged: (e) {},
             );
         break;
       default:
@@ -94,7 +110,7 @@ class ChoseComponents extends StatelessWidget {
         );
         break;
     }
-    
+
     if (valueType.contains(option.type)) {
       if (option.type == "drop_down") {
         return Column(
@@ -105,15 +121,22 @@ class ChoseComponents extends StatelessWidget {
               fontSize: 14,
               index: null,
               option: option,
+              onTextChanged: (e) => bloc.explainTextChanged(
+                e,
+                bloc.valueNotifier.value[l].options[i],
+              ),
             ),
             const SizedBox(height: 5),
             LongField(
               type: option.type,
               content: "",
             ),
-            valueWidget((index, attribute) {
-              return _valueWidget(index, attribute);
-            }),
+            valueWidget(
+              (index, attribute) {
+                return _valueWidget(index, attribute);
+              },
+              option,
+            ),
           ],
         );
       } else {
@@ -125,11 +148,18 @@ class ChoseComponents extends StatelessWidget {
               fontSize: 14,
               index: null,
               option: option,
+              onTextChanged: (e) => bloc.explainTextChanged(
+                e,
+                bloc.valueNotifier.value[l].options[i],
+              ),
             ),
             const SizedBox(height: 5),
-            valueWidget((index, attribute) {
-              return _valueWidget(index, attribute);
-            }),
+            valueWidget(
+              (index, attribute) {
+                return _valueWidget(index, attribute);
+              },
+              option,
+            ),
           ],
         );
       }
@@ -142,6 +172,10 @@ class ChoseComponents extends StatelessWidget {
             fontSize: 14,
             index: null,
             option: option,
+            onTextChanged: (e) => bloc.explainTextChanged(
+              e,
+              bloc.valueNotifier.value[l].options[i],
+            ),
           ),
           const SizedBox(height: 5),
           _widget,
@@ -150,7 +184,10 @@ class ChoseComponents extends StatelessWidget {
     }
   }
 
-  Widget valueWidget(Widget Function(int index, String attribute) child) {
+  Widget valueWidget(
+    Widget Function(int index, String attribute) child,
+    OptionModel option,
+  ) {
     return SizedBox(
       width: 495,
       child: Wrap(

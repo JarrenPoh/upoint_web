@@ -1,11 +1,10 @@
 import 'dart:convert';
-
-import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/bloc/create_step_1_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/globals/user_simple_preference.dart';
+import 'package:upoint_web/layouts/create_step_2_layout.dart';
 import 'package:upoint_web/models/post_model.dart';
 import 'package:upoint_web/pages/create_page.dart';
 import 'package:upoint_web/widgets/create_step_1/create_step_1_body_layout.dart';
@@ -83,8 +82,19 @@ class CreateStep1Layout extends StatelessWidget {
           );
         },
       );
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => CreateStep2Layout(),
+        ),
+      );
     } else {
-      Beamer.of(context).beamToNamed('/organizer/create/step2');
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (BuildContext context) => CreateStep2Layout(),
+        ),
+      );
     }
   }
 }

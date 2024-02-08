@@ -13,7 +13,7 @@ class FormModel {
   static Map toMap(FormModel cart) {
     return {
       "title": cart.title,
-      "options": cart.options,
+      "options": cart.options.map((option) => option.toJson()).toList(),
     };
   }
 
@@ -28,13 +28,13 @@ class FormModel {
 
   Map<String, dynamic> toJson() => {
         "title": title,
-        "options": options,
+        "options": options.map((option) => option.toJson()).toList(),
       };
 
   static FormModel fromMap(Map map) {
     return FormModel(
       title: map['title'],
-      options: map['options'],
+      options: List<OptionModel>.from(map['options'].map((x) => OptionModel.fromMap(x))),
     );
   }
 }

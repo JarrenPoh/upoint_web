@@ -1,15 +1,19 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:upoint_web/globals/user_simple_preference.dart';
 import 'package:upoint_web/models/form_model.dart';
 import 'package:upoint_web/models/option_model.dart';
 
 class CreateStep2Bloc {
-  final ValueNotifier<List<FormModel>> valueNotifier =
-      ValueNotifier([FormModel(title: "基本資料", options: [])]);
+  late ValueNotifier<List<FormModel>> valueNotifier;
   late final ValueNotifier<List> commonLeftValue;
   late final ValueNotifier<List> schoolLeftValue;
   late final ValueNotifier<List> customLeftValue;
 
-  CreateStep2Bloc() {
+  CreateStep2Bloc(List<FormModel> formModel) {
+    valueNotifier = ValueNotifier(formModel);
     commonLeftValue = ValueNotifier(commonFields);
     schoolLeftValue = ValueNotifier(schoolFields);
     customLeftValue = ValueNotifier(customFields);
@@ -38,6 +42,8 @@ class CreateStep2Bloc {
     }
     // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
     valueNotifier.notifyListeners();
+    UserSimplePreference.setform(
+        jsonEncode(valueNotifier.value.map((form) => form.toJson()).toList()));
   }
 
   removeFromForm(Map optionMap, bool isTapDesignBlock) {
@@ -82,12 +88,77 @@ class CreateStep2Bloc {
     }
   }
 
+  //檢查有沒有標題下面沒選項，沒選項的標題自動刪除
   checkTitleIsEmpty(List<FormModel> _value) {
     //檢查如果區塊下沒東西，刪掉標題
     _value.removeWhere((e) => e.title != "基本資料" && e.options.isEmpty);
     valueNotifier.value = _value;
     // ignore: invalid_use_of_visible_for_testing_member,, invalid_use_of_protected_member
     valueNotifier.notifyListeners();
+    UserSimplePreference.setform(
+        jsonEncode(valueNotifier.value.map((form) => form.toJson()).toList()));
+  }
+
+  //說明文字, 其他, 必填
+  checkFunc(String type, OptionModel option) {
+    switch (type) {
+      case "explain":
+        if (option.explain == null) {
+          option.explain = "";
+        } else {
+          option.explain = null;
+        }
+        break;
+      case "other":
+        if (option.other == null) {
+          option.other = "其他..";
+        } else {
+          option.other = null;
+        }
+        break;
+      case "necessary":
+        if (option.necessary == false) {
+          option.necessary = true;
+        } else {
+          option.necessary = false;
+        }
+        break;
+      case "removeBody":
+        option.body.removeLast();
+        break;
+      case "addBody":
+        option.body.add("");
+        break;
+    }
+    // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+    valueNotifier.notifyListeners();
+    UserSimplePreference.setform(
+        jsonEncode(valueNotifier.value.map((form) => form.toJson()).toList()));
+  }
+
+  //解釋的文字
+  Timer? debounce;
+  explainTextChanged(String text, OptionModel option) {
+    if (debounce?.isActive ?? false) debounce!.cancel();
+    debounce = Timer(const Duration(seconds: 1), () async {
+      option.explain = text;
+      // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+      // valueNotifier.notifyListeners();
+      UserSimplePreference.setform(jsonEncode(
+          valueNotifier.value.map((form) => form.toJson()).toList()));
+    });
+  }
+
+  //多選跟單選的選項文字
+  onTextChanged(String text, OptionModel option, int index) {
+    if (debounce?.isActive ?? false) debounce!.cancel();
+    debounce = Timer(const Duration(seconds: 1), () async {
+      option.body[index] = text;
+      // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+      // valueNotifier.notifyListeners();
+      UserSimplePreference.setform(jsonEncode(
+          valueNotifier.value.map((form) => form.toJson()).toList()));
+    });
   }
 
   List<Map> commonFields = [

@@ -55,7 +55,7 @@ class CreateStep2RightLayout extends StatelessWidget {
                       return Padding(
                         padding: const EdgeInsets.only(top: 18),
                         child: ContainerWithCheckbox(
-                          valueNotifier: bloc.valueNotifier,
+                          bloc: bloc,
                           option: {
                             "subtitle": bloc.fixCommon[index]["subtitle"],
                             "type": bloc.fixCommon[index]["type"],
@@ -173,7 +173,7 @@ class CreateStep2RightLayout extends StatelessWidget {
                                 ),
                               ),
                               title: ContainerWithCheckbox(
-                                valueNotifier: bloc.valueNotifier,
+                                bloc: bloc,
                                 option: _options[index],
                                 fix: false,
                                 tapDelete: (lindex, i) {

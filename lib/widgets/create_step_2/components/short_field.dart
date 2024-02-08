@@ -7,11 +7,13 @@ class ShortField extends StatelessWidget {
   final int? index;
   final String attribute;
   final OptionModel option;
+  final Function(String) onTextChanged;
   const ShortField({
     super.key,
     required this.attribute,
     required this.index,
     required this.option,
+    required this.onTextChanged,
   });
 
   @override
@@ -40,6 +42,7 @@ class ShortField extends StatelessWidget {
           IntrinsicWidth(
             child: NoneDecorTextField(
               attribute: attribute,
+              onTextChanged:(e)=> onTextChanged(e),
               fontSize: 16,
               index: index,
               option: option,

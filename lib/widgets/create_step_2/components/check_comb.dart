@@ -5,10 +5,12 @@ import 'package:upoint_web/globals/regular_text.dart';
 class CheckComb extends StatefulWidget {
   final String title;
   final Function() func;
+  final bool isChecked;
   const CheckComb({
     super.key,
     required this.title,
     required this.func,
+    required this.isChecked,
   });
 
   @override
@@ -16,9 +18,20 @@ class CheckComb extends StatefulWidget {
 }
 
 class _CheckCombState extends State<CheckComb> {
-  bool _isChecked = false;
+  late bool _isChecked;
+  @override
+  void initState() {
+    super.initState();
+    refresh();
+  }
+
+  refresh() {
+    _isChecked = widget.isChecked;
+  }
+
   @override
   Widget build(BuildContext context) {
+    refresh();
     return Row(
       children: [
         const SizedBox(width: 8),

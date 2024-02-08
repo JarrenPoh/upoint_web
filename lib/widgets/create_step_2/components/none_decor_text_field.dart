@@ -7,12 +7,14 @@ class NoneDecorTextField extends StatelessWidget {
   final double fontSize;
   final String attribute;
   final OptionModel option;
+  final Function(String) onTextChanged;
   const NoneDecorTextField({
     super.key,
     required this.attribute,
     required this.fontSize,
     required this.index,
     required this.option,
+    required this.onTextChanged,
   });
 
   @override
@@ -73,6 +75,7 @@ class NoneDecorTextField extends StatelessWidget {
             disabledBorder: InputBorder.none,
             focusedBorder: InputBorder.none,
           ),
+          onChanged: (e) => onTextChanged(e),
         ),
       );
     }

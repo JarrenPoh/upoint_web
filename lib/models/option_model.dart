@@ -56,7 +56,7 @@ class OptionModel {
       necessary: map['necessary'],
       explain: map['explain'],
       other: map['other'],
-      body: map['body'],
+      body:  List<String>.from(map['body'].map((item) => item as String)),
     );
   }
 }

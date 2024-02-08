@@ -5,14 +5,16 @@ import 'package:upoint_web/models/option_model.dart';
 import 'package:upoint_web/widgets/create_step_2/components/check_comb.dart';
 import 'package:upoint_web/widgets/create_step_2/components/chose_components.dart';
 
+import '../../../bloc/create_step_2_bloc.dart';
+
 class ContainerWithCheckbox extends StatefulWidget {
-  final ValueNotifier<List<FormModel>> valueNotifier;
+  final CreateStep2Bloc bloc;
   final Map option;
   final bool fix;
   final Function(int, int)? tapDelete;
   const ContainerWithCheckbox({
     super.key,
-    required this.valueNotifier,
+    required this.bloc,
     required this.fix,
     required this.tapDelete,
     required this.option,
@@ -29,8 +31,14 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
     refresh();
   }
 
+  @override
+  void dispose() {
+    widget.bloc.debounce?.cancel();
+    super.dispose();
+  }
+
   refresh() {
-    _valueNotifier = widget.valueNotifier;
+    _valueNotifier = widget.bloc.valueNotifier;
     if (widget.fix == true) {
       option = OptionModel(
         type: widget.option["type"],
@@ -44,12 +52,12 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
       lindex = widget.option["lindex"];
       index = widget.option["index"];
       option = OptionModel(
-        type: widget.valueNotifier.value[lindex].options[index].type,
-        subtitle: widget.valueNotifier.value[lindex].options[index].subtitle,
-        necessary: widget.valueNotifier.value[lindex].options[index].necessary,
-        explain: widget.valueNotifier.value[lindex].options[index].explain,
-        other: widget.valueNotifier.value[lindex].options[index].other,
-        body: widget.valueNotifier.value[lindex].options[index].body,
+        type: _valueNotifier.value[lindex].options[index].type,
+        subtitle: _valueNotifier.value[lindex].options[index].subtitle,
+        necessary: _valueNotifier.value[lindex].options[index].necessary,
+        explain: _valueNotifier.value[lindex].options[index].explain,
+        other: _valueNotifier.value[lindex].options[index].other,
+        body: _valueNotifier.value[lindex].options[index].body,
       );
     }
     titleController = TextEditingController(text: option.subtitle);
@@ -118,21 +126,17 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
                 children: [
                   _mouseIcon(
                     Icons.remove_circle_outline,
-                    () {
-                      _valueNotifier.value[lindex].options[index].body
-                          .removeLast();
-                      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                      _valueNotifier.notifyListeners();
-                    },
+                    () => widget.bloc.checkFunc(
+                      "removeBody",
+                      _valueNotifier.value[lindex].options[index],
+                    ),
                   ),
                   _mouseIcon(
                     Icons.add_circle_outline,
-                    () {
-                      _valueNotifier.value[lindex].options[index].body
-                          .add("");
-                      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                      _valueNotifier.notifyListeners();
-                    },
+                    () => widget.bloc.checkFunc(
+                      "addBody",
+                      _valueNotifier.value[lindex].options[index],
+                    ),
                   ),
                 ],
               ),
@@ -140,17 +144,11 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
             if (widget.fix == false)
               CheckComb(
                 title: "說明文字",
-                func: () {
-                  if (_valueNotifier.value[lindex].options[index].explain ==
-                      null) {
-                    _valueNotifier.value[lindex].options[index].explain = "";
-                  } else {
-                    _valueNotifier.value[lindex].options[index].explain =
-                        null;
-                  }
-                  // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                  _valueNotifier.notifyListeners();
-                },
+                isChecked: option.explain == null ? false : true,
+                func: () => widget.bloc.checkFunc(
+                  "explain",
+                  _valueNotifier.value[lindex].options[index],
+                ),
               ),
             // 其他開放選項
             if (option.type == "single" ||
@@ -158,17 +156,11 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
                 option.type == "meal")
               CheckComb(
                 title: "其他開放選項",
-                func: () {
-                  if (_valueNotifier.value[lindex].options[index].other ==
-                      null) {
-                    _valueNotifier.value[lindex].options[index].other =
-                        "其他..";
-                  } else {
-                    _valueNotifier.value[lindex].options[index].other = null;
-                  }
-                  // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                  _valueNotifier.notifyListeners();
-                },
+                isChecked: option.other == null ? false : true,
+                func: () => widget.bloc.checkFunc(
+                  "other",
+                  _valueNotifier.value[lindex].options[index],
+                ),
               ),
             const Expanded(child: Column(children: [])),
             // 必選
@@ -190,26 +182,20 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
                   )
                 : CheckComb(
                     title: "必填",
-                    func: () {
-                      if (_valueNotifier
-                              .value[lindex].options[index].necessary ==
-                          false) {
-                        _valueNotifier
-                            .value[lindex].options[index].necessary = true;
-                      } else {
-                        _valueNotifier
-                            .value[lindex].options[index].necessary = false;
-                      }
-                      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                      _valueNotifier.notifyListeners();
-                    },
+                    isChecked: option.necessary,
+                    func: () => widget.bloc.checkFunc(
+                      "necessary",
+                      _valueNotifier.value[lindex].options[index],
+                    ),
                   ),
           ],
         ),
         // 內容
         ChoseComponents(
-          valueNotifier: _valueNotifier,
-          option: option,
+          bloc: widget.bloc,
+          l: widget.fix ? 0 : lindex,
+          i: widget.fix ? 0 : index,
+          option:option,
         ),
       ],
     );

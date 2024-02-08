@@ -80,7 +80,6 @@ class CreateStep1Bloc {
           break;
       }
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-      valueNotifier.notifyListeners();
       await UserSimplePreference.setpost(
         jsonEncode(PostModel.toMap(valueNotifier.value)),
       );
@@ -95,7 +94,6 @@ class CreateStep1Bloc {
       String json = jsonEncode(delta.toJson());
       valueNotifier.value.content = json;
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-      valueNotifier.notifyListeners();
       await UserSimplePreference.setpost(
         jsonEncode(PostModel.toMap(valueNotifier.value)),
       );

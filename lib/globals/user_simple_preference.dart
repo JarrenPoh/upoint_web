@@ -4,11 +4,12 @@ class UserSimplePreference {
   static SharedPreferences? _preferences;
 
   static const _post = 'post';
+  static const _form = 'form';
 
   static Future init() async =>
       _preferences = await SharedPreferences.getInstance();
 
-  //Search Post History
+  //organizer create post
   static Future setpost(String post) async {
     print('存：$post');
     await _preferences?.setString(_post, post);
@@ -20,5 +21,19 @@ class UserSimplePreference {
 
   static String getpost() {
     return _preferences?.getString(_post) ?? "";
+  }
+
+  //organizer create form
+  static Future setform(String form) async {
+    print('存：$form');
+    await _preferences?.setString(_form, form);
+  }
+
+  static Future removeform(String form) async {
+    await _preferences?.setString(_form, "");
+  }
+
+  static String getform() {
+    return _preferences?.getString(_form) ?? "";
   }
 }

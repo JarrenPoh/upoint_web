@@ -47,7 +47,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routeInformationParser: BeamerParser(),
       routerDelegate: BeamerDelegate(
-        initialPath: '/organizer/inform',
+        initialPath: '/main',
         transitionDelegate: const NoAnimationTransitionDelegate(),
         locationBuilder: BeamerLocationBuilder(
           beamLocations: [
