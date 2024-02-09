@@ -52,7 +52,7 @@ class CreateStep1Layout extends StatelessWidget {
   checkFunc(BuildContext context, CreateStep1Bloc _bloc) {
     String? errorText = _bloc.checkFunc();
     if (errorText != null) {
-      showDialog(
+      showDialog( 
         context: context,
         builder: (context) {
           return AlertDialog(

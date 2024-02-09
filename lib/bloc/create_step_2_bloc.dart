@@ -24,9 +24,9 @@ class CreateStep2Bloc {
     if (feildType == "common") {
       _index = 0;
       if (option.type == "gender") {
-        option.body = ["葷", "素"];
-      } else if (option.type == "meal") {
         option.body = ["男", "女"];
+      } else if (option.type == "meal") {
+        option.body = ["葷", "素"];
       }
     } else if (feildType == "school") {
       _index = 1;
@@ -100,7 +100,7 @@ class CreateStep2Bloc {
   }
 
   //說明文字, 其他, 必填
-  checkFunc(String type, OptionModel option) {
+  checkBox(String type, OptionModel option) {
     switch (type) {
       case "explain":
         if (option.explain == null) {
@@ -140,10 +140,8 @@ class CreateStep2Bloc {
   Timer? debounce;
   explainTextChanged(String text, OptionModel option) {
     if (debounce?.isActive ?? false) debounce!.cancel();
-    debounce = Timer(const Duration(seconds: 1), () async {
+    debounce = Timer(const Duration(milliseconds: 500), () async {
       option.explain = text;
-      // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
-      // valueNotifier.notifyListeners();
       UserSimplePreference.setform(jsonEncode(
           valueNotifier.value.map((form) => form.toJson()).toList()));
     });
@@ -152,13 +150,69 @@ class CreateStep2Bloc {
   //多選跟單選的選項文字
   onTextChanged(String text, OptionModel option, int index) {
     if (debounce?.isActive ?? false) debounce!.cancel();
-    debounce = Timer(const Duration(seconds: 1), () async {
+    debounce = Timer(const Duration(milliseconds: 500), () async {
       option.body[index] = text;
-      // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
-      // valueNotifier.notifyListeners();
       UserSimplePreference.setform(jsonEncode(
           valueNotifier.value.map((form) => form.toJson()).toList()));
     });
+  }
+
+  //自定義formModel的標題文字
+  onTitleChanged(String text, FormModel form) {
+    if (debounce?.isActive ?? false) debounce!.cancel();
+    debounce = Timer(const Duration(milliseconds: 500), () async {
+      form.title = text;
+      UserSimplePreference.setform(jsonEncode(
+          valueNotifier.value.map((form) => form.toJson()).toList()));
+    });
+  }
+
+  //  檢查step2有沒有沒寫完的
+  String? checkFunc() {
+    List<FormModel> formList = valueNotifier.value;
+    String? text;
+    for (var form in formList) {
+      for (var option in form.options) {
+        if (option.explain != null && option.explain == "") {
+          text = '"${option.subtitle}"的說明文字尚未填寫內容';
+          break;
+        } else if (option.type == "multi" && option.body.any((e) => e == "")) {
+          text = '"${option.subtitle}"有選項尚未填寫內容';
+          break;
+        } else if (option.type == "single" && option.body.any((e) => e == "")) {
+          text = '"${option.subtitle}"有選項尚未填寫內容';
+          break;
+        } else if (option.type == "drop_down" &&
+            option.body.any((e) => e == "")) {
+          text = '"${option.subtitle}"有選項尚未填寫內容';
+          break;
+        }
+      }
+    }
+    return text;
+  }
+
+  // 初始化，如果之前有填過內容，橘色外匡耀預設出現
+  initLeftOrangeOuter() {
+    for (FormModel form in valueNotifier.value) {
+      for (OptionModel option in form.options) {
+        List _commons = commonFields.map((e) => e["type"]).toList();
+        List _schools = schoolFields.map((e) => e["type"]).toList();
+        if (_commons.contains(option.type)) {
+          int _i = _commons.indexWhere((e) => e == option.type);
+          addLeftOrangeOuter(
+            "common",
+            _i,
+          );
+        } else if (_schools.contains(option.type)) {
+          int _i = _schools.indexWhere((e) => e == option.type);
+          addLeftOrangeOuter(
+            "school",
+            _i,
+          );
+        }
+      }
+    }
   }
 
   List<Map> commonFields = [

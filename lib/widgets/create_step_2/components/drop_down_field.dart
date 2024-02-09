@@ -2,11 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
 
 class DropDownField extends StatelessWidget {
-  final index;
-  const DropDownField({super.key, required this.index});
+  final int index;
+  final Function(String) ontextChanged;
+  final String text;
+  const DropDownField({
+    super.key,
+    required this.index,
+    required this.ontextChanged,
+    required this.text,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _controller = TextEditingController(text: text);
     return Column(
       children: [
         const SizedBox(height: 10),
@@ -24,6 +32,8 @@ class DropDownField extends StatelessWidget {
             const SizedBox(width: 5),
             Expanded(
               child: TextField(
+                controller: _controller,
+                onChanged: (e) => ontextChanged(e),
                 style: TextStyle(
                   color: grey500,
                   fontSize: 16,

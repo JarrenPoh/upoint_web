@@ -46,7 +46,7 @@ class CreateStep2RightLayout extends StatelessWidget {
             child: Column(
               children: [
                 // 基本資訊標題
-                title("基本資訊", ValueKey("")),
+                title("基本資訊", ValueKey(""), null),
                 //固定基本資訊
                 Column(
                   children: List.generate(
@@ -155,6 +155,11 @@ class CreateStep2RightLayout extends StatelessWidget {
                             return title(
                               _options[index]["subtitle"],
                               ValueKey(index.toString()),
+                              (e) => bloc.onTitleChanged(
+                                e,
+                                bloc.valueNotifier
+                                    .value[_options[index]["lindex"] + 1],
+                              ),
                             );
                           } else {
                             return ListTile(
@@ -202,7 +207,11 @@ class CreateStep2RightLayout extends StatelessWidget {
     );
   }
 
-  Widget title(String text, ValueKey key) {
+  Widget title(
+    String text,
+    ValueKey key,
+    Function(String)? onTitleChanged,
+  ) {
     TextEditingController titleController = TextEditingController(text: text);
     bool enabled = text == "基本資訊" || text == "學校相關";
     return Column(
@@ -219,6 +228,8 @@ class CreateStep2RightLayout extends StatelessWidget {
             const SizedBox(width: 12),
             IntrinsicWidth(
               child: TextFormField(
+                onChanged:
+                    onTitleChanged == null ? (e) {} : (e) => onTitleChanged(e),
                 keyboardType: TextInputType.text,
                 controller: titleController,
                 enabled: !enabled,

@@ -63,7 +63,7 @@ class CreateStep1Bloc {
 
   void onTextChanged(String? text, int index) {
     if (debounce01?.isActive ?? false) debounce01!.cancel();
-    debounce01 = Timer(const Duration(seconds: 1), () async {
+    debounce01 = Timer(const Duration(milliseconds: 500), () async {
       String _type = createInformList[index]["index"];
       switch (_type) {
         case "title":
@@ -90,7 +90,7 @@ class CreateStep1Bloc {
   Timer? debounce02;
   onQuillChanged(Delta delta) {
     if (debounce02?.isActive ?? false) debounce02!.cancel();
-    debounce02 = Timer(const Duration(seconds: 1), () async {
+    debounce02 = Timer(const Duration(milliseconds: 500), () async {
       String json = jsonEncode(delta.toJson());
       valueNotifier.value.content = json;
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member

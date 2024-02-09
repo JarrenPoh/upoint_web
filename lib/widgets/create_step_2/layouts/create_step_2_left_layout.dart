@@ -28,6 +28,7 @@ class _CreateStep2LeftLayoutState extends State<CreateStep2LeftLayout> with Tick
       vsync: this,
       initialIndex: 0,
     );
+    widget.bloc.initLeftOrangeOuter();
   }
 
   @override

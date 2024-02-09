@@ -14,14 +14,12 @@ class OrganizerLocation extends BeamLocation {
   List<String> get pathBlueprints => [
         '/organizer/inform',
         '/organizer/center',
-        '/organizer/create/step1',
-        '/organizer/create/step2',
+        '/organizer/create',
       ];
   @override
   List<BeamPage> buildPages(
       BuildContext context, RouteInformationSerializable state) {
     var screenSize = MediaQuery.of(context).size;
-    int currentStep = 1;
     void onIconTapped(int index) {
       String url = '';
       if (index == 0) {
@@ -29,7 +27,7 @@ class OrganizerLocation extends BeamLocation {
       } else if (index == 1) {
         url = "/center";
       } else {
-        url = "/create/step$currentStep";
+        url = "/create";
       }
       Beamer.of(context).beamToNamed('/organizer' + url);
     }

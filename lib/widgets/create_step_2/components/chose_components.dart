@@ -74,7 +74,15 @@ class ChoseComponents extends StatelessWidget {
             );
         break;
       case "drop_down":
-        _valueWidget = (index, attribute) => DropDownField(index: index);
+        _valueWidget = (index, attribute) => DropDownField(
+              index: index,
+              text: option.body[index],
+              ontextChanged: (e) => bloc.onTextChanged(
+                e,
+                bloc.valueNotifier.value[l].options[i],
+                index,
+              ),
+            );
         break;
       case "date":
         _widget = LongField(
@@ -89,7 +97,11 @@ class ChoseComponents extends StatelessWidget {
               attribute: attribute,
               index: index,
               option: option,
-              onTextChanged: (e) {},
+              onTextChanged: (e) => bloc.onTextChanged(
+                e,
+                bloc.valueNotifier.value[l].options[i],
+                index,
+              ),
             );
         break;
       case "meal":
@@ -97,7 +109,11 @@ class ChoseComponents extends StatelessWidget {
               attribute: attribute,
               index: index,
               option: option,
-              onTextChanged: (e) {},
+              onTextChanged: (e) => bloc.onTextChanged(
+                e,
+                bloc.valueNotifier.value[l].options[i],
+                index,
+              ),
             );
         break;
       default:

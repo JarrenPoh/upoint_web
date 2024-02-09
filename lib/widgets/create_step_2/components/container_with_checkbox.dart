@@ -126,14 +126,14 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
                 children: [
                   _mouseIcon(
                     Icons.remove_circle_outline,
-                    () => widget.bloc.checkFunc(
+                    () => widget.bloc.checkBox(
                       "removeBody",
                       _valueNotifier.value[lindex].options[index],
                     ),
                   ),
                   _mouseIcon(
                     Icons.add_circle_outline,
-                    () => widget.bloc.checkFunc(
+                    () => widget.bloc.checkBox(
                       "addBody",
                       _valueNotifier.value[lindex].options[index],
                     ),
@@ -145,7 +145,7 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
               CheckComb(
                 title: "說明文字",
                 isChecked: option.explain == null ? false : true,
-                func: () => widget.bloc.checkFunc(
+                func: () => widget.bloc.checkBox(
                   "explain",
                   _valueNotifier.value[lindex].options[index],
                 ),
@@ -157,7 +157,7 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
               CheckComb(
                 title: "其他開放選項",
                 isChecked: option.other == null ? false : true,
-                func: () => widget.bloc.checkFunc(
+                func: () => widget.bloc.checkBox(
                   "other",
                   _valueNotifier.value[lindex].options[index],
                 ),
@@ -183,7 +183,7 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
                 : CheckComb(
                     title: "必填",
                     isChecked: option.necessary,
-                    func: () => widget.bloc.checkFunc(
+                    func: () => widget.bloc.checkBox(
                       "necessary",
                       _valueNotifier.value[lindex].options[index],
                     ),
