@@ -32,14 +32,15 @@ class OrganizerLocation extends BeamLocation {
       Beamer.of(context).beamToNamed('/organizer' + url);
     }
 
-    Widget page = const Center(child: Text("page not found"));
+    Widget Function(OrganizerModel) page =
+        (o) => const Center(child: Text("page not found"));
     Uri uri = state.toRouteInformation().uri;
     if (uri.pathSegments.contains('inform')) {
-      page = InformLayout();
+      page = (o) => InformLayout();
     } else if (uri.pathSegments.contains('center')) {
-      page = Container();
+      page = (o) => Container();
     } else if (uri.pathSegments.contains('create')) {
-      page = CreateStep1Layout();
+      page = (o) => CreateStep1Layout(organizer: o);
     }
     return [
       BeamPage(
@@ -94,7 +95,7 @@ class OrganizerLocation extends BeamLocation {
                           ),
                         );
                       } else {
-                        return page;
+                        return page(organizer);
                       }
                     }
                   },

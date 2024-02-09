@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class OrganizerModel {
-  String? organizerName;
+  String? userName;
   String uid;
   String? pic;
   String? phoneNumber;
   String email;
 
   OrganizerModel({
-    this.organizerName,
+    this.userName,
     required this.uid,
     this.pic,
     required this.email,
@@ -17,7 +17,7 @@ class OrganizerModel {
 
   static Map toMap(OrganizerModel cart) {
     return {
-      "organizerName": cart.organizerName,
+      "userName": cart.userName,
       "uid": cart.uid,
       "pic": cart.pic,
       "email": cart.email,
@@ -29,7 +29,7 @@ class OrganizerModel {
     var snapshot = (snap.data()) as Map<String, dynamic>;
     // print('這是本帳用戶信息在 post.dart in model ${snapshot}');
     return OrganizerModel(
-      organizerName: snapshot['organizerName'],
+      userName: snapshot['userName'],
       uid: snapshot['uid'],
       pic: snapshot['pic'],
       email: snapshot['email'],
@@ -38,7 +38,7 @@ class OrganizerModel {
   }
 
   Map<String, dynamic> toJson() => {
-        "organizerName": organizerName,
+        "userName": userName,
         "uid": uid,
         "pic": pic,
         "email": email,
@@ -50,7 +50,7 @@ class OrganizerModel {
       return null;
     } else {
       return OrganizerModel(
-        organizerName: map['organizerName'],
+        userName: map['userName'],
         uid: map['uid'],
         pic: map['pic'],
         email: map['email'],

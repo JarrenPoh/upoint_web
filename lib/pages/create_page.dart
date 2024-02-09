@@ -7,13 +7,13 @@ class CreatePage extends StatefulWidget {
   final Widget child;
   final int step;
   final bool isWeb;
-  final Function checkFunc;
+  final Function nextStep;
   const CreatePage({
     super.key,
     required this.child,
     required this.step,
     required this.isWeb,
-    required this.checkFunc,
+    required this.nextStep,
   });
 
   @override
@@ -43,7 +43,8 @@ class _CreatePageState extends State<CreatePage> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 64),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 48, horizontal: 64),
                 child: Column(
                   children: [
                     Row(
@@ -60,9 +61,8 @@ class _CreatePageState extends State<CreatePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        widget.step == 1
-                            ? Container()
-                            : TapHoverContainer(
+                        widget.step == 2
+                            ? TapHoverContainer(
                                 padding: widget.isWeb ? 84 : 40,
                                 onTap: () {
                                   Navigator.pop(context);
@@ -72,13 +72,12 @@ class _CreatePageState extends State<CreatePage> {
                                 color: Colors.white,
                                 borderColor: primaryColor,
                                 textColor: primaryColor,
-                              ),
+                              )
+                            : Container(),
                         TapHoverContainer(
                           padding: widget.isWeb ? 84 : 40,
-                          onTap: () {
-                            widget.checkFunc();
-                          },
-                          text: "下一步",
+                          onTap: () => widget.nextStep(),
+                          text: widget.step != 3 ? "下一步" : "確定",
                           color: primaryColor,
                           hoverColor: secondColor,
                           borderColor: primaryColor,

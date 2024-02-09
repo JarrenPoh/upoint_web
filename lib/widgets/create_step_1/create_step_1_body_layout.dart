@@ -86,7 +86,7 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
                             child: widget.bloc.valueNotifier.value.photo == null
                                 ? Center(
                                     child: IconButton(
-                                      onPressed: () {},
+                                      onPressed: widget.bloc.pickImage,
                                       icon: const Icon(
                                         Icons.upload_rounded,
                                         color: Color(0xFF343434),

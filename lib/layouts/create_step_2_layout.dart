@@ -5,16 +5,21 @@ import 'package:upoint_web/bloc/create_step_2_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/globals/user_simple_preference.dart';
+import 'package:upoint_web/layouts/create_step_3_layout.dart';
 import 'package:upoint_web/models/form_model.dart';
+import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/widgets/responsive_layout.dart';
 import 'package:upoint_web/pages/create_page.dart';
 import 'package:upoint_web/widgets/create_step_2/layouts/create_step_2_left_layout.dart';
 import 'package:upoint_web/widgets/create_step_2/layouts/create_step_2_right_layout.dart';
 
 class CreateStep2Layout extends StatelessWidget {
-  CreateStep2Layout({super.key});
+  CreateStep2Layout({
+    super.key,
+    required this.organizer,
+  });
   final String getForm = UserSimplePreference.getform();
-
+  final OrganizerModel organizer;
   @override
   Widget build(BuildContext context) {
     final CreateStep2Bloc _bloc = CreateStep2Bloc(getForm.isEmpty
@@ -28,12 +33,12 @@ class CreateStep2Layout extends StatelessWidget {
     );
   }
 
-  Widget tabletLayout(BuildContext context,CreateStep2Bloc _bloc) {
+  Widget tabletLayout(BuildContext context, CreateStep2Bloc _bloc) {
     print('切換到 tabletLayout');
     return CreatePage(
       isWeb: false,
       step: 2,
-      checkFunc: () => checkFunc(context, _bloc),
+      nextStep: () => nextStep(context, _bloc),
       child: Column(
         children: [
           //左邊區塊
@@ -45,12 +50,12 @@ class CreateStep2Layout extends StatelessWidget {
     );
   }
 
-  Widget webLayout(BuildContext context,CreateStep2Bloc _bloc) {
+  Widget webLayout(BuildContext context, CreateStep2Bloc _bloc) {
     print('切換到 desktopLayout');
     return CreatePage(
       isWeb: true,
       step: 2,
-      checkFunc: () => checkFunc(context, _bloc),
+      nextStep: () => nextStep(context, _bloc),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -64,7 +69,7 @@ class CreateStep2Layout extends StatelessWidget {
     );
   }
 
-  checkFunc(BuildContext context, CreateStep2Bloc _bloc) {
+  nextStep(BuildContext context, CreateStep2Bloc _bloc) {
     String? errorText = _bloc.checkFunc();
     if (errorText != null) {
       showDialog(
@@ -98,7 +103,41 @@ class CreateStep2Layout extends StatelessWidget {
         },
       );
     } else {
-      print('success');
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: MediumText(
+              color: grey400,
+              size: 16,
+              text: "提示",
+            ),
+            content: MediumText(
+              color: grey500,
+              size: 20,
+              text: "確定發送嗎",
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: MediumText(
+                  color: grey500,
+                  size: 16,
+                  text: "確定",
+                ),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          CreateStep3Layout(organizer: organizer),
+                    ),
+                  );
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 }

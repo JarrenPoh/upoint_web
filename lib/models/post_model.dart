@@ -1,25 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PostModel {
-  String? photo;
-  String? organizerName;
-  String? title;
-  String? location;
-  String? startDate;
-  String? endDate;
-  String? startTime;
-  String? endTime;
-  String? introduction;
-  String? capacity;
-  String? content;
-  String? reward;
-  String? rewardTagId;
-  String? link;
+  String? photo; 
+  String? title; 
+  String? location; 
+  String? startDate; 
+  String? endDate; 
+  String? startTime; 
+  String? endTime; 
+  String? introduction; 
+  String? capacity; 
+  String? content; 
+  String? reward; 
+  String? rewardTagId; 
+  String? link; 
+  //以下尚未填
+  String? form;
   String? postId;
-  String? uid;
+  String? organizerUid;
+  String? organizerName;
   List? signList;
   var datePublished;
-  String? pic;
+  String? organizerPic;
 
   PostModel({
     this.photo,
@@ -38,9 +40,10 @@ class PostModel {
     this.link,
     this.postId,
     this.datePublished,
-    this.uid,
+    this.organizerUid,
     this.signList,
-    this.pic,
+    this.organizerPic,
+    this.form,
   });
 
   static Map toMap(PostModel cart) {
@@ -49,21 +52,22 @@ class PostModel {
       "organizerName": cart.organizerName,
       "title": cart.title,
       "startDate": cart.startDate,
-      "endDate":cart.endDate,
+      "endDate": cart.endDate,
       "location": cart.location,
       "startTime": cart.startTime,
       "endTime": cart.endTime,
-      "introduction":cart.introduction,
+      "introduction": cart.introduction,
       "content": cart.content,
-      "capacity":cart.capacity,
+      "capacity": cart.capacity,
       "reward": cart.reward,
       "rewardTagId": cart.rewardTagId,
       "link": cart.link,
       "postId": cart.postId,
       "datePublished": cart.datePublished,
-      "uid": cart.uid,
+      "organizerUid": cart.organizerUid,
       "signList": cart.signList,
-      "pic": cart.pic,
+      "organizerPic": cart.organizerPic,
+      "form":cart.form,
     };
   }
 
@@ -78,18 +82,19 @@ class PostModel {
       endDate: snapshot['endDate'],
       startTime: snapshot['startTime'],
       endTime: snapshot['endTime'],
-      introduction:snapshot['introduction'],
+      introduction: snapshot['introduction'],
       content: snapshot['content'],
-      capacity:snapshot['capacity'],
+      capacity: snapshot['capacity'],
       reward: snapshot['reward'],
       location: snapshot['location'],
       rewardTagId: snapshot['rewardTagId'],
       link: snapshot['link'],
       postId: snapshot['postId'],
       datePublished: snapshot['datePublished'],
-      uid: snapshot['uid'],
+      organizerUid: snapshot['organizerUid'],
       signList: snapshot['signList'],
-      pic: snapshot['pic'],
+      organizerPic: snapshot['organizerPic'],
+      form:snapshot['form'],
     );
   }
 
@@ -98,20 +103,21 @@ class PostModel {
         "organizerName": organizerName,
         "title": title,
         "startDate": startDate,
-        "endDate":endDate,
+        "endDate": endDate,
         "startTime": startTime,
         "endTime": endTime,
-        "introduction":introduction,
+        "introduction": introduction,
         "content": content,
         "reward": reward,
-        "capacity":capacity,
+        "capacity": capacity,
         "rewardTagId": rewardTagId,
         "location": location,
         "link": link,
         "postId": postId,
         "datePublished": datePublished,
-        "uid": uid,
-        "pic": pic,
+        "organizerUid": organizerUid,
+        "organizerPic": organizerPic,
+        "form":form,
       };
 
   static PostModel fromMap(Map map) {
@@ -120,20 +126,21 @@ class PostModel {
       organizerName: map['organizerName'],
       title: map['title'],
       startDate: map['startDate'],
-      endDate:map['endDate'],
+      endDate: map['endDate'],
       startTime: map['startTime'],
       endTime: map['endTime'],
       introduction: map["introduction"],
       content: map['content'],
-      capacity:map['capacity'],
+      capacity: map['capacity'],
       location: map['location'],
       reward: map['reward'],
       rewardTagId: map['rewardTagId'],
       link: map['link'],
       postId: map['postId'],
       datePublished: map['datePublished'],
-      uid: map['uid'],
-      pic: map['pic'],
+      organizerUid: map['organizerUid'],
+      organizerPic: map['organizerPic'],
+      form:map['form'],
     );
   }
 }
