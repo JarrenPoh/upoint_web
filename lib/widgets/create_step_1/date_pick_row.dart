@@ -4,18 +4,19 @@ import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/globals/regular_text.dart';
 import 'package:upoint_web/globals/time_transfer.dart';
+import 'package:upoint_web/models/post_model.dart';
 
 class DatePickRow extends StatefulWidget {
-  final String? date;
-  final String? time;
+  final PostModel post;
+  final String index;
   final bool isWeb;
   final String title;
   final Function(String) dateFunc;
   final Function(String) timeFunc;
   const DatePickRow({
     super.key,
-    required this.date,
-    required this.time,
+    required this.post,
+    required this.index,
     required this.isWeb,
     required this.title,
     required this.dateFunc,
@@ -31,18 +32,44 @@ class _DatePickRowState extends State<DatePickRow> {
   late double padLeft;
   late double padRight;
   late double height;
+  late String hintText;
   @override
   void initState() {
     super.initState();
     refresh();
     // 有編輯過
-    if (widget.date != null) {
-      dateText = widget.date;
-      selectedDate = DateFormat('yyyy-MM-dd').parse(widget.date!);
+    initSet();
+  }
+
+  initSet() {
+    String? _date;
+    String? _time;
+    switch (widget.index) {
+      case "startDate":
+        _date = widget.post.startDate;
+        _time = widget.post.startTime;
+        hintText = "活動開始時間";
+        break;
+      case "endDate":
+        _date = widget.post.endDate;
+        _time = widget.post.endTime;
+        hintText = "活動結束時間";
+
+        break;
+      case "formDate":
+        _date = widget.post.formDate;
+        _time = widget.post.formTime;
+        hintText = "報名截止時間";
+
+        break;
     }
-    if (widget.time != null) {
-      timeText = widget.time;
-      selectedTime = TimeTransfer.timeTrans02(widget.time!);
+    if (_date != null) {
+      dateText = _date;
+      selectedDate = DateFormat('yyyy-MM-dd').parse(_date);
+    }
+    if (_time != null) {
+      timeText = _time;
+      selectedTime = TimeTransfer.timeTrans02(_time);
     }
   }
 
@@ -178,7 +205,7 @@ class _DatePickRowState extends State<DatePickRow> {
                         child: RegularText(
                           color: timeText == null ? grey400 : grey500,
                           size: 16,
-                          text: timeText ?? "時間",
+                          text: timeText ?? hintText,
                         ),
                       ),
                       Container(

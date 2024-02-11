@@ -6,6 +6,8 @@ class PostModel {
   String? location;
   var startDate;
   var endDate;
+  var formDate;
+  String? formTime;
   String? startTime;
   String? endTime;
   String? introduction;
@@ -46,6 +48,8 @@ class PostModel {
     this.organizerPic,
     this.form,
     this.tags,
+    this.formDate,
+    this.formTime,
   });
 
   static Map toMap(PostModel cart) {
@@ -71,6 +75,8 @@ class PostModel {
       "organizerPic": cart.organizerPic,
       "form": cart.form,
       "tags": cart.tags,
+      "formDate":cart.formDate,
+      "formTime":cart.formTime,
     };
   }
 
@@ -99,6 +105,8 @@ class PostModel {
       organizerPic: snapshot['organizerPic'],
       form: snapshot['form'],
       tags: snapshot['tags'],
+      formDate:snapshot['formDate'],
+      formTime:snapshot['formTime'],
     );
   }
 
@@ -123,6 +131,8 @@ class PostModel {
         "organizerPic": organizerPic,
         "form": form,
         "tags": tags,
+        "formDate":formDate,
+        "formTime":formTime,
       };
 
   static PostModel fromMap(Map map) {
@@ -147,6 +157,8 @@ class PostModel {
       organizerPic: map['organizerPic'],
       form: map['form'],
       tags: map['tags'],
+      formDate:map['formDate'],
+      formTime:map['formTime'],
     );
   }
 }

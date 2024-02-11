@@ -133,22 +133,11 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
                       return Column(
                         children: [
                           const SizedBox(height: 24),
-                          // 填startTime
-                          if (type == "date0")
+                          // 時間的
+                          if (type == "date")
                             DatePickRow(
-                              time: widget.bloc.valueNotifier.value.startTime,
-                              date: widget.bloc.valueNotifier.value.startDate,
-                              isWeb: widget.isWeb,
-                              title: widget.bloc.createInformList[index]
-                                  ['title'],
-                              dateFunc: (e) => widget.bloc.dateFunc(e, index),
-                              timeFunc: (e) => widget.bloc.timeFunc(e, index),
-                            ),
-                          //填endTime
-                          if (type == "date1")
-                            DatePickRow(
-                              time: widget.bloc.valueNotifier.value.endTime,
-                              date: widget.bloc.valueNotifier.value.endDate,
+                              post: widget.bloc.valueNotifier.value,
+                              index: widget.bloc.createInformList[index]["index"],
                               isWeb: widget.isWeb,
                               title: widget.bloc.createInformList[index]
                                   ['title'],

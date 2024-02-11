@@ -77,6 +77,7 @@ class FirestoreMethods {
       post.datePublished = DateTime.now();
       post.startDate = DateFormat('yyyy-MM-dd').parse(post.startDate);
       post.endDate = DateFormat('yyyy-MM-dd').parse(post.endDate);
+      post.formDate = DateFormat('yyyy-MM-dd').parse(post.formDate);
       post.organizerName = organizer.userName;
       post.organizerPic = organizer.pic;
       post.organizerUid = organizer.uid;

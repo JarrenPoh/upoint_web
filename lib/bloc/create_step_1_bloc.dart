@@ -28,14 +28,19 @@ class CreateStep1Bloc {
       "type": "normal",
     },
     {
-      "title": "開始日期",
+      "title": "活動開始日期",
       "index": "startDate",
-      "type": "date0",
+      "type": "date",
     },
     {
-      "title": "結束日期",
+      "title": "活動結束日期",
       "index": "endDate",
-      "type": "date1",
+      "type": "date",
+    },
+    {
+      "title": "報名截止日期",
+      "index": "formDate",
+      "type": "date",
     },
     {
       "title": "活動獎勵",
@@ -171,6 +176,9 @@ class CreateStep1Bloc {
       case "endDate":
         valueNotifier.value.endDate = text;
         break;
+      case "formDate":
+        valueNotifier.value.formDate = text;
+        break;
     }
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     valueNotifier.notifyListeners();
@@ -187,6 +195,9 @@ class CreateStep1Bloc {
         break;
       case "endDate":
         valueNotifier.value.endTime = text;
+        break;
+      case "formDate":
+        valueNotifier.value.formTime = text;
         break;
     }
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
@@ -220,6 +231,10 @@ class CreateStep1Bloc {
       text = '“結束日期”尚未填寫';
     } else if (_check(post.endTime)) {
       text = '“結束時間”尚未填寫';
+    }else if (_check(post.formDate)) {
+      text = '“表單截止日期”尚未填寫';
+    } else if (_check(post.formTime)) {
+      text = '“表單截止時間”尚未填寫';
     } else if (_check(post.introduction)) {
       text = '“活動簡介”尚未填寫';
     } else if (_check(post.content)) {
