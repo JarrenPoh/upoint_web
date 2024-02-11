@@ -64,9 +64,11 @@ class CreateStep3Layout extends StatelessWidget {
             Container(
               height: 152,
               width: 152,
-              decoration:  BoxDecoration(
+              decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(isSuccess ?"assets/create_success.png":"assets/create_failed.png"),
+                  image: AssetImage(isSuccess
+                      ? "assets/create_success.png"
+                      : "assets/create_failed.png"),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -77,7 +79,7 @@ class CreateStep3Layout extends StatelessWidget {
               text: isSuccess ? "創建成功" : "創建失敗，請聯絡service.upoint@gmail.com",
             ),
             const SizedBox(height: 50),
-            LinkField(formUrl: formUrl),
+            if (isSuccess) LinkField(formUrl: formUrl),
           ],
         ),
       ),
@@ -101,9 +103,11 @@ class CreateStep3Layout extends StatelessWidget {
             Container(
               height: 152,
               width: 152,
-              decoration:  BoxDecoration(
+              decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(isSuccess ?"assets/create_success.png":"assets/create_failed.png"),
+                  image: AssetImage(isSuccess
+                      ? "assets/create_success.png"
+                      : "assets/create_failed.png"),
                   fit: BoxFit.cover,
                 ),
               ),
