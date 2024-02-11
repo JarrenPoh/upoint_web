@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:upoint_web/globals/user_simple_preference.dart';
 import 'package:upoint_web/models/post_model.dart';
 import 'package:uuid/uuid.dart';
@@ -55,7 +56,7 @@ class FirestoreMethods {
 
   //尋找
   //上傳貼文
-  Future<String> uploadPost(OrganizerModel organizer) async {
+  Future<Map> uploadPost(OrganizerModel organizer) async {
     String res = "some error occur";
     String? photoUrl;
     Uint8List file;
@@ -74,17 +75,31 @@ class FirestoreMethods {
       post.form = getForm;
       post.postId = postId;
       post.datePublished = DateTime.now();
+      post.startDate = DateFormat('yyyy-MM-dd').parse(post.startDate);
+      post.endDate = DateFormat('yyyy-MM-dd').parse(post.endDate);
       post.organizerName = organizer.userName;
       post.organizerPic = organizer.pic;
       post.organizerUid = organizer.uid;
       post.signList = [];
       await _firestore.collection('posts').doc(postId).set(post.toJson());
       res = 'success';
+      await UserSimplePreference.removeform();
+      await UserSimplePreference.removepost();
+      print('上傳成功');
     } catch (err) {
       res = err.toString();
       print(res);
     }
-    return res;
+    String? formUrl;
+    if (getForm?.substring(0, 4) == "http") {
+      formUrl = getForm;
+    } else if (getForm != null) {
+      formUrl = "https://upoint/signForm?id=$postId";
+    }
+    return {
+      "status": res,
+      "formUrl": formUrl,
+    };
   }
 
   //上傳報名表單

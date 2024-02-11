@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:upoint_web/bloc/create_step_2_bloc.dart';
+import 'package:upoint_web/bloc/create_form_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/models/option_model.dart';
 import 'package:upoint_web/widgets/create_step_2/components/drop_down_field.dart';
@@ -9,7 +9,7 @@ import 'package:upoint_web/widgets/create_step_2/components/short_field.dart';
 import 'package:upoint_web/widgets/create_step_2/components/time_field.dart';
 
 class ChoseComponents extends StatelessWidget {
-  final CreateStep2Bloc bloc;
+  final CreateFormBloc bloc;
   final int l;
   final int i;
   final OptionModel option;
@@ -31,22 +31,25 @@ class ChoseComponents extends StatelessWidget {
       case "date2002":
         _widget = LongField(
           type: option.type,
-          content: "格式：2002-09-15",
+          hintText: "格式：2002-09-15",
         );
         break;
       case "date91":
         _widget = LongField(
           type: option.type,
-          content: "格式：91-09-15",
+          hintText: "格式：91-09-15",
         );
         break;
       case "short":
-        _widget = LongField(type: option.type, content: "");
+        _widget = LongField(
+          type: option.type,
+          hintText: "小框框，簡答，只能填一行",
+        );
         break;
       case "detail":
         _widget = LongField(
           type: option.type,
-          content: "",
+          hintText: "大框框，鼓勵多字，可以換行",
         );
         break;
       case "single":
@@ -87,7 +90,7 @@ class ChoseComponents extends StatelessWidget {
       case "date":
         _widget = LongField(
           type: option.type,
-          content: "格式：91-09-15",
+          hintText: "格式：91-09-15",
         );
         break;
       case "time":
@@ -145,7 +148,7 @@ class ChoseComponents extends StatelessWidget {
             const SizedBox(height: 5),
             LongField(
               type: option.type,
-              content: "",
+              hintText: "",
             ),
             valueWidget(
               (index, attribute) {

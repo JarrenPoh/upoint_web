@@ -19,7 +19,7 @@ class QuillField extends StatefulWidget {
 }
 
 class _QuillFieldState extends State<QuillField> {
-   QuillController _controller = QuillController.basic();
+  QuillController _controller = QuillController.basic();
   bool needHint = true;
   @override
   void initState() {
@@ -70,7 +70,16 @@ class _QuillFieldState extends State<QuillField> {
           ),
           child: Stack(
             children: [
-              Container(
+              if (needHint) // Document is empty
+                const Positioned(
+                  left: 0,
+                  top: 0,
+                  child: Text(
+                    '请输入文本...',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              SizedBox(
                 height: 300,
                 child: QuillEditor.basic(
                   configurations: QuillEditorConfigurations(
@@ -82,15 +91,6 @@ class _QuillFieldState extends State<QuillField> {
                   ),
                 ),
               ),
-              if (needHint) // Document is empty
-                const Positioned(
-                  left: 0,
-                  top: 0,
-                  child: Text(
-                    '请输入文本...',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ),
             ],
           ),
         ),

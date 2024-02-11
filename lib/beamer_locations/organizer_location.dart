@@ -4,7 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
+import 'package:upoint_web/layouts/center_layout.dart';
 import 'package:upoint_web/layouts/create_step_1_layout.dart';
+import 'package:upoint_web/layouts/create_step_2_layout.dart';
+import 'package:upoint_web/layouts/create_step_3_layout.dart';
 import 'package:upoint_web/layouts/inform_layout.dart';
 import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/pages/login_page.dart';
@@ -38,9 +41,30 @@ class OrganizerLocation extends BeamLocation {
     if (uri.pathSegments.contains('inform')) {
       page = (o) => InformLayout();
     } else if (uri.pathSegments.contains('center')) {
-      page = (o) => Container();
+      page = (o) => CenterLayout(organizer: o);
     } else if (uri.pathSegments.contains('create')) {
-      page = (o) => CreateStep1Layout(organizer: o);
+      final PageController _controller = PageController();
+      jumpToPage(int i) {
+        _controller.jumpToPage(i);
+      }
+
+      page = (o) => PageView(
+            controller: _controller,
+            children: [
+              CreateStep1Layout(
+                organizer: o,
+                jumpToPage: jumpToPage,
+              ),
+              CreateStep2Layout(
+                organizer: o,
+                jumpToPage: jumpToPage,
+              ),
+              CreateStep3Layout(
+                organizer: o,
+                jumpToPage: jumpToPage,
+              ),
+            ],
+          );
     }
     return [
       BeamPage(

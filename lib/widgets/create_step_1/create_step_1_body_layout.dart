@@ -7,6 +7,7 @@ import 'package:upoint_web/models/post_model.dart';
 import 'package:upoint_web/widgets/create_step_1/capacity_row.dart';
 import 'package:upoint_web/widgets/create_step_1/date_pick_row.dart';
 import 'package:upoint_web/widgets/create_step_1/quill_field.dart';
+import 'package:upoint_web/widgets/create_step_1/tag_pick_row.dart';
 import 'package:upoint_web/widgets/underscore_textfield.dart';
 
 class CreateStep1BodyLayout extends StatefulWidget {
@@ -128,8 +129,7 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
                     (index) {
                       String? text = _initText(
                           widget.bloc.createInformList[index]["index"]);
-                      String type = _pickType(
-                          widget.bloc.createInformList[index]['index']);
+                      String type = widget.bloc.createInformList[index]['type'];
                       return Column(
                         children: [
                           const SizedBox(height: 24),
@@ -185,6 +185,46 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
               ],
             ),
             const SizedBox(height: 48),
+            // 活動標籤
+            Column(
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      color: primaryColor,
+                      width: 8,
+                      height: 29,
+                    ),
+                    const SizedBox(width: 16),
+                    MediumText(
+                      color: grey500,
+                      size: 20,
+                      text: '標籤設定',
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+                Column(
+                  children: List.generate(
+                    widget.bloc.tagList.length,
+                    (index) {
+                      Map tagMap = widget.bloc.tagList[index];
+                      initTagMap(tagMap, index);
+                      return Column(
+                        children: [
+                          TagPickRow(
+                            tagMap: tagMap,
+                            tagPick: (e) => widget.bloc.tagPick(index, e),
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 48),
             // 活動詳情
             Column(
               children: [
@@ -224,6 +264,24 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
     );
   }
 
+  initTagMap(Map tagMap, int index) {
+    (tagMap["tag"] as List).forEach((e) {
+      if (index == 0) {
+        if (e["id"] == widget.bloc.valueNotifier.value.rewardTagId) {
+          e["isChecked"] = true;
+        } else {
+          e["isChecked"] = false;
+        }
+      } else {
+        if (widget.bloc.valueNotifier.value.tags!.contains(e["index"])) {
+          e["isChecked"] = true;
+        } else {
+          e["isChecked"] = false;
+        }
+      }
+    });
+  }
+
   String? _initText(String type) {
     String? text;
     switch (type) {
@@ -239,22 +297,10 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
       case "introduction":
         text = widget.bloc.valueNotifier.value.introduction;
         break;
+      case "reward":
+        text = widget.bloc.valueNotifier.value.reward;
+        break;
     }
     return text;
-  }
-
-  String _pickType(String index) {
-    List date = ["startDate", "endDate"];
-    List normal = ["title", "location", "introduction"];
-    List capacity = ["capacity"];
-    if (date.contains(index)) {
-      int i = date.indexWhere((e) => e == index);
-      return "date$i";
-    } else if (normal.contains(index)) {
-      return "normal";
-    } else if (capacity.contains(index)) {
-      return "capacity";
-    }
-    return "";
   }
 }

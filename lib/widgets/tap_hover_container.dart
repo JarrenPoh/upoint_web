@@ -3,6 +3,7 @@ import 'package:upoint_web/globals/medium_text.dart';
 
 class TapHoverContainer extends StatefulWidget {
   final String text;
+  final double? textSize ;
   final Color color;
   final Color hoverColor;
   final Color borderColor;
@@ -18,6 +19,7 @@ class TapHoverContainer extends StatefulWidget {
     required this.textColor,
     required this.color,
     required this.onTap,
+    this.textSize = 16,
   });
 
   @override
@@ -48,7 +50,7 @@ class _TapHoverContainerState extends State<TapHoverContainer> {
         child: Center(
           child: MediumText(
             color: widget.textColor,
-            size: 16,
+            size: widget.textSize!,
             text: widget.text,
           ),
         ),

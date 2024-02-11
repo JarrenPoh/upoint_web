@@ -3,21 +3,22 @@ import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/regular_text.dart';
 
 class LongField extends StatelessWidget {
-  final String content;
+  final String hintText;
   final String type;
   const LongField({
     super.key,
     required this.type,
-    required this.content,
+    required this.hintText,
   });
 
   @override
   Widget build(BuildContext context) {
+    double height= type=="detail"?120:40;
     return Row(
       children: [
         Expanded(
           child: Container(
-            height: 48,
+            height: height,
             padding: EdgeInsets.only(left: 17, right: 11),
             decoration: BoxDecoration(
               border: Border.all(color: grey300),
@@ -29,7 +30,7 @@ class LongField extends StatelessWidget {
                 RegularText(
                   color: grey400,
                   size: 16,
-                  text: content,
+                  text: hintText,
                 ),
                 if (type == "date")
                   Icon(

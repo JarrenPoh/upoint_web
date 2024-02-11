@@ -1,355 +1,106 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:upoint_web/bloc/create_form_bloc.dart';
 import 'package:upoint_web/globals/user_simple_preference.dart';
 import 'package:upoint_web/models/form_model.dart';
-import 'package:upoint_web/models/option_model.dart';
+import 'package:upoint_web/models/organizer_model.dart';
 
 class CreateStep2Bloc {
-  late ValueNotifier<List<FormModel>> valueNotifier;
-  late final ValueNotifier<List> commonLeftValue;
-  late final ValueNotifier<List> schoolLeftValue;
-  late final ValueNotifier<List> customLeftValue;
-
+  late CreateFormBloc createFormBloc;
   CreateStep2Bloc(List<FormModel> formModel) {
-    valueNotifier = ValueNotifier(formModel);
-    commonLeftValue = ValueNotifier(commonFields);
-    schoolLeftValue = ValueNotifier(schoolFields);
-    customLeftValue = ValueNotifier(customFields);
+    createFormBloc = CreateFormBloc(formModel);
+  }
+  ValueNotifier<String> formOptionValue = ValueNotifier("form");
+  List<Map> formOptions = [
+    {
+      "text": "使用本系統表單",
+      "type": "form",
+    },
+    {
+      "text": "使用外部連結",
+      "type": "link",
+    },
+    {
+      "text": "無需報名",
+      "type": "null",
+    },
+  ];
+
+  tapOption(String type) {
+    formOptionValue.value = type;
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    formOptionValue.notifyListeners();
   }
 
-  addToForm(String feildType, OptionModel option) {
-    int _index;
-    if (feildType == "common") {
-      _index = 0;
-      if (option.type == "gender") {
-        option.body = ["男", "女"];
-      } else if (option.type == "meal") {
-        option.body = ["葷", "素"];
-      }
-    } else if (feildType == "school") {
-      _index = 1;
-    } else {
-      //加到最下面
-      _index = valueNotifier.value.length - 1;
-    }
-    //如果沒學校，先加學校
-    if (feildType == "school" && valueNotifier.value.length == 1) {
-      valueNotifier.value.add(FormModel(title: "學校相關", options: [option]));
-    } else {
-      valueNotifier.value[_index].options.add(option);
-    }
-    // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
-    valueNotifier.notifyListeners();
-    UserSimplePreference.setform(
-        jsonEncode(valueNotifier.value.map((form) => form.toJson()).toList()));
-  }
-
-  removeFromForm(Map optionMap, bool isTapDesignBlock) {
-    List<FormModel> _value = valueNotifier.value;
-    if (isTapDesignBlock) {
-      OptionModel _op = OptionModel.fromMap(optionMap);
-      for (var i = 0; i < _value.length; i++) {
-        _value[i].options.removeWhere((e) => e.type == _op.type);
-      }
-    } else {
-      _value[optionMap["lindex"]].options.removeAt(optionMap["index"]);
-    }
-    checkTitleIsEmpty(_value);
-  }
-
-  addLeftOrangeOuter(String feildType, int index) {
-    ValueNotifier<List<dynamic>> _leftValue;
-    if (feildType == "common") {
-      _leftValue = commonLeftValue;
-    } else if (feildType == "school") {
-      _leftValue = schoolLeftValue;
-    } else {
-      _leftValue = customLeftValue;
-    }
-    _leftValue.value[index]['selected'] = true;
-    // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
-    _leftValue.notifyListeners();
-  }
-
-  removeLeftOrangeOuter(String type) {
-    int index;
-    if (commonFields.any((e) => e["type"] == type)) {
-      index = commonFields.indexWhere((e) => e["type"] == type);
-      commonLeftValue.value[index]['selected'] = false;
-      // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
-      commonLeftValue.notifyListeners();
-    } else if (schoolFields.any((e) => e["type"] == type)) {
-      index = schoolFields.indexWhere((e) => e["type"] == type);
-      schoolLeftValue.value[index]['selected'] = false;
-      // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
-      schoolLeftValue.notifyListeners();
-    }
-  }
-
-  //檢查有沒有標題下面沒選項，沒選項的標題自動刪除
-  checkTitleIsEmpty(List<FormModel> _value) {
-    //檢查如果區塊下沒東西，刪掉標題
-    _value.removeWhere((e) => e.title != "基本資料" && e.options.isEmpty);
-    valueNotifier.value = _value;
-    // ignore: invalid_use_of_visible_for_testing_member,, invalid_use_of_protected_member
-    valueNotifier.notifyListeners();
-    UserSimplePreference.setform(
-        jsonEncode(valueNotifier.value.map((form) => form.toJson()).toList()));
-  }
-
-  //說明文字, 其他, 必填
-  checkBox(String type, OptionModel option) {
-    switch (type) {
-      case "explain":
-        if (option.explain == null) {
-          option.explain = "";
-        } else {
-          option.explain = null;
-        }
-        break;
-      case "other":
-        if (option.other == null) {
-          option.other = "其他..";
-        } else {
-          option.other = null;
-        }
-        break;
-      case "necessary":
-        if (option.necessary == false) {
-          option.necessary = true;
-        } else {
-          option.necessary = false;
-        }
-        break;
-      case "removeBody":
-        option.body.removeLast();
-        break;
-      case "addBody":
-        option.body.add("");
-        break;
-    }
-    // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
-    valueNotifier.notifyListeners();
-    UserSimplePreference.setform(
-        jsonEncode(valueNotifier.value.map((form) => form.toJson()).toList()));
-  }
-
-  //解釋的文字
-  Timer? debounce;
-  explainTextChanged(String text, OptionModel option) {
-    if (debounce?.isActive ?? false) debounce!.cancel();
-    debounce = Timer(const Duration(milliseconds: 500), () async {
-      option.explain = text;
-      UserSimplePreference.setform(jsonEncode(
-          valueNotifier.value.map((form) => form.toJson()).toList()));
-    });
-  }
-
-  //多選跟單選的選項文字
-  onTextChanged(String text, OptionModel option, int index) {
-    if (debounce?.isActive ?? false) debounce!.cancel();
-    debounce = Timer(const Duration(milliseconds: 500), () async {
-      option.body[index] = text;
-      UserSimplePreference.setform(jsonEncode(
-          valueNotifier.value.map((form) => form.toJson()).toList()));
-    });
-  }
-
-  //自定義formModel的標題文字
-  onTitleChanged(String text, FormModel form) {
-    if (debounce?.isActive ?? false) debounce!.cancel();
-    debounce = Timer(const Duration(milliseconds: 500), () async {
-      form.title = text;
-      UserSimplePreference.setform(jsonEncode(
-          valueNotifier.value.map((form) => form.toJson()).toList()));
-    });
+  String _link = "";
+  linkTextChanged(String text) {
+    _link = text;
   }
 
   //  檢查step2有沒有沒寫完的
   String? checkFunc() {
-    List<FormModel> formList = valueNotifier.value;
-    String? text;
-    for (var form in formList) {
-      for (var option in form.options) {
-        if (option.explain != null && option.explain == "") {
-          text = '"${option.subtitle}"的說明文字尚未填寫內容';
-          break;
-        } else if (option.type == "multi" && option.body.any((e) => e == "")) {
-          text = '"${option.subtitle}"有選項尚未填寫內容';
-          break;
-        } else if (option.type == "single" && option.body.any((e) => e == "")) {
-          text = '"${option.subtitle}"有選項尚未填寫內容';
-          break;
-        } else if (option.type == "drop_down" &&
-            option.body.any((e) => e == "")) {
-          text = '"${option.subtitle}"有選項尚未填寫內容';
-          break;
-        }
-      }
+    //確認要檢查什麼類型
+    String type = formOptionValue.value;
+    String? errorText;
+    bool _check(String? v) {
+      return v == null || v == "";
     }
-    return text;
+
+    switch (type) {
+      case "link":
+        if (_link == "") {
+          errorText = "請填寫外部報名連結";
+        }
+        break;
+      case "form":
+        List<FormModel> formList = createFormBloc.valueNotifier.value;
+        for (var form in formList) {
+          if (_check(form.title)) {
+            errorText = '大標題不能為空！';
+            break;
+          }
+          for (var option in form.options) {
+            if (_check(option.subtitle)) {
+              errorText = '"${form.title}"有副標尚未填寫內容';
+              break;
+            } else if (option.explain != null && option.explain == "") {
+              errorText = '"${option.subtitle}"的說明文字尚未填寫內容';
+              break;
+            } else if (option.type == "multi" &&
+                option.body.any((e) => _check(e))) {
+              errorText = '"${option.subtitle}"有選項尚未填寫內容';
+              break;
+            } else if (option.type == "single" &&
+                option.body.any((e) => _check(e))) {
+              errorText = '"${option.subtitle}"有選項尚未填寫內容';
+              break;
+            } else if (option.type == "drop_down" &&
+                option.body.any((e) => _check(e))) {
+              errorText = '"${option.subtitle}"有選項尚未填寫內容';
+              break;
+            }
+          }
+        }
+        break;
+    }
+    return errorText;
   }
 
-  // 初始化，如果之前有填過內容，橘色外匡耀預設出現
-  initLeftOrangeOuter() {
-    for (FormModel form in valueNotifier.value) {
-      for (OptionModel option in form.options) {
-        List _commons = commonFields.map((e) => e["type"]).toList();
-        List _schools = schoolFields.map((e) => e["type"]).toList();
-        if (_commons.contains(option.type)) {
-          int _i = _commons.indexWhere((e) => e == option.type);
-          addLeftOrangeOuter(
-            "common",
-            _i,
-          );
-        } else if (_schools.contains(option.type)) {
-          int _i = _schools.indexWhere((e) => e == option.type);
-          addLeftOrangeOuter(
-            "school",
-            _i,
-          );
-        }
-      }
+  //送出
+  confirmSend(
+    BuildContext context,
+    OrganizerModel organizer,
+    Function(int) jumpToPage,
+  ) async {
+    //確認是選什麼類型，link的話要換一下userSimplePreference
+    String type = formOptionValue.value;
+    if (type == "link") {
+      await UserSimplePreference.setform(_link);
+    } else if (type == "null") {
+      await UserSimplePreference.setform("");
     }
+    //到完成頁
+    // ignore: use_build_context_synchronously
+    Navigator.of(context).pop(true);
+    jumpToPage(2);
   }
-
-  List<Map> commonFields = [
-    {
-      "subtitle": "性別",
-      "hover": false,
-      "selected": false,
-      "type": "gender",
-    },
-    {
-      "subtitle": "身分證字號",
-      "hover": false,
-      "selected": false,
-      "type": "id",
-    },
-    {
-      "subtitle": "出生年月日(西元年)",
-      "hover": false,
-      "selected": false,
-      "type": "date2002",
-    },
-    {
-      "subtitle": "出生年月日(民國年)",
-      "hover": false,
-      "selected": false,
-      "type": "date91",
-    },
-    {
-      "subtitle": "飲食需求(葷素)",
-      "hover": false,
-      "selected": false,
-      "type": "meal",
-    },
-    {
-      "subtitle": "地址",
-      "hover": false,
-      "selected": false,
-      "type": "address",
-    },
-  ];
-
-  List fixCommon = [
-    {
-      "subtitle": "姓名",
-      "type": "username",
-    },
-    {
-      "subtitle": "聯絡電話",
-      "type": "phonenumber",
-    },
-    {
-      "subtitle": "email",
-      "type": "email",
-    },
-  ];
-
-  List<Map> schoolFields = [
-    {
-      "subtitle": "學校名稱",
-      "hover": false,
-      "selected": false,
-      "type": "school",
-    },
-    {
-      "subtitle": "學院",
-      "hover": false,
-      "selected": false,
-      "type": "department0",
-    },
-    {
-      "subtitle": "系所",
-      "hover": false,
-      "selected": false,
-      "type": "department1",
-    },
-    {
-      "subtitle": "年級",
-      "hover": false,
-      "selected": false,
-      "type": "grade",
-    },
-    {
-      "subtitle": "班級",
-      "hover": false,
-      "selected": false,
-      "type": "class",
-    },
-  ];
-
-  List<Map> customFields = [
-    {
-      "subtitle": "新增標題",
-      "hover": false,
-      "selected": false,
-      "type": "add_title",
-    },
-    {
-      "subtitle": "簡答文字",
-      "hover": false,
-      "selected": false,
-      "type": "short",
-    },
-    {
-      "subtitle": "詳答文字",
-      "hover": false,
-      "selected": false,
-      "type": "detail",
-    },
-    {
-      "subtitle": "單選項目",
-      "hover": false,
-      "selected": false,
-      "type": "single",
-    },
-    {
-      "subtitle": "複選項目",
-      "hover": false,
-      "selected": false,
-      "type": "multi",
-    },
-    {
-      "subtitle": "下拉選單",
-      "hover": false,
-      "selected": false,
-      "type": "drop_down",
-    },
-    {
-      "subtitle": "日期",
-      "hover": false,
-      "selected": false,
-      "type": "date",
-    },
-    {
-      "subtitle": "時間",
-      "hover": false,
-      "selected": false,
-      "type": "time",
-    },
-  ];
 }

@@ -4,7 +4,6 @@ import 'package:upoint_web/bloc/create_step_1_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/globals/user_simple_preference.dart';
-import 'package:upoint_web/layouts/create_step_2_layout.dart';
 import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/models/post_model.dart';
 import 'package:upoint_web/pages/create_page.dart';
@@ -13,15 +12,19 @@ import 'package:upoint_web/widgets/responsive_layout.dart';
 
 class CreateStep1Layout extends StatelessWidget {
   final OrganizerModel organizer;
+  final Function(int) jumpToPage;
   const CreateStep1Layout({
     super.key,
     required this.organizer,
+    required this.jumpToPage,
   });
   @override
   Widget build(BuildContext context) {
     String getPost = UserSimplePreference.getpost();
     final CreateStep1Bloc _bloc = CreateStep1Bloc(
-      getPost.isEmpty ? PostModel() : PostModel.fromMap(jsonDecode(getPost)),
+      getPost.isEmpty
+          ? PostModel(tags: [])
+          : PostModel.fromMap(jsonDecode(getPost)),
     );
 
     return ResponsiveLayout(
@@ -88,14 +91,7 @@ class CreateStep1Layout extends StatelessWidget {
         },
       );
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (BuildContext context) => CreateStep2Layout(
-            organizer: organizer,
-          ),
-        ),
-      );
+      jumpToPage(1);
     }
   }
 }

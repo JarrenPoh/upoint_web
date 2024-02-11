@@ -1,19 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PostModel {
-  String? photo; 
-  String? title; 
-  String? location; 
-  String? startDate; 
-  String? endDate; 
-  String? startTime; 
-  String? endTime; 
-  String? introduction; 
-  String? capacity; 
-  String? content; 
-  String? reward; 
-  String? rewardTagId; 
-  String? link; 
+  String? photo;
+  String? title;
+  String? location;
+  var startDate;
+  var endDate;
+  String? startTime;
+  String? endTime;
+  String? introduction;
+  String? capacity;
+  String? content;
+  String? reward;
+  String? rewardTagId;
+  List<dynamic>? tags;
+  String? link;
   //以下尚未填
   String? form;
   String? postId;
@@ -44,6 +45,7 @@ class PostModel {
     this.signList,
     this.organizerPic,
     this.form,
+    this.tags,
   });
 
   static Map toMap(PostModel cart) {
@@ -67,7 +69,8 @@ class PostModel {
       "organizerUid": cart.organizerUid,
       "signList": cart.signList,
       "organizerPic": cart.organizerPic,
-      "form":cart.form,
+      "form": cart.form,
+      "tags": cart.tags,
     };
   }
 
@@ -94,7 +97,8 @@ class PostModel {
       organizerUid: snapshot['organizerUid'],
       signList: snapshot['signList'],
       organizerPic: snapshot['organizerPic'],
-      form:snapshot['form'],
+      form: snapshot['form'],
+      tags: snapshot['tags'],
     );
   }
 
@@ -117,7 +121,8 @@ class PostModel {
         "datePublished": datePublished,
         "organizerUid": organizerUid,
         "organizerPic": organizerPic,
-        "form":form,
+        "form": form,
+        "tags": tags,
       };
 
   static PostModel fromMap(Map map) {
@@ -140,7 +145,8 @@ class PostModel {
       datePublished: map['datePublished'],
       organizerUid: map['organizerUid'],
       organizerPic: map['organizerPic'],
-      form:map['form'],
+      form: map['form'],
+      tags: map['tags'],
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:upoint_web/bloc/create_step_2_bloc.dart';
+import 'package:upoint_web/bloc/create_form_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/models/option_model.dart';
@@ -8,7 +8,7 @@ import 'package:upoint_web/widgets/create_step_2/components/container_with_check
 import 'package:upoint_web/widgets/mouse_grab_widget.dart';
 
 class CreateStep2RightLayout extends StatelessWidget {
-  final CreateStep2Bloc bloc;
+  final CreateFormBloc bloc;
   const CreateStep2RightLayout({
     super.key,
     required this.bloc,

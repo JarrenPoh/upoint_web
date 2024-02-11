@@ -1,6 +1,7 @@
 import 'package:beamer/beamer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:upoint_web/beamer_locations/form_location.dart';
 import 'package:upoint_web/beamer_locations/main_location.dart';
 import 'package:upoint_web/beamer_locations/organizer_location.dart';
@@ -22,7 +23,9 @@ void main() async {
     ),
   );
   await UserSimplePreference.init();
-  runApp(const MyApp());
+  initializeDateFormatting('zh_Hant_TW', null).then((_) {
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {

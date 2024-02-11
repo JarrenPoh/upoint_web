@@ -8,12 +8,14 @@ class CreatePage extends StatefulWidget {
   final int step;
   final bool isWeb;
   final Function nextStep;
+  final Function(int)? jumpToPage;
   const CreatePage({
     super.key,
     required this.child,
     required this.step,
     required this.isWeb,
     required this.nextStep,
+    this.jumpToPage,
   });
 
   @override
@@ -65,7 +67,7 @@ class _CreatePageState extends State<CreatePage> {
                             ? TapHoverContainer(
                                 padding: widget.isWeb ? 84 : 40,
                                 onTap: () {
-                                  Navigator.pop(context);
+                                  widget.jumpToPage!(0);
                                 },
                                 text: "回活動資訊",
                                 hoverColor: grey100,
@@ -77,7 +79,11 @@ class _CreatePageState extends State<CreatePage> {
                         TapHoverContainer(
                           padding: widget.isWeb ? 84 : 40,
                           onTap: () => widget.nextStep(),
-                          text: widget.step != 3 ? "下一步" : "確定",
+                          text: widget.step == 1
+                              ? "下一步"
+                              : widget.step == 2
+                                  ? "送出"
+                                  : "查看活動詳情",
                           color: primaryColor,
                           hoverColor: secondColor,
                           borderColor: primaryColor,

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:upoint_web/bloc/create_form_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/models/form_model.dart';
 import 'package:upoint_web/models/option_model.dart';
 import 'package:upoint_web/widgets/create_step_2/components/check_comb.dart';
 import 'package:upoint_web/widgets/create_step_2/components/chose_components.dart';
 
-import '../../../bloc/create_step_2_bloc.dart';
-
 class ContainerWithCheckbox extends StatefulWidget {
-  final CreateStep2Bloc bloc;
+  final CreateFormBloc bloc;
   final Map option;
   final bool fix;
   final Function(int, int)? tapDelete;
@@ -60,7 +59,7 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
         body: _valueNotifier.value[lindex].options[index].body,
       );
     }
-    titleController = TextEditingController(text: option.subtitle);
+    subTitleController = TextEditingController(text: option.subtitle);
   }
 
   late ValueNotifier<List<FormModel>> _valueNotifier;
@@ -73,11 +72,11 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
     "聯絡電話",
     "email",
   ];
-  late TextEditingController titleController;
+  late TextEditingController subTitleController;
   @override
   Widget build(BuildContext context) {
     refresh();
-    titleController = TextEditingController(text: option.subtitle);
+    subTitleController = TextEditingController(text: option.subtitle);
     return Column(
       children: [
         Row(
@@ -89,10 +88,11 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
                   color: grey500,
                 ),
               ),
+            // 小標題
             IntrinsicWidth(
               child: TextFormField(
                 keyboardType: TextInputType.text,
-                controller: titleController,
+                controller: subTitleController,
                 enabled: !enableTitle.contains(option.subtitle),
                 style: TextStyle(
                   color: grey500,
@@ -110,6 +110,10 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
                   enabledBorder: InputBorder.none,
                   disabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
+                ),
+                onChanged: (e) => widget.bloc.onSubtitleChanged(
+                  e,
+                  _valueNotifier.value[lindex].options[index],
                 ),
               ),
             ),
@@ -195,7 +199,7 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
           bloc: widget.bloc,
           l: widget.fix ? 0 : lindex,
           i: widget.fix ? 0 : index,
-          option:option,
+          option: option,
         ),
       ],
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:upoint_web/bloc/create_step_2_bloc.dart';
+import 'package:upoint_web/bloc/create_form_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/models/form_model.dart';
@@ -8,7 +8,7 @@ import 'package:upoint_web/widgets/create_step_2/components/design_block.dart';
 import 'package:upoint_web/widgets/custom_indicator.dart';
 
 class CreateStep2LeftLayout extends StatefulWidget {
-  final CreateStep2Bloc bloc;
+  final CreateFormBloc bloc;
   const CreateStep2LeftLayout({
     super.key,
     required this.bloc,
