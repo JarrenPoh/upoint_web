@@ -39,7 +39,7 @@ class OrganizerLocation extends BeamLocation {
         (o) => const Center(child: Text("page not found"));
     Uri uri = state.toRouteInformation().uri;
     if (uri.pathSegments.contains('inform')) {
-      page = (o) => InformLayout();
+      page = (o) => InformLayout(organizer: o);
     } else if (uri.pathSegments.contains('center')) {
       page = (o) => CenterLayout(organizer: o);
     } else if (uri.pathSegments.contains('create')) {
@@ -99,6 +99,8 @@ class OrganizerLocation extends BeamLocation {
                     } else {
                       OrganizerModel? organizer =
                           OrganizerModel.fromMap(snapshot.data?.data());
+                      print('拿了身份：${organizer?.toJson()}');
+
                       if (organizer == null) {
                         return Center(
                           child: Column(

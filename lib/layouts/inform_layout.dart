@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:upoint_web/bloc/inform_bloc.dart';
+import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/pages/inform_page.dart';
 import 'package:upoint_web/widgets/inform/inform_avatar_layout.dart';
 import 'package:upoint_web/widgets/inform/inform_common_layout.dart';
@@ -7,7 +8,11 @@ import 'package:upoint_web/widgets/inform/inform_contact_layout.dart';
 import 'package:upoint_web/widgets/responsive_layout.dart';
 
 class InformLayout extends StatelessWidget {
-  InformLayout({super.key});
+  final OrganizerModel organizer;
+  InformLayout({
+    super.key,
+    required this.organizer,
+  });
   final InformBloc _bloc = InformBloc();
   @override
   Widget build(BuildContext context) {
@@ -24,9 +29,9 @@ class InformLayout extends StatelessWidget {
       child: Column(
         children: [
           //頭像
-          const Row(
+          Row(
             children: [
-              InformAvatarLayout(),
+              InformAvatarLayout(organizer: organizer),
             ],
           ),
           const SizedBox(height: 30),
@@ -34,12 +39,14 @@ class InformLayout extends StatelessWidget {
           InformCommonLayout(
             list: _bloc.commonList,
             isWeb: false,
+            organizer: organizer,
           ),
           const SizedBox(height: 30),
           //第二列
           InformContactLayout(
             list: _bloc.contactList,
             isWeb: false,
+            organizer: organizer,
           ),
           const SizedBox(height: 40),
         ],
@@ -56,13 +63,14 @@ class InformLayout extends StatelessWidget {
           Row(
             children: [
               //頭像
-              const InformAvatarLayout(),
+              InformAvatarLayout(organizer: organizer),
               const SizedBox(width: 37),
               //基本資料
               Expanded(
                 child: InformCommonLayout(
                   list: _bloc.commonList,
                   isWeb: true,
+                  organizer: organizer,
                 ),
               )
             ],
@@ -72,6 +80,7 @@ class InformLayout extends StatelessWidget {
           InformContactLayout(
             list: _bloc.contactList,
             isWeb: true,
+            organizer: organizer,
           ),
           const SizedBox(height: 96),
         ],

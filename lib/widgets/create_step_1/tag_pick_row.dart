@@ -102,9 +102,9 @@ class _TagPickRowState extends State<TagPickRow> {
                                 hoverColor: _isChecked
                                     ? Color.fromRGBO(241, 231, 216, 1)
                                     : grey200,
-                                borderColor: _isChecked ? fillColor : grey100,
+                                borderColor: _isChecked ? subColor : grey100,
                                 textColor: grey500,
-                                color: _isChecked ? fillColor : grey100,
+                                color: _isChecked ? subColor : grey100,
                                 onTap: () {
                                   widget.tagPick(tagMap["tag"][index]["index"]);
                                   onTap(tagMap["tag"][index]["index"]);

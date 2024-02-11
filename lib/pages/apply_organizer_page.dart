@@ -1,26 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:upoint_web/bloc/inform_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/custom_snackbars.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
 
-class InformPage extends StatefulWidget {
+class ApplyOrganizerPage extends StatefulWidget {
   final bool isWeb;
-  final InformBloc bloc;
   final Widget child;
-  const InformPage({
+  const ApplyOrganizerPage({
     super.key,
     required this.isWeb,
-    required this.bloc,
     required this.child,
   });
 
   @override
-  State<InformPage> createState() => _InformPageState();
+  State<ApplyOrganizerPage> createState() => _ApplyOrganizerPageState();
 }
 
-class _InformPageState extends State<InformPage> {
+class _ApplyOrganizerPageState extends State<ApplyOrganizerPage> {
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -69,7 +66,7 @@ class _InformPageState extends State<InformPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       TapHoverContainer(
-                        text: "編輯個資",
+                        text: "提交申請",
                         padding: widget.isWeb ? 84 : 22,
                         hoverColor: secondColor,
                         borderColor: Colors.transparent,

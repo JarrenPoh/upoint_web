@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:upoint_web/color.dart';
+import 'package:upoint_web/globals/custom_snackbars.dart';
 import 'package:upoint_web/globals/regular_text.dart';
 
 import '../../tap_hover_container.dart';
@@ -32,24 +33,7 @@ class _LinkFieldState extends State<LinkField> {
     });
     Clipboard.setData(ClipboardData(text: text)).then((_) {
       // 显示复制成功的提示
-      ScaffoldMessenger.of(context).showSnackBar(
-         SnackBar(
-          content:const Text(
-            '复制成功',
-            style: TextStyle(
-              fontSize: 16.0,
-              color: Colors.white,
-            ),
-          ),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          margin: EdgeInsets.all(10),
-          duration: Duration(seconds: 1),
-        ),
-      );
+      Messenger.snackBar(context, "複製成功");
     });
   }
 

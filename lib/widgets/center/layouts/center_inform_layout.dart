@@ -55,7 +55,7 @@ class _CenterInformLayoutState extends State<CenterInformLayout> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: fillColor,
+              color: subColor,
               borderRadius: BorderRadius.circular(5),
             ),
             child: MediumText(

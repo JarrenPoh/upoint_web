@@ -8,4 +8,4 @@ var grey400 = Color(0xFF9D9D9D);
 var grey500 = Color(0xFF343434);
 var primaryColor = Color(0xFFF8791D);
 var secondColor = Color(0xFFFB9348);
-var fillColor = Color(0xFFFFF5E7);
+var subColor = Color(0xFFFFF5E7);
