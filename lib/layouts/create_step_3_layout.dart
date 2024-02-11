@@ -22,7 +22,7 @@ class CreateStep3Layout extends StatelessWidget {
     return FutureBuilder<Map>(
         future: FirestoreMethods().uploadPost(organizer),
         builder: (context, snapshot) {
-          bool isSuccess = snapshot.data?["success"] == "success";
+          bool isSuccess = snapshot.data?["status"] == "success";
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: SizedBox(
