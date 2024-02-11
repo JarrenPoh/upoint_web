@@ -31,7 +31,7 @@ class _ProgressStepWidgetState extends State<ProgressStepWidget> {
                 (index) {
                   return Row(
                     children: [
-                      circleWidget(index, widget.iniStep),
+                      circleWidget(index, widget.iniStep-1),
                       if (index != 2)
                         Container(
                           margin: EdgeInsets.symmetric(horizontal: 16),
