@@ -92,7 +92,7 @@ class _LinkFieldState extends State<LinkField> {
               borderColor: Colors.white,
               textColor: isTap ? grey400 : secondColor,
               color: Colors.white,
-              onTap: () => copyToClipboard("", context)),
+              onTap: () => copyToClipboard(controller.text, context)),
         ],
       ),
     );
