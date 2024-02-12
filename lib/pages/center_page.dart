@@ -30,7 +30,6 @@ class _CenterPageState extends State<CenterPage> {
             padding: const EdgeInsets.symmetric(vertical: 48),
             child: Container(
               width: widget.isWeb ? 1076 : 543,
-              height: 1200,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -56,7 +55,6 @@ class _CenterPageState extends State<CenterPage> {
                     ),
                     child: widget.child,
                   ),
-                  const Expanded(child: Column(children: [])),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 60,

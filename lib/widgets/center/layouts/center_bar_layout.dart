@@ -41,6 +41,7 @@ class _CenterBarLayoutState extends State<CenterBarLayout> {
         percent: 0.5,
         center: outSideForm
             ? Column(
+              mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   RegularText(
                     color: grey500,
