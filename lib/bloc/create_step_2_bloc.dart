@@ -96,7 +96,7 @@ class CreateStep2Bloc {
     if (type == "link") {
       await UserSimplePreference.setform(_link);
     } else if (type == "null") {
-      await UserSimplePreference.setform("");
+      await UserSimplePreference.setform("null");
     }
     //到完成頁
     // ignore: use_build_context_synchronously

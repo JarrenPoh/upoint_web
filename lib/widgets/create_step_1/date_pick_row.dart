@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:upoint_web/color.dart';
+import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/globals/regular_text.dart';
 import 'package:upoint_web/globals/time_transfer.dart';
@@ -11,16 +12,14 @@ class DatePickRow extends StatefulWidget {
   final String index;
   final bool isWeb;
   final String title;
-  final Function(String) dateFunc;
-  final Function(String) timeFunc;
+  final Function(String?, String?) dateTimeFunc;
   const DatePickRow({
     super.key,
     required this.post,
     required this.index,
     required this.isWeb,
     required this.title,
-    required this.dateFunc,
-    required this.timeFunc,
+    required this.dateTimeFunc,
   });
 
   @override
@@ -44,24 +43,31 @@ class _DatePickRowState extends State<DatePickRow> {
   initSet() {
     String? _date;
     String? _time;
+    List _list = [];
     switch (widget.index) {
       case "startDate":
-        _date = widget.post.startDate;
-        _time = widget.post.startTime;
+        if (widget.post.startDateTime != null) {
+          _list = (widget.post.startDateTime as String).split('/');
+        }
         hintText = "活動開始時間";
         break;
       case "endDate":
-        _date = widget.post.endDate;
-        _time = widget.post.endTime;
+        if (widget.post.endDateTime != null) {
+          _list = (widget.post.endDateTime as String).split('/');
+        }
         hintText = "活動結束時間";
 
         break;
       case "formDate":
-        _date = widget.post.formDate;
-        _time = widget.post.formTime;
+        if (widget.post.formDateTime != null) {
+          _list = (widget.post.formDateTime as String).split('/');
+        }
         hintText = "報名截止時間";
-
         break;
+    }
+    if (_list.isNotEmpty) {
+      _date = _list[0];
+      _time = _list[1];
     }
     if (_date != null) {
       dateText = _date;
@@ -80,64 +86,31 @@ class _DatePickRowState extends State<DatePickRow> {
     height = 38;
   }
 
-  List hintList = ["時", "分", "PM"];
+  // 選日期
   DateTime? selectedDate;
   String? dateText;
   Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2024),
-      lastDate: DateTime(2100),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: primaryColor,
-              onPrimary: Colors.white,
-              onSurface: Colors.black,
-            ),
-            dialogBackgroundColor: Colors.white,
-          ),
-          child: child!,
-        );
-      },
-    );
+    final DateTime? picked = await Messenger.selectDate(context, selectedDate);
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
         dateText = DateFormat('yyyy-MM-dd').format(selectedDate!);
       });
-      widget.dateFunc(dateText!);
+      widget.dateTimeFunc(dateText, timeText);
     }
   }
 
+  //選時間
   TimeOfDay? selectedTime;
   String? timeText;
   Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: selectedTime ?? TimeOfDay.now(),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
-              primary: primaryColor,
-              onPrimary: Colors.white,
-              onSurface: Colors.black,
-            ),
-            dialogBackgroundColor: Colors.white,
-          ),
-          child: child!,
-        );
-      },
-    );
+    final TimeOfDay? picked = await Messenger.selectTime(context, selectedTime);
     if (picked != null && picked != selectedTime) {
       setState(() {
         selectedTime = picked;
         timeText = TimeTransfer.timeTrans01(context, selectedTime!);
       });
-      widget.timeFunc(timeText!);
+      widget.dateTimeFunc(dateText, timeText);
     }
   }
 

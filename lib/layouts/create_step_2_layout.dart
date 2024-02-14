@@ -2,8 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:upoint_web/bloc/create_step_2_bloc.dart';
-import 'package:upoint_web/color.dart';
-import 'package:upoint_web/globals/medium_text.dart';
+import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/globals/user_simple_preference.dart';
 import 'package:upoint_web/models/form_model.dart';
 import 'package:upoint_web/models/organizer_model.dart';
@@ -25,11 +24,9 @@ class CreateStep2Layout extends StatelessWidget {
   final OrganizerModel organizer;
   @override
   Widget build(BuildContext context) {
-    final CreateStep2Bloc _bloc = CreateStep2Bloc(getForm.isEmpty
-        ? [FormModel(title: "基本資料", options: [])]
-        : (jsonDecode(getForm) as List)
-            .map((jsonItem) => FormModel.fromMap(jsonItem))
-            .toList());
+    final CreateStep2Bloc _bloc = CreateStep2Bloc((jsonDecode(getForm) as List)
+        .map((jsonItem) => FormModel.fromMap(jsonItem))
+        .toList());
     return ResponsiveLayout(
       tabletLayout: tabletLayout(context, _bloc),
       webLayout: webLayout(context, _bloc),
@@ -83,68 +80,19 @@ class CreateStep2Layout extends StatelessWidget {
     );
   }
 
-  nextStep(BuildContext context, CreateStep2Bloc _bloc) {
+  nextStep(BuildContext context, CreateStep2Bloc _bloc) async {
     String? errorText = _bloc.checkFunc();
     if (errorText != null) {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: MediumText(
-              color: grey400,
-              size: 16,
-              text: "有欄位尚未填寫完畢",
-            ),
-            content: MediumText(
-              color: grey500,
-              size: 20,
-              text: errorText,
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: MediumText(
-                  color: grey500,
-                  size: 16,
-                  text: "確定",
-                ),
-                onPressed: () {
-                  // ... 执行删除操作
-                  Navigator.of(context).pop(true); //关闭对话框
-                },
-              ),
-            ],
-          );
-        },
-      );
+      Messenger.dialog("有欄位尚未填寫完畢", errorText, context);
     } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: MediumText(
-              color: grey400,
-              size: 16,
-              text: "提示",
-            ),
-            content: MediumText(
-              color: grey500,
-              size: 20,
-              text: "確定發送嗎",
-            ),
-            actions: <Widget>[
-              TextButton(
-                child: MediumText(
-                  color: grey500,
-                  size: 16,
-                  text: "確定",
-                ),
-                onPressed: () =>
-                    _bloc.confirmSend(context, organizer, jumpToPage),
-              ),
-            ],
-          );
-        },
+      String res = await Messenger.dialog(
+        "提示",
+        "確定發送嗎",
+        context,
       );
+      if (res == "success") {
+        _bloc.confirmSend(context, organizer, jumpToPage);
+      }
     }
   }
 }

@@ -2,7 +2,7 @@ import 'package:beamer/beamer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:upoint_web/beamer_locations/form_location.dart';
+import 'package:upoint_web/beamer_locations/sign_form_location.dart';
 import 'package:upoint_web/beamer_locations/main_location.dart';
 import 'package:upoint_web/beamer_locations/organizer_location.dart';
 import 'package:upoint_web/color.dart';
@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         locationBuilder: BeamerLocationBuilder(
           beamLocations: [
             MainLocation(),
-            FormLocation(),
+            SignFormLocation(),
             OrganizerLocation(),
           ],
         ),

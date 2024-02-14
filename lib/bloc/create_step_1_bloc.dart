@@ -104,7 +104,7 @@ class CreateStep1Bloc {
 
   void onTextChanged(String? text, int index) {
     if (debounce01?.isActive ?? false) debounce01!.cancel();
-    debounce01 = Timer(const Duration(milliseconds: 500), () async {
+    debounce01 = Timer(const Duration(milliseconds: 250), () async {
       String _type = createInformList[index]["index"];
       switch (_type) {
         case "title":
@@ -157,7 +157,7 @@ class CreateStep1Bloc {
   Timer? debounce02;
   onQuillChanged(Delta delta) {
     if (debounce01?.isActive ?? false) debounce01!.cancel();
-    debounce01 = Timer(const Duration(milliseconds: 500), () async {
+    debounce01 = Timer(const Duration(milliseconds: 250), () async {
       String json = jsonEncode(delta.toJson());
       valueNotifier.value.content = json;
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
@@ -167,18 +167,16 @@ class CreateStep1Bloc {
     });
   }
 
-  dateFunc(String text, int index) async {
+  dateTimeFunc(String? dateText, String? timeText, int index) async {
     String _type = createInformList[index]["index"];
     switch (_type) {
       case "startDate":
-        valueNotifier.value.startDate = text;
+        valueNotifier.value.startDateTime = "$dateText/$timeText";
         break;
       case "endDate":
-        valueNotifier.value.endDate = text;
-        break;
+        valueNotifier.value.endDateTime = "$dateText/$timeText";
       case "formDate":
-        valueNotifier.value.formDate = text;
-        break;
+        valueNotifier.value.formDateTime = "$dateText/$timeText";
     }
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     valueNotifier.notifyListeners();
@@ -187,33 +185,43 @@ class CreateStep1Bloc {
     );
   }
 
-  timeFunc(String text, int index) async {
-    String _type = createInformList[index]["index"];
-    switch (_type) {
-      case "startDate":
-        valueNotifier.value.startTime = text;
-        break;
-      case "endDate":
-        valueNotifier.value.endTime = text;
-        break;
-      case "formDate":
-        valueNotifier.value.formTime = text;
-        break;
-    }
-    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-    valueNotifier.notifyListeners();
-    await UserSimplePreference.setpost(
-      jsonEncode(PostModel.toMap(valueNotifier.value)),
-    );
-  }
+  // timeFunc(String text, int index) async {
+  //   String _type = createInformList[index]["index"];
+  //   switch (_type) {
+  //     case "startDate":
+  //       valueNotifier.value.startTime = text;
+  //       break;
+  //     case "endDate":
+  //       valueNotifier.value.endTime = text;
+  //       break;
+  //     case "formDate":
+  //       valueNotifier.value.formTime = text;
+  //       break;
+  //   }
+  //   // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+  //   valueNotifier.notifyListeners();
+  //   await UserSimplePreference.setpost(
+  //     jsonEncode(PostModel.toMap(valueNotifier.value)),
+  //   );
+  // }
 
-  //  檢查step1有沒有沒寫完的
+  //  檢查step1有沒有沒寫完的˝
   String? checkFunc() {
     PostModel post = valueNotifier.value;
     String? text;
     bool _check(String? v) {
-      return v == null || v == "";
+      return v == null || v == "" || v == "null";
     }
+
+    List _startList = post.startDateTime == null
+        ? ["", ""]
+        : (post.startDateTime as String).split('/');
+    List _endList = post.endDateTime == null
+        ? ["", ""]
+        : (post.endDateTime as String).split('/');
+    List _formList = post.formDateTime == null
+        ? ["", ""]
+        : (post.formDateTime as String).split('/');
 
     if (_check(post.photo)) {
       text = '“照片”尚未填寫';
@@ -223,17 +231,17 @@ class CreateStep1Bloc {
       text = '“不限人數”尚未填寫';
     } else if (_check(post.location)) {
       text = '“活動地點”尚未填寫';
-    } else if (_check(post.startDate)) {
+    } else if (_check(_startList[0])) {
       text = '“開始日期”尚未填寫';
-    } else if (_check(post.startTime)) {
+    } else if (_check(_startList[1])) {
       text = '“開始時間”尚未填寫';
-    } else if (_check(post.endDate)) {
+    } else if (_check(_endList[0])) {
       text = '“結束日期”尚未填寫';
-    } else if (_check(post.endTime)) {
+    } else if (_check(_endList[1])) {
       text = '“結束時間”尚未填寫';
-    }else if (_check(post.formDate)) {
+    } else if (_check(_formList[0])) {
       text = '“表單截止日期”尚未填寫';
-    } else if (_check(post.formTime)) {
+    } else if (_check(_formList[1])) {
       text = '“表單截止時間”尚未填寫';
     } else if (_check(post.introduction)) {
       text = '“活動簡介”尚未填寫';

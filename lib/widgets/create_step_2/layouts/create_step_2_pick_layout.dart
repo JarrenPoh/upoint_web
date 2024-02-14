@@ -3,6 +3,7 @@ import 'package:upoint_web/bloc/create_step_2_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/globals/regular_text.dart';
+import 'package:upoint_web/widgets/create_step_1/date_pick_row.dart';
 
 class CreateStep2PickLayout extends StatefulWidget {
   final CreateStep2Bloc bloc;
@@ -211,6 +212,44 @@ class _CreateStep2PickLayoutState extends State<CreateStep2PickLayout> {
       ),
     );
   }
+
+  // Widget formDate() {
+  //   return Container(
+  //     width: 948,
+  //     height: 144,
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(10),
+  //       border: Border.all(color: grey300),
+  //     ),
+  //     child: Column(
+  //       children: [
+  //         Container(
+  //           height: 59,
+  //           decoration: BoxDecoration(
+  //             borderRadius: const BorderRadius.vertical(
+  //               top: Radius.circular(10),
+  //             ),
+  //             color: grey100,
+  //           ),
+  //           child: Center(
+  //             child: MediumText(
+  //               color: grey500,
+  //               size: 18,
+  //               text: '報名表單選項',
+  //             ),
+  //           ),
+  //         ),
+  //         DatePickRow(
+  //           post: post,
+  //           index: index,
+  //           isWeb: isWeb,
+  //           title: title,
+  //           dateTimeFunc: dateTimeFunc,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget nullField() {
     return SizedBox(

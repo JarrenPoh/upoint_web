@@ -32,7 +32,6 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
 
   @override
   void dispose() {
-    widget.bloc.debounce?.cancel();
     super.dispose();
   }
 

@@ -15,6 +15,7 @@ import 'package:upoint_web/widgets/custom_navigation_bar.dart';
 
 class OrganizerLocation extends BeamLocation {
   List<String> get pathBlueprints => [
+        '/organizer',
         '/organizer/inform',
         '/organizer/center',
         '/organizer/create',
@@ -38,6 +39,10 @@ class OrganizerLocation extends BeamLocation {
     Widget Function(OrganizerModel) page =
         (o) => const Center(child: Text("page not found"));
     Uri uri = state.toRouteInformation().uri;
+    if (uri.pathSegments.length == 1 && uri.pathSegments.first == 'organizer') {
+      Beamer.of(context).beamToNamed('/organizer/inform');
+      return []; // Return an empty list as beamToNamed will handle navigation
+    }
     if (uri.pathSegments.contains('inform')) {
       page = (o) => InformLayout(organizer: o);
     } else if (uri.pathSegments.contains('center')) {
@@ -50,6 +55,7 @@ class OrganizerLocation extends BeamLocation {
 
       page = (o) => PageView(
             controller: _controller,
+            physics: const NeverScrollableScrollPhysics(),
             children: [
               CreateStep1Layout(
                 organizer: o,

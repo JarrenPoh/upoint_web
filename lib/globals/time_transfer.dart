@@ -22,40 +22,37 @@ class TimeTransfer {
       final int minute = int.parse(match.group(2)!);
       final String period = match.group(3)!;
 
-      // 转换小时数到24小时制
       int hourIn24 =
           period.toUpperCase() == 'PM' ? (hour % 12) + 12 : hour % 12;
 
       return TimeOfDay(hour: hourIn24, minute: minute);
     }
-    return null; // 如果无法解析，返回 null
+    return null;
   }
 
   //firebase TimeStamp to 113/2/19（周一）
-  static String formatTimestampToROC(Timestamp timestamp) {
+  static String timeTrans03(Timestamp timestamp) {
     // 將Timestamp轉換為DateTime
     DateTime dateTime = timestamp.toDate();
-
-    // 民國年份是西元年份減去1911
     int rocYear = dateTime.year - 1911;
-
-    // 使用intl包格式化月份和日期
     String formattedDate = DateFormat('M/d').format(dateTime);
-
-    // 獲取星期，並將"星期"轉換為單一字（如星期一轉為"一"）
     String weekday = DateFormat('E', 'zh').format(dateTime).replaceAll('週', '');
-
-    // 組合成最終格式
     return '$rocYear/$formattedDate（$weekday）';
   }
 
-  //1:20PM -> 13:20
-  static String timeTrans03(String timeString) {
-    DateFormat inputFormat = DateFormat("h:mm a");
+  //firebase TimeStamp to 13:20
+  static String timeTrans04(Timestamp timestamp) {
+    DateTime dateTime = timestamp.toDate();
     DateFormat outputFormat = DateFormat("HH:mm");
-
-    DateTime time = inputFormat.parse(timeString);
-    String convertedTime = outputFormat.format(time);
+    String convertedTime = outputFormat.format(dateTime);
     return convertedTime;
+  }
+
+  //DateTime -> 91-09-15
+  static String convertToROC(DateTime date) {
+    // 计算民国年份
+    int rocYear = date.year - 1911;
+    // 格式化为 "民國年-MM-dd"
+    return '民國${rocYear}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 }

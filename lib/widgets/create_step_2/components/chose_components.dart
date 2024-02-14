@@ -95,6 +95,7 @@ class ChoseComponents extends StatelessWidget {
         break;
       case "time":
         _widget = const TimeField();
+        break;
       case "gender":
         _valueWidget = (index, attribute) => ShortField(
               attribute: attribute,

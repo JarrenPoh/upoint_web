@@ -13,7 +13,7 @@ class LongField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double height= type=="detail"?120:40;
+    double height = type == "detail" ? 120 : 48;
     return Row(
       children: [
         Expanded(

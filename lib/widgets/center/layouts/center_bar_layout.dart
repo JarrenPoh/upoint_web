@@ -62,13 +62,13 @@ class _CenterBarLayoutState extends State<CenterBarLayout> {
                       ? MediumText(
                           color: grey500,
                           size: 14,
-                          text: "${widget.post.signList?.length ?? 0}人",
+                          text: "${widget.post.signFormsLength}人",
                         )
                       : MediumText(
                           color: grey500,
                           size: 14,
                           text:
-                              "${widget.post.signList?.length ?? 0}/${widget.post.capacity}",
+                              "${widget.post.signFormsLength}/${widget.post.capacity}",
                         ),
                 ],
               ),

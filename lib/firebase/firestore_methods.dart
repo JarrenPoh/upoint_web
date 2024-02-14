@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:upoint_web/globals/user_simple_preference.dart';
 import 'package:upoint_web/models/post_model.dart';
+import 'package:upoint_web/models/sign_form_model.dart';
 import 'package:uuid/uuid.dart';
 import '../models/organizer_model.dart';
 import '../models/user_model.dart';
@@ -58,11 +59,12 @@ class FirestoreMethods {
   //上傳貼文
   Future<Map> uploadPost(OrganizerModel organizer) async {
     String res = "some error occur";
+    String? formUrl;
     String? photoUrl;
     Uint8List file;
     String postId = const Uuid().v1();
     String getPost = UserSimplePreference.getpost();
-    String? getForm = UserSimplePreference.getform() == ""
+    String? getForm = UserSimplePreference.getform() == "null"
         ? null
         : UserSimplePreference.getform();
     PostModel post = PostModel.fromMap(jsonDecode(getPost));
@@ -75,27 +77,32 @@ class FirestoreMethods {
       post.form = getForm;
       post.postId = postId;
       post.datePublished = DateTime.now();
-      post.startDate = DateFormat('yyyy-MM-dd').parse(post.startDate);
-      post.endDate = DateFormat('yyyy-MM-dd').parse(post.endDate);
-      post.formDate = DateFormat('yyyy-MM-dd').parse(post.formDate);
+      post.startDateTime =
+          DateFormat("yyyy-MM-dd/h:mm a").parse(post.startDateTime);
+      post.endDateTime =
+          DateFormat("yyyy-MM-dd/h:mm a").parse(post.endDateTime);
+      post.formDateTime =
+          DateFormat("yyyy-MM-dd/h:mm a").parse(post.formDateTime);
       post.organizerName = organizer.username;
       post.organizerPic = organizer.pic;
       post.organizerUid = organizer.uid;
-      post.signList = [];
+      post.signFormsLength = 0;
       await _firestore.collection('posts').doc(postId).set(post.toJson());
       res = 'success';
       await UserSimplePreference.removeform();
       await UserSimplePreference.removepost();
       print('上傳成功');
+      print('here1:$getForm');
+      if (getForm == null) {
+        formUrl = null;
+      } else if (getForm.substring(0, 4) == "http") {
+        formUrl = getForm;
+      } else {
+        formUrl = "https://upoint/signForm?id=$postId";
+      }
     } catch (err) {
       res = err.toString();
       print(res);
-    }
-    String? formUrl;
-    if (getForm?.substring(0, 4) == "http") {
-      formUrl = getForm;
-    } else if (getForm != null) {
-      formUrl = "https://upoint/signForm?id=$postId";
     }
     return {
       "status": res,
@@ -104,25 +111,36 @@ class FirestoreMethods {
   }
 
   //上傳報名表單
-  // Future<String> uploadForm(PostModel post, OrganModel organizer) async {
-  //   String res = "some error occur";
-  //   String? photoUrl;
-  //   Uint8List? file;
-  //   String postId = const Uuid().v1();
-  //   try {
-  //     file = await post.photos!.first;
-  //     photoUrl = await StorageMethods()
-  //         .uploadImageToStorage('posts', file!, true, postId);
-  //     post.photos!.first = photoUrl;
-  //     post.postId = postId;
-  //     post.datePublished = DateTime.now();
-  //     post.uid = organizer.uid;
-  //     post.pic = organizer.pic;
-  //     await _firestore.collection('posts').doc(postId).set(post.toJson());
-  //     res = 'success';
-  //   } catch (err) {
-  //     res = err.toString();
-  //   }
-  //   return res;
-  // }
+  Future<String> uploadSignForm(UserModel user, String postId) async {
+    String res = "some error occur";
+    String signFormId = const Uuid().v1();
+    String getSignFormBody = UserSimplePreference.getSignForm();
+    try {
+      //以下尚未填過
+      SignFormModel signForm = SignFormModel(
+        uuid: user.uuid,
+        fcmToken: user.fcmToken,
+        body: getSignFormBody,
+        datePublished: DateTime.now(),
+        signFormId: signFormId,
+      );
+      // 上傳到posts collection下的signForms collection
+      await _firestore
+          .collection('posts')
+          .doc(postId)
+          .collection('signForms')
+          .doc(signFormId)
+          .set(signForm.toJson());
+      // 幫posts文件的signFormsLength加一
+      await _firestore.collection('posts').doc(postId).update({
+        "signFormsLength": FieldValue.increment(1),
+      });
+      res = 'success';
+      await UserSimplePreference.removeSignForm();
+    } catch (err) {
+      res = err.toString();
+      print('err${err.toString()}');
+    }
+    return res;
+  }
 }

@@ -45,4 +45,30 @@ class AuthMethods {
     }
     return res;
   }
+
+  Future<DocumentSnapshot?> getUserData() async {
+    int retries = 0;
+    while (retries < 3) {
+      try {
+        print("索取使用者的firestore");
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get();
+        if (userDoc.exists) {
+          return userDoc; // 如果找到資料，則將其發送給 StreamBuilder
+        } else {
+          // 如果未找到資料，等待兩秒後重試
+          await Future.delayed(Duration(seconds: 2));
+          retries++;
+        }
+      } catch (e) {
+        print(e);
+        await Future.delayed(Duration(seconds: 2));
+        retries++;
+      }
+    }
+    return null;
+    // 如果重試三次後仍未找到資料，發送一個包含錯誤的 DocumentSnapshot
+  }
 }

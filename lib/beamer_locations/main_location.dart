@@ -42,7 +42,7 @@ class MainLocation extends BeamLocation {
             preferredSize: Size(screenSize.width, 80),
             child: Container()
           ),
-          body: page,
+          body: SingleChildScrollView(child: page),
         ),
       )
     ];

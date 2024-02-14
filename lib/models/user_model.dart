@@ -28,11 +28,11 @@ class UserModel {
         "uuid": uuid,
         "username": username,
         "studentID": studentID,
-        "className":className,
+        "className": className,
         "phoneNumber": phoneNumber,
         "fcmToken": fcmToken,
-        "signList":signList,
-        "pic":pic,
+        "signList": signList,
+        "pic": pic,
       };
 
   static UserModel fromSnap(DocumentSnapshot snap) {
@@ -46,8 +46,26 @@ class UserModel {
       className: snapshot['className'],
       phoneNumber: snapshot['phoneNumber'],
       fcmToken: snapshot['fcmToken'],
-      signList:snapshot['signList'],
+      signList: snapshot['signList'],
       pic: snapshot['pic'],
     );
+  }
+
+  static UserModel? fromMap(Map? map) {
+    if (map == null) {
+      return null;
+    } else {
+      return UserModel(
+      email: map['email'],
+      uuid: map['uuid'],
+      username: map['username'],
+      studentID: map['studentID'],
+      className: map['className'],
+      phoneNumber: map['phoneNumber'],
+      fcmToken: map['fcmToken'],
+      signList: map['signList'],
+      pic: map['pic'],
+      );
+    }
   }
 }

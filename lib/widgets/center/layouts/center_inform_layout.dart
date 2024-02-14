@@ -31,14 +31,14 @@ class _CenterInformLayoutState extends State<CenterInformLayout> {
     } else if (widget.post.form != null) {
       formUrl = "https://upoint/signForm?id=${widget.post.postId}";
     }
-    String _start = TimeTransfer.formatTimestampToROC(widget.post.startDate);
-    String _end = TimeTransfer.formatTimestampToROC(widget.post.endDate);
+    String _start = TimeTransfer.timeTrans03(widget.post.startDateTime);
+    String _end = TimeTransfer.timeTrans03(widget.post.endDateTime);
     if (_start == _end) {
       dateDuration =
-          "$_start${TimeTransfer.timeTrans03(widget.post.startTime!)} ~ ${TimeTransfer.timeTrans03(widget.post.endTime!)}";
+          "$_start${TimeTransfer.timeTrans04(widget.post.startDateTime!)} ~ ${TimeTransfer.timeTrans04(widget.post.endDateTime!)}";
     } else {
       dateDuration =
-          "$_start${TimeTransfer.timeTrans03(widget.post.startTime!)} ~ $_end${TimeTransfer.timeTrans03(widget.post.endTime!)}";
+          "$_start${TimeTransfer.timeTrans04(widget.post.startDateTime!)} ~ $_end${TimeTransfer.timeTrans04(widget.post.endDateTime!)}";
     }
   }
 

@@ -26,8 +26,6 @@ class CreateStep1BodyLayout extends StatefulWidget {
 class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
   @override
   void dispose() {
-    widget.bloc.debounce01?.cancel();
-    widget.bloc.debounce02?.cancel();
     super.dispose();
   }
 
@@ -137,12 +135,13 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
                           if (type == "date")
                             DatePickRow(
                               post: widget.bloc.valueNotifier.value,
-                              index: widget.bloc.createInformList[index]["index"],
+                              index: widget.bloc.createInformList[index]
+                                  ["index"],
                               isWeb: widget.isWeb,
                               title: widget.bloc.createInformList[index]
                                   ['title'],
-                              dateFunc: (e) => widget.bloc.dateFunc(e, index),
-                              timeFunc: (e) => widget.bloc.timeFunc(e, index),
+                              dateTimeFunc: (e, ee) =>
+                                  widget.bloc.dateTimeFunc(e, ee, index),
                             ),
                           //填名額的
                           if (type == "capacity")

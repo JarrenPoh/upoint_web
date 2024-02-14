@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:upoint_web/bloc/inform_bloc.dart';
 import 'package:upoint_web/color.dart';
-import 'package:upoint_web/globals/custom_snackbars.dart';
+import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
 

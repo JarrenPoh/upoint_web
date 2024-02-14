@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/form_model.dart';
 
 class UserSimplePreference {
   static SharedPreferences? _preferences;
 
   static const _post = 'post';
   static const _form = 'form';
+  static const _signForm = 'signForm';
 
   static Future init() async =>
       _preferences = await SharedPreferences.getInstance();
@@ -34,6 +39,23 @@ class UserSimplePreference {
   }
 
   static String getform() {
-    return _preferences?.getString(_form) ?? "";
+    return _preferences?.getString(_form) ??
+        jsonEncode([FormModel(title: "基本資料", options: [])]
+            .map((form) => form.toJson())
+            .toList());
+  }
+
+  //user sign form
+  static Future setSignForm(String signForm) async {
+    print('存：$signForm');
+    await _preferences?.setString(_signForm, signForm);
+  }
+
+  static Future removeSignForm() async {
+    await _preferences?.setString(_signForm, "");
+  }
+
+  static String getSignForm() {
+    return _preferences?.getString(_signForm) ?? "";
   }
 }

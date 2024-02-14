@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
-import 'package:upoint_web/globals/custom_snackbars.dart';
+import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/models/organizer_model.dart';
 
 import '../tap_hover_container.dart';

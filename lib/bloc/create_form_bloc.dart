@@ -140,7 +140,7 @@ class CreateFormBloc {
   Timer? debounce;
   explainTextChanged(String text, OptionModel option) {
     if (debounce?.isActive ?? false) debounce!.cancel();
-    debounce = Timer(const Duration(milliseconds: 500), () async {
+    debounce = Timer(const Duration(milliseconds: 250), () async {
       option.explain = text;
       UserSimplePreference.setform(jsonEncode(
           valueNotifier.value.map((form) => form.toJson()).toList()));
@@ -150,7 +150,7 @@ class CreateFormBloc {
   //多選跟單選的選項文字
   onTextChanged(String text, OptionModel option, int index) {
     if (debounce?.isActive ?? false) debounce!.cancel();
-    debounce = Timer(const Duration(milliseconds: 500), () async {
+    debounce = Timer(const Duration(milliseconds: 250), () async {
       option.body[index] = text;
       UserSimplePreference.setform(jsonEncode(
           valueNotifier.value.map((form) => form.toJson()).toList()));
@@ -159,7 +159,7 @@ class CreateFormBloc {
 
   onSubtitleChanged(String text, OptionModel option) {
     if (debounce?.isActive ?? false) debounce!.cancel();
-    debounce = Timer(const Duration(milliseconds: 500), () async {
+    debounce = Timer(const Duration(milliseconds: 250), () async {
       option.subtitle = text;
       UserSimplePreference.setform(jsonEncode(
           valueNotifier.value.map((form) => form.toJson()).toList()));
@@ -169,7 +169,7 @@ class CreateFormBloc {
   //自定義formModel的標題文字
   onTitleChanged(String text, FormModel form) {
     if (debounce?.isActive ?? false) debounce!.cancel();
-    debounce = Timer(const Duration(milliseconds: 500), () async {
+    debounce = Timer(const Duration(milliseconds: 250), () async {
       form.title = text;
       UserSimplePreference.setform(jsonEncode(
           valueNotifier.value.map((form) => form.toJson()).toList()));
