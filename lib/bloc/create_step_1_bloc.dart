@@ -38,11 +38,6 @@ class CreateStep1Bloc {
       "type": "date",
     },
     {
-      "title": "報名截止日期",
-      "index": "formDate",
-      "type": "date",
-    },
-    {
       "title": "活動獎勵",
       "index": "reward",
       "type": "normal",
@@ -219,9 +214,6 @@ class CreateStep1Bloc {
     List _endList = post.endDateTime == null
         ? ["", ""]
         : (post.endDateTime as String).split('/');
-    List _formList = post.formDateTime == null
-        ? ["", ""]
-        : (post.formDateTime as String).split('/');
 
     if (_check(post.photo)) {
       text = '“照片”尚未填寫';
@@ -239,10 +231,6 @@ class CreateStep1Bloc {
       text = '“結束日期”尚未填寫';
     } else if (_check(_endList[1])) {
       text = '“結束時間”尚未填寫';
-    } else if (_check(_formList[0])) {
-      text = '“表單截止日期”尚未填寫';
-    } else if (_check(_formList[1])) {
-      text = '“表單截止時間”尚未填寫';
     } else if (_check(post.introduction)) {
       text = '“活動簡介”尚未填寫';
     } else if (_check(post.content)) {

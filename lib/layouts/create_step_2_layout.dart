@@ -52,6 +52,7 @@ class CreateStep2Layout extends StatelessWidget {
       child: CreateStep2PickLayout(
         bloc: _bloc,
         child: formWidget,
+        isWeb: false,
       ),
     );
   }
@@ -76,6 +77,7 @@ class CreateStep2Layout extends StatelessWidget {
       child: CreateStep2PickLayout(
         bloc: _bloc,
         child: formWidget,
+        isWeb: true,
       ),
     );
   }

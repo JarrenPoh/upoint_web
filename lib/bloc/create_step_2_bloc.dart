@@ -1,13 +1,21 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:upoint_web/bloc/create_form_bloc.dart';
 import 'package:upoint_web/globals/user_simple_preference.dart';
 import 'package:upoint_web/models/form_model.dart';
 import 'package:upoint_web/models/organizer_model.dart';
+import 'package:upoint_web/models/post_model.dart';
 
 class CreateStep2Bloc {
   late CreateFormBloc createFormBloc;
+  late ValueNotifier<PostModel> postValue;
   CreateStep2Bloc(List<FormModel> formModel) {
     createFormBloc = CreateFormBloc(formModel);
+    String getPost = UserSimplePreference.getpost();
+    postValue = ValueNotifier(getPost.isEmpty
+        ? PostModel(tags: [])
+        : PostModel.fromMap(jsonDecode(getPost)));
   }
   ValueNotifier<String> formOptionValue = ValueNotifier("form");
   List<Map> formOptions = [
@@ -36,24 +44,47 @@ class CreateStep2Bloc {
     _link = text;
   }
 
+  formDateFunc(String? dateText, String? timeText) async {
+    postValue.value.formDateTime = "$dateText/$timeText";
+    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+    postValue.notifyListeners();
+    await UserSimplePreference.setpost(
+      jsonEncode(PostModel.toMap(postValue.value)),
+    );
+  }
+
   //  檢查step2有沒有沒寫完的
   String? checkFunc() {
     //確認要檢查什麼類型
     String type = formOptionValue.value;
     String? errorText;
     bool _check(String? v) {
-      return v == null || v == "";
+      return v == null || v == "" || v == "null";
     }
 
+    List _formList = postValue.value.formDateTime == null
+        ? ["", ""]
+        : (postValue.value.formDateTime as String).split('/');
     switch (type) {
       case "link":
         if (_link == "") {
           errorText = "請填寫外部報名連結";
+        } else if (_check(_formList[0])) {
+          errorText = '“表單截止日期”尚未填寫';
+        } else if (_check(_formList[1])) {
+          errorText = '“表單截止時間”尚未填寫';
         }
         break;
       case "form":
         List<FormModel> formList = createFormBloc.valueNotifier.value;
         for (var form in formList) {
+          if (_check(_formList[0])) {
+            errorText = '“表單截止日期”尚未填寫';
+            break;
+          } else if (_check(_formList[1])) {
+            errorText = '“表單截止時間”尚未填寫';
+            break;
+          }
           if (_check(form.title)) {
             errorText = '大標題不能為空！';
             break;
