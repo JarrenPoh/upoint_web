@@ -24,9 +24,11 @@ class CreateStep2Layout extends StatelessWidget {
   final OrganizerModel organizer;
   @override
   Widget build(BuildContext context) {
+    print('asd:$getForm');
     final CreateStep2Bloc _bloc = CreateStep2Bloc((jsonDecode(getForm) as List)
         .map((jsonItem) => FormModel.fromMap(jsonItem))
         .toList());
+    print('asdad');
     return ResponsiveLayout(
       tabletLayout: tabletLayout(context, _bloc),
       webLayout: webLayout(context, _bloc),

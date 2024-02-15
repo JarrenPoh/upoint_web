@@ -170,8 +170,6 @@ class CreateStep1Bloc {
         break;
       case "endDate":
         valueNotifier.value.endDateTime = "$dateText/$timeText";
-      case "formDate":
-        valueNotifier.value.formDateTime = "$dateText/$timeText";
     }
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     valueNotifier.notifyListeners();

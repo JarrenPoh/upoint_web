@@ -21,7 +21,7 @@ class UserSimplePreference {
   }
 
   static Future removepost() async {
-    await _preferences?.setString(_post, "");
+    await _preferences?.remove(_post);
   }
 
   static String getpost() {
@@ -35,7 +35,7 @@ class UserSimplePreference {
   }
 
   static Future removeform() async {
-    await _preferences?.setString(_form, "");
+    await _preferences?.remove(_form);
   }
 
   static String getform() {
@@ -52,7 +52,7 @@ class UserSimplePreference {
   }
 
   static Future removeSignForm() async {
-    await _preferences?.setString(_signForm, "");
+    await _preferences?.remove(_signForm);
   }
 
   static String getSignForm() {

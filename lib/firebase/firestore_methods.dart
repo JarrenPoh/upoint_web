@@ -73,6 +73,7 @@ class FirestoreMethods {
       photoUrl = await StorageMethods()
           .uploadImageToStorage('posts', file, true, postId);
       post.photo = photoUrl;
+
       //以下尚未填過
       post.form = getForm;
       post.postId = postId;
@@ -81,8 +82,10 @@ class FirestoreMethods {
           DateFormat("yyyy-MM-dd/h:mm a").parse(post.startDateTime);
       post.endDateTime =
           DateFormat("yyyy-MM-dd/h:mm a").parse(post.endDateTime);
-      post.formDateTime =
-          DateFormat("yyyy-MM-dd/h:mm a").parse(post.formDateTime);
+      if (post.formDateTime != null) {
+        post.formDateTime =
+            DateFormat("yyyy-MM-dd/h:mm a").parse(post.formDateTime);
+      }
       post.organizerName = organizer.username;
       post.organizerPic = organizer.pic;
       post.organizerUid = organizer.uid;
@@ -103,6 +106,8 @@ class FirestoreMethods {
     } catch (err) {
       res = err.toString();
       print(res);
+      await UserSimplePreference.removeform();
+      await UserSimplePreference.removepost();
     }
     return {
       "status": res,

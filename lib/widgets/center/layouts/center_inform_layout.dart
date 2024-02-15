@@ -21,7 +21,7 @@ class CenterInformLayout extends StatefulWidget {
 }
 
 class _CenterInformLayoutState extends State<CenterInformLayout> {
-  late String? formUrl;
+   String? formUrl;
   late String dateDuration;
   @override
   void initState() {
@@ -83,7 +83,7 @@ class _CenterInformLayoutState extends State<CenterInformLayout> {
               ? RegularText(
                   color: grey500,
                   size: 14,
-                  text: "此活動無表單",
+                  text: "此活動無需報名",
                 )
               : LinkField(formUrl: formUrl),
         ],

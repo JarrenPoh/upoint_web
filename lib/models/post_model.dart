@@ -118,6 +118,7 @@ class PostModel {
         "form": form,
         "tags": tags,
         "formDateTime":formDateTime,
+        "signFormsLength":signFormsLength,
       };
 
   static PostModel fromMap(Map map) {
@@ -141,6 +142,7 @@ class PostModel {
       form: map['form'],
       tags: map['tags'],
       formDateTime:map['formDateTime'],
+      signFormsLength:map['signFormsLength'],
     );
   }
 }
