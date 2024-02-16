@@ -9,6 +9,7 @@ class OrganizerModel {
   String? unit;
   String? contact;
   String email;
+  int postLength;
 
   OrganizerModel({
     this.username,
@@ -19,6 +20,7 @@ class OrganizerModel {
     this.bio,
     this.unit,
     this.contact,
+    required this.postLength,
   });
 
   static Map toMap(OrganizerModel cart) {
@@ -46,6 +48,7 @@ class OrganizerModel {
       bio:snapshot['bio'],
       unit:snapshot['unit'],
       contact:snapshot['contact'],
+      postLength:snapshot['postLength'],
     );
   }
 
@@ -58,6 +61,7 @@ class OrganizerModel {
         "bio":bio,
         "unit":unit,
         "contact":contact,
+        "postLength":postLength,
       };
 
   static OrganizerModel? fromMap(Map? map) {
@@ -73,6 +77,7 @@ class OrganizerModel {
         bio:map['bio'],
         unit:map['unit'],
         contact:map['contact'],
+        postLength:map['postLength'],
       );
     }
   }

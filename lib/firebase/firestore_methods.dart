@@ -27,6 +27,7 @@ class FirestoreMethods {
           OrganizerModel user = OrganizerModel(
             email: email,
             uid: currentUser.uid,
+            postLength: 0,
           );
           //上傳firestore
           await _firestore
@@ -95,7 +96,6 @@ class FirestoreMethods {
       await UserSimplePreference.removeform();
       await UserSimplePreference.removepost();
       print('上傳成功');
-      print('here1:$getForm');
       if (getForm == null) {
         formUrl = null;
       } else if (getForm.substring(0, 4) == "http") {
@@ -103,6 +103,10 @@ class FirestoreMethods {
       } else {
         formUrl = "https://upoint/signForm?id=$postId";
       }
+      // 幫organizer的postLength加一
+      await _firestore.collection('organizers').doc(organizer.uid).update({
+        "postLength": FieldValue.increment(1),
+      });
     } catch (err) {
       res = err.toString();
       print(res);

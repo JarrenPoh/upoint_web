@@ -38,10 +38,12 @@ class _CenterBarLayoutState extends State<CenterBarLayout> {
         animation: true,
         animationDuration: 1200,
         lineWidth: 8,
-        percent: 0.5,
+        percent: outSideForm || noLimit
+            ? 0
+            : widget.post.signFormsLength! / (int.parse(widget.post.capacity!)),
         center: outSideForm
             ? Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   RegularText(
                     color: grey500,
