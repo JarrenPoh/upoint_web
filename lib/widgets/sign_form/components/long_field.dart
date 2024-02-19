@@ -1,16 +1,20 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/globals/time_transfer.dart';
+import 'package:upoint_web/models/option_model.dart';
+
+import '../../../globals/medium_text.dart';
 
 class LongField extends StatefulWidget {
   final String initText;
-  final String type;
+  final OptionModel option;
   final Function(String) onChanged;
   const LongField({
     super.key,
-    required this.type,
+    required this.option,
     required this.initText,
     required this.onChanged,
   });
@@ -22,16 +26,16 @@ class LongField extends StatefulWidget {
 class _LongFieldState extends State<LongField> {
   late double height;
   late TextEditingController _controller;
-  List iconList = ["date", "date2002", "date91", "drop_down", "time"];
+  List iconList = ["date", "date2002", "date91", "time"];
   @override
   void initState() {
     super.initState();
-    height = widget.type == "detail" ? 120 : 48;
+    height = widget.option.type == "detail" ? 120 : 48;
     _controller = TextEditingController(text: widget.initText);
   }
 
   Widget choseIcon() {
-    if (widget.type == "time") {
+    if (widget.option.type == "time") {
       return Container(
         height: 24,
         width: 24,
@@ -41,7 +45,7 @@ class _LongFieldState extends State<LongField> {
           ),
         ),
       );
-    } else if (widget.type == "drop_down") {
+    } else if (widget.option.type == "drop_down") {
       return Icon(
         Icons.keyboard_arrow_down,
         color: grey300,
@@ -56,10 +60,14 @@ class _LongFieldState extends State<LongField> {
     }
   }
 
-  onTap() async {
-    if (widget.type == "time") {
+  onTap(String? text) async {
+    if (widget.option.type == "time") {
       await _selectTime(context);
-    } else if (widget.type == "drop_down") {
+    } else if (widget.option.type == "drop_down") {
+      setState(() {
+        _controller.text = text ?? "";
+      });
+      widget.onChanged(_controller.text);
     } else {
       await _selectDate(context);
     }
@@ -72,7 +80,7 @@ class _LongFieldState extends State<LongField> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        if (widget.type == "date2002") {
+        if (widget.option.type == "date2002") {
           _text = DateFormat('yyyy-MM-dd').format(selectedDate!);
         } else {
           _text = TimeTransfer.convertToROC(selectedDate!);
@@ -110,36 +118,78 @@ class _LongFieldState extends State<LongField> {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
-              crossAxisAlignment: widget.type == "detail"
+              crossAxisAlignment: widget.option.type == "detail"
                   ? CrossAxisAlignment.start
                   : CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    enabled: !iconList.contains(widget.type),
-                    style: TextStyle(
-                      color: grey500,
-                      fontSize: 16,
-                      fontFamily: "NotoSansRegular",
-                    ),
-                    decoration: const InputDecoration(
-                      contentPadding: EdgeInsets.only(bottom: 0),
-                      enabledBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                    ),
-                    onChanged: (e) => widget.onChanged(e),
-                  ),
-                ),
-                if (iconList.contains(widget.type))
+                widget.option.type == "drop_down"
+                    ? Expanded(
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            customButton: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                MediumText(
+                                  color: grey500,
+                                  size: 16,
+                                  text: _controller.text,
+                                ),
+                                choseIcon(),
+                              ],
+                            ),
+                            hint: Text(
+                              '請擇一',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Theme.of(context).hintColor,
+                              ),
+                            ),
+                            value: _controller.text == ""
+                                ? null
+                                : _controller.text,
+                            isExpanded: true,
+                            onChanged: (value) => onTap(value),
+                            items: widget.option.body
+                                .map(
+                                  (e) => DropdownMenuItem<String>(
+                                    value: e,
+                                    child: MediumText(
+                                      color: grey500,
+                                      size: 16,
+                                      text: e,
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                          ),
+                        ),
+                      )
+                    : Expanded(
+                        child: TextField(
+                          controller: _controller,
+                          enabled: !iconList.contains(widget.option.type),
+                          style: TextStyle(
+                            color: grey500,
+                            fontSize: 16,
+                            fontFamily: "NotoSansRegular",
+                          ),
+                          decoration: const InputDecoration(
+                            contentPadding: EdgeInsets.only(bottom: 0),
+                            enabledBorder: InputBorder.none,
+                            disabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                          ),
+                          onChanged: (e) => widget.onChanged(e),
+                        ),
+                      ),
+                if (iconList.contains(widget.option.type))
                   Row(
                     children: [
                       MouseRegion(
                         cursor: SystemMouseCursors.click,
                         child: GestureDetector(
-                          onTap: () => onTap(),
+                          onTap: () => onTap(null),
                           child: choseIcon(),
                         ),
                       ),

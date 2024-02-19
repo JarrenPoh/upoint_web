@@ -28,7 +28,7 @@ class _CapacityRowState extends State<CapacityRow> {
   @override
   void initState() {
     super.initState();
-    if (widget.number == "unlimited") {
+    if (widget.number == null) {
       _textEditingController.text = "不限人數";
       _isChecked = true;
       _enabaled = false;
@@ -88,7 +88,7 @@ class _CapacityRowState extends State<CapacityRow> {
               _isChecked = !_isChecked;
             });
             if (ee == true) {
-              widget.onChanged("unlimited");
+              widget.onChanged(null);
               setState(() {
                 _textEditingController.text = "不限人數";
                 _enabaled = false;

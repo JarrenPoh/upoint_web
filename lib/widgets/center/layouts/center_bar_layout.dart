@@ -40,7 +40,7 @@ class _CenterBarLayoutState extends State<CenterBarLayout> {
         lineWidth: 8,
         percent: outSideForm || noLimit
             ? 0
-            : widget.post.signFormsLength! / (int.parse(widget.post.capacity!)),
+            : widget.post.signFormsLength! / widget.post.capacity!,
         center: outSideForm
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,

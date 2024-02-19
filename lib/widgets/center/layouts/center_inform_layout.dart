@@ -21,7 +21,7 @@ class CenterInformLayout extends StatefulWidget {
 }
 
 class _CenterInformLayoutState extends State<CenterInformLayout> {
-   String? formUrl;
+  String? formUrl;
   late String dateDuration;
   @override
   void initState() {
@@ -29,17 +29,10 @@ class _CenterInformLayoutState extends State<CenterInformLayout> {
     if (widget.post.form?.substring(0, 4) == "http") {
       formUrl = widget.post.form!;
     } else if (widget.post.form != null) {
-      formUrl = "https://upoint/signForm?id=${widget.post.postId}";
+      formUrl = "https://upoint.tw/signForm?id=${widget.post.postId}";
     }
-    String _start = TimeTransfer.timeTrans03(widget.post.startDateTime);
-    String _end = TimeTransfer.timeTrans03(widget.post.endDateTime);
-    if (_start == _end) {
-      dateDuration =
-          "$_start${TimeTransfer.timeTrans04(widget.post.startDateTime!)} ~ ${TimeTransfer.timeTrans04(widget.post.endDateTime!)}";
-    } else {
-      dateDuration =
-          "$_start${TimeTransfer.timeTrans04(widget.post.startDateTime!)} ~ $_end${TimeTransfer.timeTrans04(widget.post.endDateTime!)}";
-    }
+    dateDuration = TimeTransfer.timeTrans05(
+        widget.post.startDateTime, widget.post.endDateTime);
   }
 
   @override

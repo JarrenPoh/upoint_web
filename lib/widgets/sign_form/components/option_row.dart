@@ -49,7 +49,7 @@ class _OptionRowState extends State<OptionRow> {
       );
     } else {
       _widget = LongField(
-        type: widget.option.type,
+        option: widget.option,
         initText: _signForm[widget.index]["value"],
         onChanged: (e) => widget.bloc.onLongFieldChanged(e, widget.index),
       );

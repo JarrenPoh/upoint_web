@@ -6,9 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/firebase/auth_methods.dart';
+import 'package:upoint_web/layouts/login_layout.dart';
 import 'package:upoint_web/layouts/sign_form_layout.dart';
 import 'package:upoint_web/models/user_model.dart';
-import 'package:upoint_web/pages/login_page.dart';
 import 'package:upoint_web/widgets/custom_navigation_bar.dart';
 
 class SignFormLocation extends BeamLocation {
@@ -75,7 +75,7 @@ class SignFormLocation extends BeamLocation {
                 print('firebase authState error');
                 return Center(child: Text('${snapshot.error}'));
               } else {
-                return const Center(child: LoginPage(role: "user"));
+                return  Center(child:LoginLayout(role: "user"));
               }
             },
           ),

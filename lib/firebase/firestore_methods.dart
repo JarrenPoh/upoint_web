@@ -101,7 +101,7 @@ class FirestoreMethods {
       } else if (getForm.substring(0, 4) == "http") {
         formUrl = getForm;
       } else {
-        formUrl = "https://upoint/signForm?id=$postId";
+        formUrl = "https://upoint.tw/signForm?id=$postId";
       }
       // 幫organizer的postLength加一
       await _firestore.collection('organizers').doc(organizer.uid).update({
@@ -124,6 +124,7 @@ class FirestoreMethods {
     String res = "some error occur";
     String signFormId = const Uuid().v1();
     String getSignFormBody = UserSimplePreference.getSignForm();
+    List<String> _signList = user.signList ?? [];
     try {
       //以下尚未填過
       SignFormModel signForm = SignFormModel(
@@ -143,6 +144,11 @@ class FirestoreMethods {
       // 幫posts文件的signFormsLength加一
       await _firestore.collection('posts').doc(postId).update({
         "signFormsLength": FieldValue.increment(1),
+      });
+      // 幫users文件的signList加上postId
+      _signList.add(postId);
+      await _firestore.collection('users').doc(user.uuid).update({
+        "signList": _signList,
       });
       res = 'success';
       await UserSimplePreference.removeSignForm();

@@ -48,6 +48,17 @@ class TimeTransfer {
     return convertedTime;
   }
 
+  //start&end TimeStamp to 113/02/09 13:00~17:00
+  static String timeTrans05(Timestamp startTime, Timestamp endTime) {
+    String _start = TimeTransfer.timeTrans03(startTime);
+    String _end = TimeTransfer.timeTrans03(endTime);
+    if (_start == _end) {
+      return "$_start${TimeTransfer.timeTrans04(startTime)} ~ ${TimeTransfer.timeTrans04(endTime)}";
+    } else {
+      return "$_start${TimeTransfer.timeTrans04(startTime)} ~ $_end${TimeTransfer.timeTrans04(endTime)}";
+    }
+  }
+
   //DateTime -> 91-09-15
   static String convertToROC(DateTime date) {
     // 计算民国年份

@@ -249,7 +249,7 @@ class _CreateStep2PickLayoutState extends State<CreateStep2PickLayout> {
                   child: MediumText(
                     color: grey500,
                     size: 18,
-                    text: '報名表單選項',
+                    text: '報名時程',
                   ),
                 ),
               ),

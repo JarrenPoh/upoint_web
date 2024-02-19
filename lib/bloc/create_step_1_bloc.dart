@@ -109,7 +109,7 @@ class CreateStep1Bloc {
           valueNotifier.value.location = text;
           break;
         case "capacity":
-          valueNotifier.value.capacity = text;
+          valueNotifier.value.capacity = text == null ? null : int.parse(text);
           break;
         case "introduction":
           valueNotifier.value.introduction = text;
@@ -217,7 +217,7 @@ class CreateStep1Bloc {
       text = '“照片”尚未填寫';
     } else if (_check(post.title)) {
       text = '“活動名稱”尚未填寫';
-    } else if (_check(post.capacity)) {
+    } else if (_check(post.capacity.toString())) {
       text = '“不限人數”尚未填寫';
     } else if (_check(post.location)) {
       text = '“活動地點”尚未填寫';

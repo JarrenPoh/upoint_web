@@ -8,7 +8,7 @@ class PostModel {
   var endDateTime;
   var formDateTime;
   String? introduction;
-  String? capacity;
+  int? capacity;
   String? content;
   String? reward;
   String? rewardTagId;

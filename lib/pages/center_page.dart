@@ -86,7 +86,7 @@ class _CenterPageState extends State<CenterPage> {
                             MouseRegion(
                               cursor: SystemMouseCursors.click,
                               child: GestureDetector(
-                                onTap: _currPage != 0
+                                onTap: _currPage != 1
                                     ? () => widget.bloc
                                         .fetchNextPosts(_currPage - 1)
                                     : () {},

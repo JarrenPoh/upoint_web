@@ -9,8 +9,8 @@ import 'package:upoint_web/layouts/create_step_1_layout.dart';
 import 'package:upoint_web/layouts/create_step_2_layout.dart';
 import 'package:upoint_web/layouts/create_step_3_layout.dart';
 import 'package:upoint_web/layouts/inform_layout.dart';
+import 'package:upoint_web/layouts/login_layout.dart';
 import 'package:upoint_web/models/organizer_model.dart';
-import 'package:upoint_web/pages/login_page.dart';
 import 'package:upoint_web/widgets/custom_navigation_bar.dart';
 
 class OrganizerLocation extends BeamLocation {
@@ -136,7 +136,7 @@ class OrganizerLocation extends BeamLocation {
                 print('firebase authState error');
                 return Center(child: Text('${snapshot.error}'));
               } else {
-                return const Center(child: LoginPage(role: "organizer"));
+                return Center(child: LoginLayout(role: "organizer"));
               }
             },
           ),

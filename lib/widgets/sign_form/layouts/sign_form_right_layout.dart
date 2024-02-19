@@ -27,6 +27,7 @@ class SignFormRightLayout extends StatefulWidget {
 }
 
 class _SignFormRightLayoutState extends State<SignFormRightLayout> {
+  var _count = 0;
   onTap() {
     String? errorText = widget.bloc.checkFunc(widget.formList);
     if (errorText != null) {
@@ -73,14 +74,19 @@ class _SignFormRightLayoutState extends State<SignFormRightLayout> {
                       const SizedBox(height: 36),
                       _title(widget.formList[index].title),
                       const SizedBox(height: 8),
-                      for (var i = 0;
-                          i < widget.formList[index].options.length;
-                          i++)
-                        OptionRow(
-                          option: widget.formList[index].options[i],
-                          bloc: widget.bloc,
-                          index: i,
+                      Column(
+                        children: List.generate(
+                          widget.formList[index].options.length,
+                          (i) {
+                            _count++;
+                            return OptionRow(
+                              option: widget.formList[index].options[i],
+                              bloc: widget.bloc,
+                              index: _count - 1,
+                            );
+                          },
                         ),
+                      ),
                     ],
                   );
                 },

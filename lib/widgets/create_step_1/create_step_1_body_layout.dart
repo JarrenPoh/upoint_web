@@ -280,7 +280,7 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
         text = widget.bloc.valueNotifier.value.location;
         break;
       case "capacity":
-        text = widget.bloc.valueNotifier.value.capacity;
+        text = widget.bloc.valueNotifier.value.capacity.toString();
         break;
       case "introduction":
         text = widget.bloc.valueNotifier.value.introduction;
