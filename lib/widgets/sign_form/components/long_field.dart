@@ -24,13 +24,12 @@ class LongField extends StatefulWidget {
 }
 
 class _LongFieldState extends State<LongField> {
-  late double height;
+  late bool isDetail = widget.option.type == "detail";
   late TextEditingController _controller;
   List iconList = ["date", "date2002", "date91", "time"];
   @override
   void initState() {
     super.initState();
-    height = widget.option.type == "detail" ? 120 : 48;
     _controller = TextEditingController(text: widget.initText);
   }
 
@@ -111,7 +110,7 @@ class _LongFieldState extends State<LongField> {
       children: [
         Expanded(
           child: Container(
-            height: height,
+            height: isDetail ? 120 : 48,
             padding: EdgeInsets.only(left: 17, right: 11),
             decoration: BoxDecoration(
               border: Border.all(color: grey300),
@@ -169,6 +168,9 @@ class _LongFieldState extends State<LongField> {
                         child: TextField(
                           controller: _controller,
                           enabled: !iconList.contains(widget.option.type),
+                          keyboardType:
+                              isDetail ? TextInputType.multiline : null,
+                          maxLines: isDetail ? 20 : 1,
                           style: TextStyle(
                             color: grey500,
                             fontSize: 16,
