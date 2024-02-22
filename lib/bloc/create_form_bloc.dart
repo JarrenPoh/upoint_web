@@ -255,6 +255,18 @@ class CreateFormBloc {
 
   List<Map> schoolFields = [
     {
+      "subtitle": "學號",
+      "hover": false,
+      "selected": false,
+      "type": "studentID",
+    },
+    {
+      "subtitle": "班級",
+      "hover": false,
+      "selected": false,
+      "type": "class",
+    },
+    {
       "subtitle": "學校名稱",
       "hover": false,
       "selected": false,
@@ -277,12 +289,6 @@ class CreateFormBloc {
       "hover": false,
       "selected": false,
       "type": "grade",
-    },
-    {
-      "subtitle": "班級",
-      "hover": false,
-      "selected": false,
-      "type": "class",
     },
   ];
 
