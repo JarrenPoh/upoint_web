@@ -76,123 +76,129 @@ class _ContainerWithCheckboxState extends State<ContainerWithCheckbox> {
   Widget build(BuildContext context) {
     refresh();
     subTitleController = TextEditingController(text: option.subtitle);
-    return Column(
+    return Wrap(
+      runSpacing: 8,
       children: [
-        Row(
-          children: [
-            if (widget.fix)
-              Text(
-                '*',
-                style: TextStyle(
-                  color: grey500,
-                ),
+        if (widget.fix)
+          Text(
+            '*',
+            style: TextStyle(
+              color: grey500,
+            ),
+          ),
+        // 小標題
+        IntrinsicWidth(
+          child: TextFormField(
+            keyboardType: TextInputType.text,
+            controller: subTitleController,
+            enabled: !enableTitle.contains(option.subtitle),
+            style: TextStyle(
+              color: grey500,
+              fontSize: 16,
+              fontFamily: "NotoSansRegular",
+            ),
+            decoration: InputDecoration(
+              isDense: true,
+              contentPadding: EdgeInsets.only(bottom: 0, top: 0),
+              hintStyle: TextStyle(
+                color: grey300,
+                fontSize: 16,
+                fontFamily: "NotoSansRegular",
               ),
-            // 小標題
-            IntrinsicWidth(
-              child: TextFormField(
-                keyboardType: TextInputType.text,
-                controller: subTitleController,
-                enabled: !enableTitle.contains(option.subtitle),
-                style: TextStyle(
-                  color: grey500,
-                  fontSize: 16,
-                  fontFamily: "NotoSansRegular",
-                ),
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.only(bottom: 0, top: 0),
-                  hintStyle: TextStyle(
-                    color: grey300,
-                    fontSize: 16,
-                    fontFamily: "NotoSansRegular",
+              enabledBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+            ),
+            onChanged: (e) => widget.bloc.onSubtitleChanged(
+              e,
+              _valueNotifier.value[lindex].options[index],
+            ),
+          ),
+        ),
+        const SizedBox(width: 11),
+        // 垃圾桶
+        if (widget.fix == false)
+          IntrinsicWidth(
+            child: _mouseIcon(
+              Icons.delete_rounded,
+              () => widget.tapDelete!(lindex, index),
+            ),
+          ),
+        // 新增 刪除
+        if (valueType.contains(option.type))
+          IntrinsicWidth(
+            child: Row(
+              children: [
+                _mouseIcon(
+                  Icons.remove_circle_outline,
+                  () => widget.bloc.checkBox(
+                    "removeBody",
+                    _valueNotifier.value[lindex].options[index],
                   ),
-                  enabledBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
                 ),
-                onChanged: (e) => widget.bloc.onSubtitleChanged(
-                  e,
-                  _valueNotifier.value[lindex].options[index],
+                _mouseIcon(
+                  Icons.add_circle_outline,
+                  () => widget.bloc.checkBox(
+                    "addBody",
+                    _valueNotifier.value[lindex].options[index],
+                  ),
                 ),
+              ],
+            ),
+          ),
+        // 說明文字
+        if (widget.fix == false)
+          IntrinsicWidth(
+            child: CheckComb(
+              title: "說明文字",
+              isChecked: option.explain == null ? false : true,
+              func: () => widget.bloc.checkBox(
+                "explain",
+                _valueNotifier.value[lindex].options[index],
               ),
             ),
-            const SizedBox(width: 11),
-            // 垃圾桶
-            if (widget.fix == false)
-              _mouseIcon(
-                Icons.delete_rounded,
-                () => widget.tapDelete!(lindex, index),
+          ),
+        // 其他開放選項
+        if (option.type == "single" ||
+            option.type == "multi" ||
+            option.type == "meal")
+          IntrinsicWidth(
+            child: CheckComb(
+              title: "其他開放選項",
+              isChecked: option.other == null ? false : true,
+              func: () => widget.bloc.checkBox(
+                "other",
+                _valueNotifier.value[lindex].options[index],
               ),
-            // 新增 刪除
-            if (valueType.contains(option.type))
-              Row(
-                children: [
-                  _mouseIcon(
-                    Icons.remove_circle_outline,
-                    () => widget.bloc.checkBox(
-                      "removeBody",
-                      _valueNotifier.value[lindex].options[index],
-                    ),
+            ),
+          ),
+        // 必選
+        widget.fix
+            ? Container(
+                height: 16,
+                width: 16,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: grey300,
                   ),
-                  _mouseIcon(
-                    Icons.add_circle_outline,
-                    () => widget.bloc.checkBox(
-                      "addBody",
-                      _valueNotifier.value[lindex].options[index],
-                    ),
+                  borderRadius: BorderRadius.circular(3),
+                ),
+                child: Icon(
+                  Icons.check,
+                  color: grey400,
+                  size: 9,
+                ),
+              )
+            : IntrinsicWidth(
+                child: CheckComb(
+                  title: "必填",
+                  isChecked: option.necessary,
+                  func: () => widget.bloc.checkBox(
+                    "necessary",
+                    _valueNotifier.value[lindex].options[index],
                   ),
-                ],
-              ),
-            // 說明文字
-            if (widget.fix == false)
-              CheckComb(
-                title: "說明文字",
-                isChecked: option.explain == null ? false : true,
-                func: () => widget.bloc.checkBox(
-                  "explain",
-                  _valueNotifier.value[lindex].options[index],
                 ),
               ),
-            // 其他開放選項
-            if (option.type == "single" ||
-                option.type == "multi" ||
-                option.type == "meal")
-              CheckComb(
-                title: "其他開放選項",
-                isChecked: option.other == null ? false : true,
-                func: () => widget.bloc.checkBox(
-                  "other",
-                  _valueNotifier.value[lindex].options[index],
-                ),
-              ),
-            const Expanded(child: Column(children: [])),
-            // 必選
-            widget.fix
-                ? Container(
-                    height: 16,
-                    width: 16,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: grey300,
-                      ),
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                    child: Icon(
-                      Icons.check,
-                      color: grey400,
-                      size: 9,
-                    ),
-                  )
-                : CheckComb(
-                    title: "必填",
-                    isChecked: option.necessary,
-                    func: () => widget.bloc.checkBox(
-                      "necessary",
-                      _valueNotifier.value[lindex].options[index],
-                    ),
-                  ),
-          ],
-        ),
         // 內容
         ChoseComponents(
           bloc: widget.bloc,

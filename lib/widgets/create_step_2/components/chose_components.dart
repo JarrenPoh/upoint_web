@@ -6,7 +6,6 @@ import 'package:upoint_web/widgets/create_step_2/components/drop_down_field.dart
 import 'package:upoint_web/widgets/create_step_2/components/long_field.dart';
 import 'package:upoint_web/widgets/create_step_2/components/none_decor_text_field.dart';
 import 'package:upoint_web/widgets/create_step_2/components/short_field.dart';
-import 'package:upoint_web/widgets/create_step_2/components/time_field.dart';
 
 class ChoseComponents extends StatelessWidget {
   final CreateFormBloc bloc;
@@ -94,7 +93,10 @@ class ChoseComponents extends StatelessWidget {
         );
         break;
       case "time":
-        _widget = const TimeField();
+        _widget = LongField(
+          type: option.type,
+          hintText: "",
+        );
         break;
       case "gender":
         _valueWidget = (index, attribute) => ShortField(

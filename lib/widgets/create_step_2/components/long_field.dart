@@ -44,6 +44,16 @@ class LongField extends StatelessWidget {
                     color: grey300,
                     size: 24,
                   ),
+                if (type == "time")
+                  Container(
+                    height: 24,
+                    width: 24,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/edit_clock.png"),
+                      ),
+                    ),
+                  )
               ],
             ),
           ),
