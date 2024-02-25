@@ -87,6 +87,10 @@ class FirestoreMethods {
         post.formDateTime =
             DateFormat("yyyy-MM-dd/h:mm a").parse(post.formDateTime);
       }
+      if (post.remindDateTime != null) {
+        post.remindDateTime =
+            DateFormat("yyyy-MM-dd/h:mm a").parse(post.remindDateTime);
+      }
       post.organizerName = organizer.username;
       post.organizerPic = organizer.pic;
       post.organizerUid = organizer.uid;
