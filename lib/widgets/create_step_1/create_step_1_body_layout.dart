@@ -138,8 +138,6 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
                               index: widget.bloc.createInformList[index]
                                   ["index"],
                               isWeb: widget.isWeb,
-                              title: widget.bloc.createInformList[index]
-                                  ['title'],
                               dateTimeFunc: (e, ee) =>
                                   widget.bloc.dateTimeFunc(e, ee, index),
                             ),

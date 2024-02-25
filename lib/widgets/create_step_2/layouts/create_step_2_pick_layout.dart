@@ -231,7 +231,6 @@ class _CreateStep2PickLayoutState extends State<CreateStep2PickLayout> {
       children: [
         Container(
           width: 948,
-          height: 144,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: grey300),
@@ -254,8 +253,8 @@ class _CreateStep2PickLayoutState extends State<CreateStep2PickLayout> {
                   ),
                 ),
               ),
-              Expanded(
-                child: Container(
+              for (var _map in widget.bloc.signOptions)
+                Container(
                   height: 48,
                   margin:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -264,16 +263,14 @@ class _CreateStep2PickLayoutState extends State<CreateStep2PickLayout> {
                     builder: (context, value, child) {
                       return DatePickRow(
                         post: value,
-                        index: "formDate",
+                        index: _map["index"],
                         isWeb: widget.isWeb,
-                        title: "報名截止日期",
                         dateTimeFunc: (e, ee) =>
-                            widget.bloc.formDateFunc(e, ee),
+                            widget.bloc.dateFunc(_map["index"], e, ee),
                       );
                     },
                   ),
                 ),
-              ),
             ],
           ),
         ),

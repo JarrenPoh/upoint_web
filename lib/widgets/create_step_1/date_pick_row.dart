@@ -11,14 +11,12 @@ class DatePickRow extends StatefulWidget {
   final PostModel post;
   final String index;
   final bool isWeb;
-  final String title;
   final Function(String?, String?) dateTimeFunc;
   const DatePickRow({
     super.key,
     required this.post,
     required this.index,
     required this.isWeb,
-    required this.title,
     required this.dateTimeFunc,
   });
 
@@ -32,6 +30,7 @@ class _DatePickRowState extends State<DatePickRow> {
   late double padRight;
   late double height;
   late String hintText;
+  late String title;
   @override
   void initState() {
     super.initState();
@@ -49,20 +48,30 @@ class _DatePickRowState extends State<DatePickRow> {
         if (widget.post.startDateTime != null) {
           _list = (widget.post.startDateTime as String).split('/');
         }
+        title = "活動開始日期";
         hintText = "活動開始時間";
         break;
       case "endDate":
         if (widget.post.endDateTime != null) {
           _list = (widget.post.endDateTime as String).split('/');
         }
+        title = "活動結束日期";
         hintText = "活動結束時間";
 
         break;
-      case "formDate":
+      case "formDateTime":
         if (widget.post.formDateTime != null) {
           _list = (widget.post.formDateTime as String).split('/');
         }
+        title = "報名截止日期";
         hintText = "報名截止時間";
+        break;
+      case "remindDateTime":
+        if (widget.post.formDateTime != null) {
+          _list = (widget.post.formDateTime as String).split('/');
+        }
+        title = "發送活動提醒日期";
+        hintText = "發送活動提醒時間";
         break;
     }
     if (_list.isNotEmpty) {
@@ -140,7 +149,7 @@ class _DatePickRowState extends State<DatePickRow> {
                       child: MediumText(
                         color: dateText == null ? grey400 : grey500,
                         size: 16,
-                        text: dateText ?? widget.title,
+                        text: dateText ?? title,
                       ),
                     ),
                     Icon(

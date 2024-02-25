@@ -7,6 +7,7 @@ class PostModel {
   var startDateTime;
   var endDateTime;
   var formDateTime;
+  var remindDateTime;
   String? introduction;
   int? capacity;
   String? content;
@@ -30,6 +31,7 @@ class PostModel {
     this.title,
     this.startDateTime,
     this.endDateTime,
+    this.remindDateTime,
     this.introduction,
     this.capacity,
     this.content,
@@ -53,6 +55,7 @@ class PostModel {
       "title": cart.title,
       "startDateTime": cart.startDateTime,
       "endDateTime": cart.endDateTime,
+      "remindDateTime":cart.remindDateTime,
       "location": cart.location,
       "introduction": cart.introduction,
       "content": cart.content,
@@ -80,6 +83,7 @@ class PostModel {
       title: snapshot['title'],
       startDateTime: snapshot['startDateTime'],
       endDateTime: snapshot['endDateTime'],
+      remindDateTime:snapshot['remindDateTime'],
       introduction: snapshot['introduction'],
       content: snapshot['content'],
       capacity: snapshot['capacity'],
@@ -104,6 +108,7 @@ class PostModel {
         "title": title,
         "startDateTime": startDateTime,
         "endDateTime": endDateTime,
+        "remindDateTime":remindDateTime,
         "introduction": introduction,
         "content": content,
         "reward": reward,
@@ -128,6 +133,7 @@ class PostModel {
       title: map['title'],
       startDateTime: map['startDateTime'],
       endDateTime: map['endDateTime'],
+      remindDateTime:map['remindDateTime'],
       introduction: map["introduction"],
       content: map['content'],
       capacity: map['capacity'],

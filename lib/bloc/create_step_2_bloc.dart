@@ -34,6 +34,19 @@ class CreateStep2Bloc {
     },
   ];
 
+  List<Map> signOptions = [
+    {
+      "title": "報名截止日期",
+      "type": "date",
+      "index": "formDateTime",
+    },
+    {
+      "title": "發送活動提醒日期",
+      "type": "date",
+      "index": "remindDateTime",
+    },
+  ];
+
   tapOption(String type) {
     formOptionValue.value = type;
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
@@ -45,8 +58,12 @@ class CreateStep2Bloc {
     _link = text;
   }
 
-  formDateFunc(String? dateText, String? timeText) async {
-    postValue.value.formDateTime = "$dateText/$timeText";
+  dateFunc(String index, String? dateText, String? timeText) async {
+    if (index == "formDateTime") {
+      postValue.value.formDateTime = "$dateText/$timeText";
+    } else if (index == "remindDateTime") {
+      postValue.value.remindDateTime = "$dateText/$timeText";
+    }
     // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     postValue.notifyListeners();
     await UserSimplePreference.setpost(
@@ -66,6 +83,9 @@ class CreateStep2Bloc {
     List _formList = postValue.value.formDateTime == null
         ? ["", ""]
         : (postValue.value.formDateTime as String).split('/');
+    List _remindList = postValue.value.remindDateTime == null
+        ? ["", ""]
+        : (postValue.value.remindDateTime as String).split('/');
     switch (type) {
       case "link":
         if (_link == "") {
@@ -84,6 +104,12 @@ class CreateStep2Bloc {
             break;
           } else if (_check(_formList[1])) {
             errorText = '“表單截止時間”尚未填寫';
+            break;
+          } else if (_check(_remindList[1])) {
+            errorText = '“發送活動提醒日期”尚未填寫';
+            break;
+          } else if (_check(_remindList[1])) {
+            errorText = '“發送活動提醒時間”尚未填寫';
             break;
           }
           if (_check(form.title)) {
