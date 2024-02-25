@@ -18,14 +18,24 @@ class CreateStep1Bloc {
       "type": "normal",
     },
     {
-      "title": "活動名額（限阿拉伯數字 如：10,20,30）",
-      "index": "capacity",
-      "type": "capacity",
-    },
-    {
       "title": "活動地點",
       "index": "location",
       "type": "normal",
+    },
+    {
+      "title": "活動名額（限阿拉伯數字 如：10,20,30）",
+      "index": "capacity",
+      "type": "checkNull",
+    },
+    {
+      "title": "活動獎勵",
+      "index": "reward",
+      "type": "checkNull",
+    },
+    {
+      "title": "其他參考連結",
+      "index": "link",
+      "type": "checkNull",
     },
     {
       "title": "活動開始日期",
@@ -36,11 +46,6 @@ class CreateStep1Bloc {
       "title": "活動結束日期",
       "index": "endDate",
       "type": "date",
-    },
-    {
-      "title": "活動獎勵",
-      "index": "reward",
-      "type": "normal",
     },
     {
       "title": "活動簡介",
@@ -117,6 +122,8 @@ class CreateStep1Bloc {
         case "reward":
           valueNotifier.value.reward = text;
           break;
+        case "link":
+          valueNotifier.value.link = text;
       }
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       await UserSimplePreference.setpost(
@@ -203,7 +210,7 @@ class CreateStep1Bloc {
     PostModel post = valueNotifier.value;
     String? text;
     bool _check(String? v) {
-      return v == null || v == "" || v == "null";
+      return v == null || v == "";
     }
 
     List _startList = post.startDateTime == null
@@ -233,8 +240,10 @@ class CreateStep1Bloc {
       text = '“活動簡介”尚未填寫';
     } else if (_check(post.content)) {
       text = '“活動詳情”尚未填寫';
-    } else if (_check(post.reward)) {
-      text = '"活動獎勵"尚未填寫，若無寫“無”';
+    } else if (_check(post.reward.toString())) {
+      text = '"活動獎勵"尚未填寫';
+    } else if (_check(post.link.toString())) {
+      text = '"其他參考連結"尚未填寫';
     }
     return text;
   }

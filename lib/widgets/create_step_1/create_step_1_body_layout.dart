@@ -4,7 +4,7 @@ import 'package:upoint_web/bloc/create_step_1_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/models/post_model.dart';
-import 'package:upoint_web/widgets/create_step_1/capacity_row.dart';
+import 'package:upoint_web/widgets/create_step_1/check_null_row.dart';
 import 'package:upoint_web/widgets/create_step_1/date_pick_row.dart';
 import 'package:upoint_web/widgets/create_step_1/quill_field.dart';
 import 'package:upoint_web/widgets/create_step_1/tag_pick_row.dart';
@@ -144,8 +144,10 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
                                   widget.bloc.dateTimeFunc(e, ee, index),
                             ),
                           //填名額的
-                          if (type == "capacity")
-                            CapacityRow(
+                          if (type == "checkNull")
+                            CheckNullRow(
+                              index: widget.bloc.createInformList[index]
+                                  ["index"],
                               number: text,
                               padLeft: widget.isWeb ? 22 : 6,
                               hintText: widget.bloc.createInformList[index]
@@ -270,9 +272,9 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
     });
   }
 
-  String? _initText(String type) {
+  String? _initText(String index) {
     String? text;
-    switch (type) {
+    switch (index) {
       case "title":
         text = widget.bloc.valueNotifier.value.title;
         break;
