@@ -59,6 +59,11 @@ class TimeTransfer {
     }
   }
 
+  //firebase timestamp to 113/02/09（周一) 13:20
+  static String timeTrans06(Timestamp time){
+    return "${TimeTransfer.timeTrans03(time)}${TimeTransfer.timeTrans04(time)}";
+  }
+
   //DateTime -> 91-09-15
   static String convertToROC(DateTime date) {
     // 计算民国年份

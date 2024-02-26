@@ -23,6 +23,7 @@
       "**/node_modules/**"
     ],
     "rewrites": [
+      { "source": "/activity/**", "dynamicLinks": true},
       {
         "source": "**",
         "destination": "/index.html"
