@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:upoint_web/firebase/function_methods.dart';
+import 'package:upoint_web/globals/time_transfer.dart';
 import 'package:upoint_web/globals/user_simple_preference.dart';
 import 'package:upoint_web/models/post_model.dart';
 import 'package:upoint_web/models/sign_form_model.dart';
@@ -101,11 +103,21 @@ class FirestoreMethods {
       await UserSimplePreference.removepost();
       print('上傳成功');
       if (getForm == null) {
+        // 不用報名
         formUrl = null;
       } else if (getForm.substring(0, 4) == "http") {
+        // 外部表單
         formUrl = getForm;
       } else {
+        // 本表單
         formUrl = "https://upoint.tw/signForm?id=$postId";
+        // 觸發創建通知task
+        await FunctionMethods().createPostReminderTask(
+          postId,
+          "活動提醒",
+          "提醒您報名的活動 “${post.title}” 將在${TimeTransfer.timeTrans06(Timestamp.fromDate(post.startDateTime))}開始，活動地點於 “${post.location}進行”",
+          post.remindDateTime,
+        );
       }
       // 幫organizer的postLength加一
       await _firestore.collection('organizers').doc(organizer.uid).update({
