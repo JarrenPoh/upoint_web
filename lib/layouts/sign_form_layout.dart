@@ -124,7 +124,7 @@ class SignFormLayout extends StatelessWidget {
             height: 152,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage("assets/create_failed.png"),
+                image: AssetImage("assets/create_failed.png"),
                 fit: BoxFit.cover,
               ),
             ),

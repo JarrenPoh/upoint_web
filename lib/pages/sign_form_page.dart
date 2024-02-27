@@ -118,7 +118,7 @@ class _SignFormPageState extends State<SignFormPage> {
           height: 76,
           decoration: BoxDecoration(
             image: DecorationImage(
-              image: NetworkImage(url),
+              image: AssetImage(url),
             ),
           ),
         ),

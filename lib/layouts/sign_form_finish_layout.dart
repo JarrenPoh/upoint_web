@@ -40,7 +40,7 @@ class SignFormFinishLayout extends StatelessWidget {
             height: 152,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage("assets/$image.png"),
+                image: AssetImage("assets/$image.png"),
                 fit: BoxFit.cover,
               ),
             ),
@@ -69,7 +69,7 @@ class SignFormFinishLayout extends StatelessWidget {
             height: 152,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage("assets/$image.png"),
+                image: AssetImage("assets/$image.png"),
                 fit: BoxFit.cover,
               ),
             ),

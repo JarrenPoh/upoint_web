@@ -96,7 +96,7 @@ class _CenterPageState extends State<CenterPage> {
                                 height: 27,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    image: NetworkImage(
+                                    image: AssetImage(
                                       "assets/$leftImage.png",
                                     ),
                                     fit: BoxFit.cover,
@@ -139,7 +139,7 @@ class _CenterPageState extends State<CenterPage> {
                                 height: 27,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    image: NetworkImage(
+                                    image: AssetImage(
                                       "assets/$rightImage.png",
                                     ),
                                     fit: BoxFit.cover,
