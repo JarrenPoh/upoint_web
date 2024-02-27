@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/globals/regular_text.dart';
+import 'package:upoint_web/widgets/center/components/search_status_dropdown.dart';
 import '../bloc/center_bloc.dart';
 
 class CenterPage extends StatefulWidget {
@@ -47,8 +48,18 @@ class _CenterPageState extends State<CenterPage> {
                         MediumText(
                           color: grey500,
                           size: 18,
-                          text: "活動中心",
-                        )
+                          text: "活動狀態",
+                        ),
+                        const SizedBox(width: 16),
+                        SearchStatusDropdown(bloc: widget.bloc),
+                        // const SizedBox(width: 64),
+                        // MediumText(
+                        //   color: grey500,
+                        //   size: 18,
+                        //   text: "活動日期",
+                        // ),
+                        // const SizedBox(width: 16),
+                        // SearchTimeDropdown(bloc: widget.bloc),
                       ],
                     ),
                   ),
@@ -65,14 +76,15 @@ class _CenterPageState extends State<CenterPage> {
                     ),
                   ),
                   // Expanded(child: Column(children: [],)),
-                  ValueListenableBuilder<int>(
+                  ValueListenableBuilder<Map>(
                     valueListenable: widget.bloc.pageValueNotifier,
                     builder: (context, value, child) {
-                      int _currPage = value;
+                      int _currPage = value["currPage"];
+                      int _allPage = value["allPage"];
                       String leftImage = _currPage == 1
                           ? "arrow_left_grey"
                           : "arrow_left_primary";
-                      String rightImage = _currPage == widget.bloc.allPage
+                      String rightImage = _currPage == _allPage
                           ? "arrow_right_grey"
                           : "arrow_right_primary";
                       return Padding(
@@ -87,8 +99,8 @@ class _CenterPageState extends State<CenterPage> {
                               cursor: SystemMouseCursors.click,
                               child: GestureDetector(
                                 onTap: _currPage != 1
-                                    ? () => widget.bloc
-                                        .fetchNextPosts(_currPage - 1)
+                                    ? () =>
+                                        widget.bloc.changePage(_currPage - 1)
                                     : () {},
                                 child: Container(
                                   width: 27,
@@ -124,14 +136,14 @@ class _CenterPageState extends State<CenterPage> {
                             RegularText(
                                 color: grey500,
                                 size: 16,
-                                text: "/ ${widget.bloc.allPage}"),
+                                text: "/ ${_allPage}"),
                             const SizedBox(width: 12),
                             MouseRegion(
                               cursor: SystemMouseCursors.click,
                               child: GestureDetector(
-                                onTap: _currPage != widget.bloc.allPage
-                                    ? () => widget.bloc
-                                        .fetchNextPosts(_currPage + 1)
+                                onTap: _currPage != _allPage
+                                    ? () =>
+                                        widget.bloc.changePage(_currPage + 1)
                                     : () {},
                                 child: Container(
                                   width: 27,

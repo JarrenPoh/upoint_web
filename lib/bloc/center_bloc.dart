@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/models/organizer_model.dart';
@@ -8,36 +10,76 @@ class CenterBloc {
   CenterBloc(OrganizerModel _organizer) {
     organizer = _organizer;
     fetchInitialPosts();
-    allPage = (organizer.postLength / limit).ceil();
   }
-  int currentPage = 1;
-  late int allPage;
-  DocumentSnapshot? lastDocument; // 用于分页
-  List<DocumentSnapshot> allDocuments = [];
+  List<QueryDocumentSnapshot> _allList = [];
   final int limit = 5;
-  ValueNotifier<int> pageValueNotifier = ValueNotifier(1);
+  ValueNotifier<Map> pageValueNotifier = ValueNotifier({
+    "currPage": 1,
+    "allPage": 0,
+  });
   ValueNotifier<List<PostModel>?> postValueNotifier = ValueNotifier(null);
+  String searchStatus = "即將開始的活動";
+
+  fetchPost() async {
+    DateTime _now = DateTime.now();
+    var _a = FirebaseFirestore.instance
+        .collection('posts')
+        .where('organizerUid', isEqualTo: organizer.uid);
+    bool _descending = true;
+    switch (searchStatus) {
+      case "全選":
+        _allList = (await _a.get()).docs.toList();
+        break;
+      case "即將開始的活動":
+        _allList = (await _a
+                .where('startDateTime', isGreaterThan: _now)
+                .orderBy("startDateTime", descending: _descending)
+                .get())
+            .docs
+            .toList();
+
+        break;
+      case "進行中的活動":
+        _allList = (await _a
+                .where('endDateTime', isGreaterThan: _now)
+                .orderBy("endDateTime", descending: _descending)
+                .get())
+            .docs
+            .where((doc) {
+          var startDateTime = doc['startDateTime'] as Timestamp;
+          return startDateTime.toDate().isBefore(_now);
+        }).toList();
+
+        break;
+      case "已結束的活動":
+        _allList = (await _a
+                .where('endDateTime', isLessThan: _now)
+                .orderBy("endDateTime", descending: _descending)
+                .get())
+            .docs
+            .toList();
+
+        break;
+    }
+  }
 
   fetchInitialPosts() async {
+    await fetchPost();
     try {
-      var _query = FirebaseFirestore.instance
-          .collection('posts')
-          .where('organizerUid', isEqualTo: organizer.uid)
-          .orderBy('datePublished', descending: false)
-          .limit(limit);
-      QuerySnapshot<Map<String, dynamic>> fetchPost = await _query.get();
-      List<QueryDocumentSnapshot> _list = fetchPost.docs.toList();
-      debugPrint('找了${_list.length}則貼文');
-      if (_list.isEmpty) {
+      debugPrint('找了${_allList.length}則貼文');
+      if (_allList.isEmpty) {
         postValueNotifier.value = [];
       } else {
-        lastDocument = _list.last;
-        allDocuments.addAll(_list);
         postValueNotifier.value = [];
-        postValueNotifier.value =
-            (_list.map((e) => PostModel.fromSnap(e)).toList());
+        int _end = (_allList.length) >= limit ? limit : (_allList.length) % limit;
+        List<QueryDocumentSnapshot> _list =  _allList;
+        postValueNotifier.value = (_list
+            .getRange(0, _end)
+            .map((e) => PostModel.fromSnap(e))
+            .toList());
       }
-      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+      pageValueNotifier.value["allPage"] = (_allList.length / limit).ceil();
+      pageValueNotifier.notifyListeners();
       postValueNotifier.notifyListeners();
     } catch (e) {
       debugPrint('索取提文失敗：$e');
@@ -45,41 +87,18 @@ class CenterBloc {
   }
 
   // 加载下一页
-  Future<void> fetchNextPosts(int _page) async {
-    pageValueNotifier.value = _page;
-    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+  Future<void> changePage(int _page) async {
+    pageValueNotifier.value["currPage"] = _page;
     pageValueNotifier.notifyListeners();
     int _start = (_page - 1) * limit;
-    int _end = limit;
-    try {
-      debugPrint('換頁');
-      var _query = FirebaseFirestore.instance
-          .collection('posts')
-          .where('organizerUid', isEqualTo: organizer.uid)
-          .orderBy('datePublished', descending: false)
-          .startAfterDocument(lastDocument!)
-          .limit(limit);
-      // 如果文章不夠了
-      if (allDocuments.length < _start + 1) {
-        debugPrint('文章不夠了');
-        QuerySnapshot<Map<String, dynamic>> fetchPost = await _query.get();
-        List<QueryDocumentSnapshot> _list = fetchPost.docs.toList();
-        debugPrint('找了${_list.length}則貼文');
-        if (_list.isNotEmpty) {
-          lastDocument = _list.last;
-          allDocuments.addAll(_list);
-        }
-      }
-      _end = (allDocuments.length - _start) >= limit
-          ? limit
-          : (allDocuments.length - _start) % limit;
-      List _list = allDocuments.getRange(_start, _start + _end).toList();
-      postValueNotifier.value =
-          (_list.map((doc) => PostModel.fromSnap(doc)).toList());
-      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-      postValueNotifier.notifyListeners();
-    } catch (e) {
-      debugPrint('索取提文失敗：$e');
-    }
+    debugPrint('換頁');
+    int _end = (_allList.length - _start) >= limit
+        ? limit
+        : (_allList.length - _start) % limit;
+
+   List<QueryDocumentSnapshot> _list =  _allList.getRange(_start, _start + _end).toList();
+    postValueNotifier.value =
+        (_list.map((doc) => PostModel.fromSnap(doc)).toList());
+    postValueNotifier.notifyListeners();
   }
 }

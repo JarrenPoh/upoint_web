@@ -22,10 +22,14 @@ class CenterInformLayout extends StatefulWidget {
 
 class _CenterInformLayoutState extends State<CenterInformLayout> {
   String? formUrl;
-  late String dateDuration;
+  String dateDuration = "";
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     if (widget.post.form?.substring(0, 4) == "http") {
       formUrl = widget.post.form!;
     } else if (widget.post.form != null) {
@@ -33,10 +37,6 @@ class _CenterInformLayoutState extends State<CenterInformLayout> {
     }
     dateDuration = TimeTransfer.timeTrans05(
         widget.post.startDateTime, widget.post.endDateTime);
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 17),
       height: 300 / 16 * 9,
