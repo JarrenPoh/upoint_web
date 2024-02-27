@@ -5,6 +5,7 @@ admin.initializeApp();
 const logger = require("firebase-functions/logger");
 const cors = require('cors')({origin: true});
 const moment = require('moment-timezone');
+const { v1: uuidv1 } = require('uuid');
 
 
 
@@ -79,14 +80,34 @@ exports.createPostReminderTask = functions.region('asia-east1').https.onRequest(
           .get();
 
       const tokens = [];
+      const inboxPromises = []; // 用于存放向用户 inbox 存储信息的 promises
       subscribersSnapshot.forEach(doc => {
           const subscriber = doc.data();
           const subscriberTokens = subscriber.fcmToken;
+          const subscriberUid = subscriber.uuid;
           if (Array.isArray(subscriberTokens)) {
               tokens.push(...subscriberTokens);
           }
+
+           // 创建存储到用户 inbox 的 promise
+          const inboxPromise = admin.firestore()
+           .collection("users")
+           .doc(subscriberUid)
+           .collection("inboxs")
+           .add({
+               datePublished: admin.firestore.FieldValue.serverTimestamp(),
+               name: "優碰客服",
+               inboxId: uuidv1(),
+               uid: "tvRc40ekeeY5UTiPist8qVRm0m92",
+               pic: "https://firebasestorage.googleapis.com/v0/b/upoint-d4fc3.appspot.com/o/upoint_logo.png?alt=media&token=c75e3644-e86d-47cf-82d6-2becb27f8d25",
+               text: text,
+               url: `https://upoint.tw/activity?id=${postId}`,
+           });
+          inboxPromises.push(inboxPromise);
       });
       logger.info(`token llength: ${tokens.length}`)
+      // 等待所有的 inbox 信息被存储
+      await Promise.all(inboxPromises);
 
       if (tokens.length > 0) {
           // 发送 FCM 通知
@@ -96,6 +117,12 @@ exports.createPostReminderTask = functions.region('asia-east1').https.onRequest(
                   body: text,
               },
               tokens: tokens,
+              data:{
+                click_action: "FLUTTER_NOTIFICATION_CLICK",
+                id: "2",
+                status: "done",
+                open_link: `https://upoint.tw/activity?id=${postId}`,
+              }
           };
 
           const response = await admin.messaging().sendMulticast(message);

@@ -16,7 +16,8 @@
     "@google-cloud/tasks": "^5.1.0",
     "firebase-admin": "^11.8.0",
     "firebase-functions": "^4.3.1",
-    "moment-timezone": "^0.5.45"
+    "moment-timezone": "^0.5.45",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "firebase-functions-test": "^3.1.0"
