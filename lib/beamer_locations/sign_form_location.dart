@@ -42,6 +42,7 @@ class SignFormLocation extends BeamLocation {
           appBar: PreferredSize(
             preferredSize: Size(screenSize.width, 80),
             child: CustomNavigationBar(
+              organizer: null,
               onIconTapped: () {},
               isForm: true,
             ),

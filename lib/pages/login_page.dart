@@ -84,9 +84,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void loginUser() async {
-    print('login');
-    print(_emailController.text);
-    print(_passwordController.text);
     if (_emailController.text.trim() == '') {
       setState(() {
         list[0]["errorText"] = "電子郵件不可為空";
@@ -102,9 +99,9 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       if (!isLoading) {
         FocusScope.of(context).unfocus();
-        setState(() {
-          isLoading = true;
-        });
+        // setState(() {
+        //   isLoading = true;
+        // });
         String res = await AuthMethods().loginUser(
           email: _emailController.text,
           password: _passwordController.text,
@@ -122,13 +119,13 @@ class _LoginPageState extends State<LoginPage> {
         // ignore: use_build_context_synchronously
         // Navigator.pop(context, true);
       } else {
-        await AuthMethods().signOut();
-        // ignore: use_build_context_synchronously
-        await Messenger.dialog(
+        Messenger.dialog(
           '如有問題，請洽詢官方:service.upoint@gmail.com',
           '你尚未驗證你的Gmail',
           context,
         );
+        await AuthMethods().signOut();
+        // ignore: use_build_context_synchronously
       }
     } else {
       setState(() {

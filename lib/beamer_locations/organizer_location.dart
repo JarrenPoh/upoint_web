@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
+import 'package:upoint_web/firebase/auth_methods.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/layouts/center_layout.dart';
 import 'package:upoint_web/layouts/create_step_1_layout.dart';
@@ -12,6 +13,7 @@ import 'package:upoint_web/layouts/inform_layout.dart';
 import 'package:upoint_web/layouts/login_layout.dart';
 import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/widgets/custom_navigation_bar.dart';
+import 'package:upoint_web/widgets/tap_hover_container.dart';
 
 class OrganizerLocation extends BeamLocation {
   List<String> get pathBlueprints => [
@@ -113,6 +115,19 @@ class OrganizerLocation extends BeamLocation {
                                 size: 18,
                                 text:
                                     "如想加入UPoint活動主辦方，請洽詢service.upoint@gmail.com",
+                              ),
+                              const SizedBox(height: 15),
+                              SizedBox(
+                                width: 150,
+                                child: TapHoverContainer(
+                                  text: "登出",
+                                  padding: 15,
+                                  hoverColor: secondColor,
+                                  borderColor: Colors.transparent,
+                                  textColor: Colors.white,
+                                  color: primaryColor,
+                                  onTap: () => AuthMethods().signOut(),
+                                ),
                               ),
                             ],
                           ),

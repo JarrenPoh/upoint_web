@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/firebase/auth_methods.dart';
 import 'package:upoint_web/globals/regular_text.dart';
@@ -23,7 +22,6 @@ class CustomNavigationBar extends StatefulWidget {
 }
 
 class _CustomNavigationBarState extends State<CustomNavigationBar> {
-  final JustTheController tooltipController = JustTheController();
   final List<Map> tapContainerList = [
     {
       "title": "主辦資訊",
