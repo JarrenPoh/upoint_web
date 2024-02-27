@@ -80,7 +80,7 @@ class AuthMethods {
       }
       res = "success";
     } on PlatformException catch (e) {
-      print(e);
+      debugPrint(e.toString());
       res = e.toString();
     }
     return res;
@@ -90,7 +90,7 @@ class AuthMethods {
     int retries = 0;
     while (retries < 3) {
       try {
-        print("索取使用者的firestore");
+        debugPrint("索取使用者的firestore");
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
             .collection('users')
             .doc(FirebaseAuth.instance.currentUser!.uid)
@@ -103,7 +103,7 @@ class AuthMethods {
           retries++;
         }
       } catch (e) {
-        print(e);
+        debugPrint(e.toString());
         await Future.delayed(Duration(seconds: 2));
         retries++;
       }

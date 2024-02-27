@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 
 class StorageMethods {
   final FirebaseStorage _storage =
@@ -23,7 +24,7 @@ class StorageMethods {
       String downloadUrl = await snap.ref.getDownloadURL();
       return downloadUrl;
     } catch (e) {
-      print(e.toString());
+      debugPrint(e.toString());
     }
     return "";
   }

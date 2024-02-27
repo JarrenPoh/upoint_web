@@ -67,7 +67,7 @@ class SignFormLayout extends StatelessWidget {
     List<FormModel> formList,
     SignFormBloc bloc,
   ) {
-    print('切換到 tabletLayout');
+    debugPrint('切換到 tabletLayout');
     return SignFormPage(
       isWeb: false,
       child: Column(
@@ -93,7 +93,7 @@ class SignFormLayout extends StatelessWidget {
     List<FormModel> formList,
     SignFormBloc bloc,
   ) {
-    print('切換到 desktopLayout');
+    debugPrint('切換到 desktopLayout');
     return SignFormPage(
       isWeb: true,
       child: Row(

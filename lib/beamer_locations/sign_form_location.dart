@@ -12,7 +12,7 @@ import 'package:upoint_web/models/user_model.dart';
 import 'package:upoint_web/widgets/custom_navigation_bar.dart';
 
 class SignFormLocation extends BeamLocation {
-  List<String> get pathBlueprints => [
+  List<String> get pathBluedebugPrints => [
         '/signForm',
       ];
 
@@ -62,18 +62,18 @@ class SignFormLocation extends BeamLocation {
                       return const CircularProgressIndicator();
                     } else if (snapshot.hasError || snapshot.data == null) {
                       FirebaseAuth.instance.signOut();
-                      print('發生錯誤，系統先登出');
+                      debugPrint('發生錯誤，系統先登出');
                       return Text('Error: ${snapshot.error}');
                     } else {
                       UserModel? user =
                           UserModel.fromMap(snapshot.data?.data()as Map);
-                      print('拿了身份：${user?.toJson()}');
+                      debugPrint('拿了身份：${user?.toJson()}');
                       return SingleChildScrollView(child: page(user!));
                     }
                   },
                 );
               } else if (snapshot.hasError) {
-                print('firebase authState error');
+                debugPrint('firebase authState error');
                 return Center(child: Text('${snapshot.error}'));
               } else {
                 return  Center(child:LoginLayout(role: "user"));
@@ -86,5 +86,5 @@ class SignFormLocation extends BeamLocation {
   }
 
   @override
-  List<Pattern> get pathPatterns => pathBlueprints;
+  List<Pattern> get pathPatterns => pathBluedebugPrints;
 }

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:upoint_web/firebase/function_methods.dart';
 import 'package:upoint_web/globals/time_transfer.dart';
@@ -53,7 +54,7 @@ class FirestoreMethods {
       res = 'success';
     } catch (e) {
       res = e.toString();
-      print(res);
+      debugPrint(res);
     }
     return res;
   }
@@ -101,7 +102,7 @@ class FirestoreMethods {
       res = 'success';
       await UserSimplePreference.removeform();
       await UserSimplePreference.removepost();
-      print('上傳成功');
+      debugPrint('上傳成功');
       if (getForm == null) {
         // 不用報名
         formUrl = null;
@@ -125,7 +126,7 @@ class FirestoreMethods {
       });
     } catch (err) {
       res = err.toString();
-      print(res);
+      debugPrint(res);
       await UserSimplePreference.removeform();
       await UserSimplePreference.removepost();
     }
@@ -170,7 +171,7 @@ class FirestoreMethods {
       await UserSimplePreference.removeSignForm();
     } catch (err) {
       res = err.toString();
-      print('err${err.toString()}');
+      debugPrint('err${err.toString()}');
     }
     return res;
   }

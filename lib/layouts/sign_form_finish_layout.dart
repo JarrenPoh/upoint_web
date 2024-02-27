@@ -28,7 +28,7 @@ class SignFormFinishLayout extends StatelessWidget {
   }
 
   Widget tabletLayout(String image, String text) {
-    print('切換到 tabletLayout');
+    debugPrint('切換到 tabletLayout');
     return SignFormPage(
       isWeb: false,
       child: Column(
@@ -57,7 +57,7 @@ class SignFormFinishLayout extends StatelessWidget {
   }
 
   Widget webLayout(String image, String text) {
-    print('切換到 desktopLayout');
+    debugPrint('切換到 desktopLayout');
     return SignFormPage(
       isWeb: true,
       child: Column(

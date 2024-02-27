@@ -30,7 +30,7 @@ class SignFormBloc {
           .collection('posts')
           .doc(postId)
           .get();
-      print('找了1則貼文，拿出它的表單');
+      debugPrint('找了1則貼文，拿出它的表單');
       PostModel? _post =
           fetchPost.exists == false ? null : PostModel.fromSnap(fetchPost);
       String? _form = _post?.form;
@@ -51,7 +51,7 @@ class SignFormBloc {
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       postValueNotifier.notifyListeners();
     } catch (e) {
-      print('error:$e');
+      debugPrint('error:$e');
     }
   }
 
@@ -105,7 +105,7 @@ class SignFormBloc {
   }
 
   confirmSend(UserModel user, String postId, BuildContext context) async {
-    print('傳送報名表單');
+    debugPrint('傳送報名表單');
     String res = await FirestoreMethods().uploadSignForm(user, postId);
     // ignore: use_build_context_synchronously
     Navigator.push(

@@ -24,11 +24,11 @@ class CreateStep2Layout extends StatelessWidget {
   final OrganizerModel organizer;
   @override
   Widget build(BuildContext context) {
-    print('asd:$getForm');
+    debugPrint('asd:$getForm');
     final CreateStep2Bloc _bloc = CreateStep2Bloc((jsonDecode(getForm) as List)
         .map((jsonItem) => FormModel.fromMap(jsonItem))
         .toList());
-    print('asdad');
+    debugPrint('asdad');
     return ResponsiveLayout(
       tabletLayout: tabletLayout(context, _bloc),
       webLayout: webLayout(context, _bloc),
@@ -36,7 +36,7 @@ class CreateStep2Layout extends StatelessWidget {
   }
 
   Widget tabletLayout(BuildContext context, CreateStep2Bloc _bloc) {
-    print('切換到 tabletLayout');
+    debugPrint('切換到 tabletLayout');
     Widget formWidget = Column(
       children: [
         //左邊區塊
@@ -60,7 +60,7 @@ class CreateStep2Layout extends StatelessWidget {
   }
 
   Widget webLayout(BuildContext context, CreateStep2Bloc _bloc) {
-    print('切換到 desktopLayout');
+    debugPrint('切換到 desktopLayout');
     Widget formWidget = Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

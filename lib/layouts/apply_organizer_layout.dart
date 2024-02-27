@@ -113,7 +113,7 @@ class ApplyLayout extends StatelessWidget {
                 padLeft: isWeb ? 22 : 6,
                 hintText: i,
                 onChanged: (String e) {
-                  print(e);
+                  debugPrint(e);
                 },
               ),
             ],
@@ -145,7 +145,7 @@ class ApplyLayout extends StatelessWidget {
                 padLeft: isWeb ? 22 : 6,
                 hintText: i,
                 onChanged: (String e) {
-                  print(e);
+                  debugPrint(e);
                 },
               ),
             ],

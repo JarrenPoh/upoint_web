@@ -27,7 +27,7 @@ class CenterBloc {
           .limit(limit);
       QuerySnapshot<Map<String, dynamic>> fetchPost = await _query.get();
       List<QueryDocumentSnapshot> _list = fetchPost.docs.toList();
-      print('找了${_list.length}則貼文');
+      debugPrint('找了${_list.length}則貼文');
       if (_list.isEmpty) {
         postValueNotifier.value = [];
       } else {
@@ -40,7 +40,7 @@ class CenterBloc {
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       postValueNotifier.notifyListeners();
     } catch (e) {
-      print('索取提文失敗：$e');
+      debugPrint('索取提文失敗：$e');
     }
   }
 
@@ -52,7 +52,7 @@ class CenterBloc {
     int _start = (_page - 1) * limit;
     int _end = limit;
     try {
-      print('換頁');
+      debugPrint('換頁');
       var _query = FirebaseFirestore.instance
           .collection('posts')
           .where('organizerUid', isEqualTo: organizer.uid)
@@ -61,10 +61,10 @@ class CenterBloc {
           .limit(limit);
       // 如果文章不夠了
       if (allDocuments.length < _start + 1) {
-        print('文章不夠了');
+        debugPrint('文章不夠了');
         QuerySnapshot<Map<String, dynamic>> fetchPost = await _query.get();
         List<QueryDocumentSnapshot> _list = fetchPost.docs.toList();
-        print('找了${_list.length}則貼文');
+        debugPrint('找了${_list.length}則貼文');
         if (_list.isNotEmpty) {
           lastDocument = _list.last;
           allDocuments.addAll(_list);
@@ -79,7 +79,7 @@ class CenterBloc {
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       postValueNotifier.notifyListeners();
     } catch (e) {
-      print('索取提文失敗：$e');
+      debugPrint('索取提文失敗：$e');
     }
   }
 }

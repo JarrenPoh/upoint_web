@@ -52,7 +52,7 @@ class CreateStep3Layout extends StatelessWidget {
     BuildContext context,
     String? formUrl,
   ) {
-    print('切換到 tabletLayout');
+    debugPrint('切換到 tabletLayout');
     return CreatePage(
       isWeb: false,
       step: 3,
@@ -91,7 +91,7 @@ class CreateStep3Layout extends StatelessWidget {
     BuildContext context,
     String? formUrl,
   ) {
-    print('切換到 desktopLayout');
+    debugPrint('切換到 desktopLayout');
     return CreatePage(
       isWeb: true,
       step: 3,

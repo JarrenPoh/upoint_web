@@ -99,7 +99,7 @@ class OrganizerLocation extends BeamLocation {
                     } else {
                       OrganizerModel? organizer =
                           OrganizerModel.fromMap(snapshot.data?.data());
-                      print('拿了身份：${organizer?.toJson()}');
+                      debugPrint('拿了身份：${organizer?.toJson()}');
                       if (organizer == null) {
                         return Center(
                           child: Column(
@@ -150,7 +150,7 @@ class OrganizerLocation extends BeamLocation {
                   },
                 );
               } else if (snapshot.hasError) {
-                print('firebase authState error');
+                debugPrint('firebase authState error');
                 return Center(child: Text('${snapshot.error}'));
               } else {
                 return Center(child: LoginLayout(role: "organizer"));

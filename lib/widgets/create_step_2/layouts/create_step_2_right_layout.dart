@@ -72,9 +72,9 @@ class CreateStep2RightLayout extends StatelessWidget {
                   valueListenable: bloc.valueNotifier,
                   builder: (context, value, child) {
                     for (var v in value) {
-                      print("title: ${v.title}");
+                      debugPrint("title: ${v.title}");
                       for (var i in v.options) {
-                        print("options: ${i.toJson()}");
+                        debugPrint("options: ${i.toJson()}");
                       }
                     }
                     List<Map> _options = [];
@@ -105,7 +105,7 @@ class CreateStep2RightLayout extends StatelessWidget {
                       );
                     }
                     // print("lengths: $_lengths");
-                    print("_options: $_options");
+                    debugPrint("_options: $_options");
                     return ReorderableListView(
                       shrinkWrap: true,
                       // needsLongPressDraggable: true,
@@ -120,7 +120,7 @@ class CreateStep2RightLayout extends StatelessWidget {
                       buildDefaultDragHandles: false,
                       onReorder: (oldIndex, newIndex) {
                         if (_lengths.contains(oldIndex - 1)) {
-                          print('是標題不能移動');
+                          debugPrint('是標題不能移動');
                         } else {
                           // 这是因为在移动过程中，拖动的项已被从列表中移除
                           if (newIndex > oldIndex) {

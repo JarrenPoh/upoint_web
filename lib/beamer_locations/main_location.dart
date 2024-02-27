@@ -16,7 +16,7 @@ class MainLocation extends BeamLocation {
 
     Widget page = const Center(child: Text("page not found"));
     Uri uri = state.toRouteInformation().uri;
-    print('uri: $uri');
+    debugPrint('uri: $uri');
     // if (uri.pathSegments.contains('inform')) {
     //   page =  InformLayout();
     // } else if (uri.pathSegments.contains('center')) {

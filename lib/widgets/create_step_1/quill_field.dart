@@ -25,7 +25,7 @@ class _QuillFieldState extends State<QuillField> {
   void initState() {
     super.initState();
     if (widget.text != null) {
-      print(widget.text);
+      debugPrint(widget.text);
       _controller.document = Document.fromJson(jsonDecode(widget.text!));
       needHint = false;
     }

@@ -6,30 +6,22 @@ import 'package:upoint_web/globals/regular_text.dart';
 
 import '../../../models/post_model.dart';
 
-class CenterBarLayout extends StatefulWidget {
+// ignore: must_be_immutable
+class CenterBarLayout extends StatelessWidget {
   final PostModel post;
-
-  const CenterBarLayout({
+   CenterBarLayout({
     super.key,
     required this.post,
   });
 
-  @override
-  State<CenterBarLayout> createState() => _CenterBarLayoutState();
-}
-
-class _CenterBarLayoutState extends State<CenterBarLayout> {
   late bool noLimit;
+
   late bool outSideForm;
-  @override
-  void initState() {
-    super.initState();
-    noLimit = widget.post.capacity == null;
-    outSideForm = widget.post.form?.substring(0, 4) == "http";
-  }
 
   @override
   Widget build(BuildContext context) {
+    noLimit = post.capacity == null;
+    outSideForm = post.form?.substring(0, 4) == "http";
     return SizedBox(
       width: 120,
       height: 120,
@@ -40,7 +32,7 @@ class _CenterBarLayoutState extends State<CenterBarLayout> {
         lineWidth: 8,
         percent: outSideForm || noLimit
             ? 0
-            : widget.post.signFormsLength! / widget.post.capacity!,
+            : post.signFormsLength! / post.capacity!,
         center: outSideForm
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -64,13 +56,13 @@ class _CenterBarLayoutState extends State<CenterBarLayout> {
                       ? MediumText(
                           color: grey500,
                           size: 14,
-                          text: "${widget.post.signFormsLength}人",
+                          text: "${post.signFormsLength}人",
                         )
                       : MediumText(
                           color: grey500,
                           size: 14,
                           text:
-                              "${widget.post.signFormsLength}/${widget.post.capacity}",
+                              "${post.signFormsLength}/${post.capacity}",
                         ),
                 ],
               ),

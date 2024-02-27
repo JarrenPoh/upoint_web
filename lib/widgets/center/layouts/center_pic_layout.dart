@@ -28,7 +28,7 @@ class _CenterPicLayoutState extends State<CenterPicLayout> {
         });
       },
       onTap: () {
-        print('tap');
+        debugPrint('tap');
       },
       child: Container(
         width: widget.width,
@@ -46,15 +46,14 @@ class _CenterPicLayoutState extends State<CenterPicLayout> {
           aspectRatio: 16 / 9,
           child: isHover
               ? ClipRect(
-                child: Container(
+                  child: Container(
                     decoration: BoxDecoration(
                       color: grey500.withOpacity(0.4),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     alignment: Alignment.center,
                     child: BackdropFilter(
-                      filter: ImageFilter.blur(
-                          sigmaX: 2.0, sigmaY: 2.0), 
+                      filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
                       child: Container(
                         width: 128,
                         height: 35,
@@ -71,7 +70,7 @@ class _CenterPicLayoutState extends State<CenterPicLayout> {
                       ),
                     ),
                   ),
-              )
+                )
               : Container(),
         ),
       ),

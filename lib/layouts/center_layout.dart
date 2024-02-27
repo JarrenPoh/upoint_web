@@ -13,7 +13,7 @@ import '../pages/center_page.dart';
 
 class CenterLayout extends StatelessWidget {
   final OrganizerModel organizer;
-  CenterLayout({
+  const CenterLayout({
     super.key,
     required this.organizer,
   });

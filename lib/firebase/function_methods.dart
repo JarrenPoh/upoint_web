@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../secret.dart';
@@ -22,9 +23,9 @@ class FunctionMethods {
     );
 
     if (response.statusCode == 200) {
-      print('Task created successfully');
+      debugPrint('Task created successfully');
     } else {
-      print('Failed to create task');
+      debugPrint('Failed to create task');
     }
   }
 }

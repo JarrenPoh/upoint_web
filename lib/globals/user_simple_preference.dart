@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/form_model.dart';
@@ -16,7 +17,7 @@ class UserSimplePreference {
 
   //organizer create post
   static Future setpost(String post) async {
-    print('存：$post');
+    debugPrint('存：$post');
     await _preferences?.setString(_post, post);
   }
 
@@ -30,7 +31,7 @@ class UserSimplePreference {
 
   //organizer create form
   static Future setform(String form) async {
-    print('存：$form');
+    debugPrint('存：$form');
     await _preferences?.setString(_form, form);
   }
 
@@ -47,7 +48,7 @@ class UserSimplePreference {
 
   //user sign form
   static Future setSignForm(String signForm) async {
-    print('存：$signForm');
+    debugPrint('存：$signForm');
     await _preferences?.setString(_signForm, signForm);
   }
 

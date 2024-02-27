@@ -12,11 +12,11 @@ class CreateStep2Bloc {
   late ValueNotifier<PostModel> postValue;
   CreateStep2Bloc(List<FormModel> formModel) {
     createFormBloc = CreateFormBloc(formModel);
-    print('object0');
+    debugPrint('object0');
     String getPost = UserSimplePreference.getpost();
-    print('object');
+    debugPrint('object');
     postValue = ValueNotifier(PostModel.fromMap(jsonDecode(getPost)));
-    print('object11');
+    debugPrint('object11');
   }
   ValueNotifier<String> formOptionValue = ValueNotifier("form");
   List<Map> formOptions = [
