@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:upoint_web/color.dart';
+import 'package:upoint_web/firebase/auth_methods.dart';
 import 'package:upoint_web/globals/regular_text.dart';
+import 'package:upoint_web/models/organizer_model.dart';
 
 class CustomNavigationBar extends StatefulWidget {
   // final double opacity;
   final bool isForm;
+  final OrganizerModel? organizer;
   final Function onIconTapped;
   const CustomNavigationBar({
     super.key,
     required this.onIconTapped,
     required this.isForm,
+    required this.organizer,
     // required this.opacity,
   });
 
@@ -18,6 +23,7 @@ class CustomNavigationBar extends StatefulWidget {
 }
 
 class _CustomNavigationBarState extends State<CustomNavigationBar> {
+  final JustTheController tooltipController = JustTheController();
   final List<Map> tapContainerList = [
     {
       "title": "主辦資訊",
@@ -35,9 +41,130 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       "isSelected": false,
     },
   ];
+  bool _isOverlayShown = false;
+  late final OverlayEntry _overlayEntry = OverlayEntry(
+    builder: (context) => Positioned(
+      top: 100, // 根据需要调整位置
+      right: 20, // 根据需要调整位置
+      child: Material(
+        color: Colors.white, // 防止点击事件被遮挡
+        shape: OutlineInputBorder(
+          borderSide: BorderSide(color: grey300),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Container(
+          padding:
+              const EdgeInsets.only(top: 15, left: 15, right: 10, bottom: 15),
+          width: 230,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                children: [
+                  Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Image.network(
+                      widget.organizer!.pic!,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        RegularText(
+                          color: grey500,
+                          size: 16,
+                          text: widget.organizer!.username!,
+                          maxLines: 2,
+                        ),
+                        RegularText(
+                          color: grey500,
+                          size: 12,
+                          text: widget.organizer!.email,
+                          maxLines: 2,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Divider(color: grey300),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // InkWell(
+                  //   child: MouseRegion(
+                  //     cursor: SystemMouseCursors.click,
+                  //     child: RegularText(
+                  //       color: grey500,
+                  //       size: 14,
+                  //       text: "帳號設定",
+                  //     ),
+                  //   ),
+                  // ),
+                  // InkWell(
+                  //   child: MouseRegion(
+                  //     cursor: SystemMouseCursors.click,
+                  //     child: RegularText(
+                  //       color: grey500,
+                  //       size: 14,
+                  //       text: "變更密碼",
+                  //     ),
+                  //   ),
+                  // ),
+                  const SizedBox(height: 15),
+                  InkWell(
+                    onTap: () {
+                      _overlayEntry.remove();
+                      AuthMethods().signOut();
+                    },
+                    child: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.logout_outlined,
+                            color: grey500,
+                            size: 15,
+                          ),
+                          const SizedBox(width: 5),
+                          RegularText(
+                            color: grey500,
+                            size: 14,
+                            text: "登出",
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+  void _showOverlay(BuildContext context) {
+    if (_isOverlayShown == false) {
+      Overlay.of(context).insert(_overlayEntry);
+    } else {
+      _overlayEntry.remove();
+    }
+    setState(() {
+      _isOverlayShown = !_isOverlayShown;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
     return Stack(
       children: [
         Container(
@@ -49,12 +176,12 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                 color: Colors.grey.withOpacity(0.2), // 陰影顏色
                 spreadRadius: 1, // 陰影範圍
                 blurRadius: 1, // 模糊半徑
-                offset: Offset(0, 1), // 陰影位置的偏移量
+                offset: const Offset(0, 1), // 陰影位置的偏移量
               ),
             ],
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 100),
+            padding: const EdgeInsets.symmetric(horizontal: 0),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -62,8 +189,11 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(
-                        width: screenSize.width / 10,
+                      const Expanded(
+                        flex: 5,
+                        child: Column(
+                          children: [],
+                        ),
                       ),
                       RichText(
                         text: TextSpan(
@@ -74,10 +204,10 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                               style: TextStyle(
                                 fontSize: 24,
                                 color: primaryColor,
-                                fontFamily: 'NotoSansBold',
+                                fontFamily: 'NotoSansBpold',
                               ),
                             ),
-                            TextSpan(
+                            const TextSpan(
                               text: 'Point',
                               style: TextStyle(
                                 fontSize: 24,
@@ -97,7 +227,8 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                           ],
                         ),
                       ),
-                      Expanded(
+                      const Expanded(
+                        flex: 5,
                         child: Column(
                           children: [],
                         ),
@@ -118,6 +249,29 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                             },
                           ),
                         ),
+                      if (!widget.isForm)
+                        MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: GestureDetector(
+                            onTap: () {
+                              _showOverlay(context);
+                            },
+                            child: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: Image.asset(
+                                "assets/profile.png",
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                        ),
+                      const Expanded(
+                        flex: 1,
+                        child: Column(
+                          children: [],
+                        ),
+                      ),
                     ],
                   ),
                 ),

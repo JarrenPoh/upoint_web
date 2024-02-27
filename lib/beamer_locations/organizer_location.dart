@@ -76,14 +76,6 @@ class OrganizerLocation extends BeamLocation {
       BeamPage(
         key: ValueKey(uri),
         child: Scaffold(
-          backgroundColor: bgColor,
-          appBar: PreferredSize(
-            preferredSize: Size(screenSize.width, 80),
-            child: CustomNavigationBar(
-              onIconTapped: onIconTapped,
-              isForm: false,
-            ),
-          ),
           body: StreamBuilder<User?>(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
@@ -106,7 +98,6 @@ class OrganizerLocation extends BeamLocation {
                       OrganizerModel? organizer =
                           OrganizerModel.fromMap(snapshot.data?.data());
                       print('拿了身份：${organizer?.toJson()}');
-
                       if (organizer == null) {
                         return Center(
                           child: Column(
@@ -127,7 +118,18 @@ class OrganizerLocation extends BeamLocation {
                           ),
                         );
                       } else {
-                        return page(organizer);
+                        return Scaffold(
+                          backgroundColor: bgColor,
+                          appBar: PreferredSize(
+                            preferredSize: Size(screenSize.width, 80),
+                            child: CustomNavigationBar(
+                              onIconTapped: onIconTapped,
+                              organizer: organizer,
+                              isForm: false,
+                            ),
+                          ),
+                          body: page(organizer),
+                        );
                       }
                     }
                   },
