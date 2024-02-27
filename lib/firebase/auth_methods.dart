@@ -1,11 +1,51 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:upoint_web/firebase/firestore_methods.dart';
 import 'package:upoint_web/secret.dart';
 
 class AuthMethods {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  //使用者登入
+  Future<String> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    String res = "Some error occurred";
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      res = "success";
+    } on FirebaseAuthException catch (err) {
+      debugPrint('errorr');
+      if (err.code == 'unknown') {
+        res = 'Please enter all the fields';
+      } else if (err.code == 'wrong-password') {
+        res = '密碼輸入錯誤';
+      } else if (err.code == 'network-request-failed') {
+        res = '網路出現問題';
+      } else if (err.code == 'user-not-found') {
+        res = '此郵箱尚未註冊';
+      } else {
+        res = err.code.toString();
+      }
+    } on PlatformException catch (err) {
+      debugPrint('errorr');
+      res = err.toString();
+      debugPrint(res);
+    } catch (e) {
+      debugPrint('errorr');
+      res = e.toString();
+      debugPrint(res);
+    }
+    return res;
+  }
+
   Future<String> signInWithGoogle(String role) async {
     String res = "some error occur";
     try {
@@ -70,5 +110,10 @@ class AuthMethods {
     }
     return null;
     // 如果重試三次後仍未找到資料，發送一個包含錯誤的 DocumentSnapshot
+  }
+
+  //使用者登出
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 }
