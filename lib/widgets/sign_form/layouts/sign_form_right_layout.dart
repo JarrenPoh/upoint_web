@@ -98,15 +98,16 @@ class _SignFormRightLayoutState extends State<SignFormRightLayout> {
             width: 185,
             height: 39,
             child: TapHoverContainer(
-                text: "送出",
-                padding: 12,
-                hoverColor: secondColor,
-                borderColor: Colors.transparent,
-                textColor: Colors.white,
-                color: primaryColor,
-                onTap: () {
-                  onTap();
-                }),
+              text: "送出",
+              padding: 12,
+              hoverColor: secondColor,
+              borderColor: Colors.transparent,
+              textColor: Colors.white,
+              color: primaryColor,
+              onTap: () {
+                onTap();
+              },
+            ),
           ),
           const SizedBox(height: 29),
         ],

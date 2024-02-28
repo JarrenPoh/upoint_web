@@ -15,11 +15,16 @@ import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/widgets/custom_navigation_bar.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
 
+import '../layouts/center_post_layout.dart';
+import '../layouts/center_sign_form_layout.dart';
+
 class OrganizerLocation extends BeamLocation {
   List<String> get pathBlueprints => [
         '/organizer',
         '/organizer/inform',
         '/organizer/center',
+        '/organizer/center/post',
+        '/organizer/center/signForm',
         '/organizer/create',
       ];
   @override
@@ -35,7 +40,7 @@ class OrganizerLocation extends BeamLocation {
       } else {
         url = "/create";
       }
-      Beamer.of(context).beamToNamed('/organizer' + url);
+      Beamer.of(context).beamToNamed('/organizer$url');
     }
 
     Widget Function(OrganizerModel) page =
@@ -46,10 +51,37 @@ class OrganizerLocation extends BeamLocation {
       return []; // Return an empty list as beamToNamed will handle navigation
     }
     if (uri.pathSegments.contains('inform')) {
+      // 個人簡介
       page = (o) => InformLayout(organizer: o);
+    } else if (uri.pathSegments.contains('post')) {
+      // 活動中心點進去的貼文頁面
+      final id = uri.queryParameters['id'];
+      print('id:$id');
+      if (id != null) {
+        page = (o) => CenterPostLayout(
+              organizer: o,
+              postId: id,
+            );
+      } else {
+        page = (u) => const Center(child: Text("Page not found"));
+      }
+    } else if (uri.pathSegments.contains('signForm')) {
+      // 貼文的報名資訊
+      final id = uri.queryParameters['id'];
+      print('id:$id');
+      if (id != null) {
+        page = (o) => CenterSignFormLayout(
+              organizer: o,
+              postId: id,
+            );
+      } else {
+        page = (u) => const Center(child: Text("Page not found"));
+      }
     } else if (uri.pathSegments.contains('center')) {
+      // 活動中心
       page = (o) => CenterLayout(organizer: o);
     } else if (uri.pathSegments.contains('create')) {
+      //創建列表頁面
       final PageController _controller = PageController();
       jumpToPage(int i) {
         _controller.jumpToPage(i);

@@ -123,8 +123,12 @@ class CenterLayout extends StatelessWidget {
                       ),
                     ),
                     if (v[index].form != null)
-                      CenterBarLayout(
-                        post: v[index],
+                      SizedBox(
+                        width: 120,
+                        height: 120,
+                        child: CenterBarLayout(
+                          post: v[index],
+                        ),
                       ),
                   ],
                 ),

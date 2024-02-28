@@ -7,7 +7,7 @@ class UserModel {
   String? studentID;
   String? className;
   String? phoneNumber;
-  String? fcmToken;
+  List? fcmToken;
   List<String>? signList;
   String? pic;
 

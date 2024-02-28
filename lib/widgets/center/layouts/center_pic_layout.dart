@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/bold_text.dart';
@@ -28,7 +29,8 @@ class _CenterPicLayoutState extends State<CenterPicLayout> {
         });
       },
       onTap: () {
-        debugPrint('tap');
+        Beamer.of(context)
+            .beamToNamed('/organizer/center/post?id=${widget.post.postId!}');
       },
       child: Container(
         width: widget.width,

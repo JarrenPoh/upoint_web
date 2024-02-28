@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SignFormModel {
   String uuid;
-  String? fcmToken;
+  List? fcmToken;
   var datePublished;
   String signFormId;
   String body;

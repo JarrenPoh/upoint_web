@@ -9,3 +9,4 @@ var grey500 = Color(0xFF343434);
 var primaryColor = Color(0xFFF8791D);
 var secondColor = Color(0xFFFB9348);
 var subColor = Color(0xFFFFF5E7);
+var divColor = Color(0xFFF8F8F8);
