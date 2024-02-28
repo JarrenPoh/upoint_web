@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:upoint_web/color.dart';
@@ -8,8 +7,6 @@ import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/models/post_model.dart';
 import 'package:upoint_web/widgets/tap_hover_text.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../globals/global.dart';
 import '../../globals/regular_text.dart';
 import '../../globals/time_transfer.dart';
 
@@ -46,21 +43,25 @@ class CenterPostInformLayout extends StatelessWidget {
         "text": post.reward ?? "無",
       },
       {
+        "title": "主辦單位：",
         "type": "back",
         "icon": Icons.home,
         "text": organnizer.username,
       },
       {
+        "title": "聯絡人：",
         "type": "back",
         "icon": Icons.person,
         "text": post.contact ?? "無",
       },
       {
+        "title": "聯絡方式：",
         "type": "back",
         "icon": Icons.phone,
         "text": post.phoneNumber ?? "無",
       },
       {
+        "title": "相關連結：",
         "type": "back",
         "icon": Icons.link,
         "text": post.link ?? "無",
@@ -167,31 +168,38 @@ class CenterPostInformLayout extends StatelessWidget {
               children: [
                 for (var inform
                     in informList.where((e) => e["type"] == "back").toList())
-                  Row(
-                    children: [
-                      Icon(
-                        inform["icon"],
-                        size: 24,
-                        color: grey400,
-                      ),
-                      const SizedBox(width: 6),
-                      inform["index"] == "link"
-                          ? TapHoverText(
-                            textSize: 14,
-                              text: inform["text"],
-                              hoverColor: secondColor,
-                              color: primaryColor,
-                              onTap: () => launchUrl(
-                                Uri.parse(inform["text"]),
-                              ),
-                            )
-                          : RegularText(
+                  inform["index"] == "link" && post.link == null
+                      ? Container()
+                      : Row(
+                          children: [
+                            Icon(
+                              inform["icon"],
+                              size: 24,
+                              color: grey400,
+                            ),
+                            const SizedBox(width: 6),
+                            RegularText(
                               color: grey500,
                               size: 14,
-                              text: inform["text"],
+                              text: inform["title"],
                             ),
-                    ],
-                  ),
+                            inform["index"] == "link"
+                                ? TapHoverText(
+                                    textSize: 14,
+                                    text: inform["text"],
+                                    hoverColor: secondColor,
+                                    color: primaryColor,
+                                    onTap: () => launchUrl(
+                                      Uri.parse(inform["text"]),
+                                    ),
+                                  )
+                                : RegularText(
+                                    color: grey500,
+                                    size: 14,
+                                    text: inform["text"],
+                                  ),
+                          ],
+                        ),
               ],
             ),
           ),
