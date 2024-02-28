@@ -10,6 +10,7 @@ class UserSimplePreference {
 
   static const _post = 'post';
   static const _form = 'form';
+  static const _customTags = 'customTags';
   static const _signForm = 'signForm';
 
   static Future init() async =>
@@ -44,6 +45,16 @@ class UserSimplePreference {
         jsonEncode([FormModel(title: "基本資料", options: [])]
             .map((form) => form.toJson())
             .toList());
+  }
+
+  // organizer add tags（不能刪除）
+  static Future setCustomTags(List<String> customTag) async {
+    debugPrint("存：$customTag");
+    await _preferences?.setStringList(_customTags, customTag);
+  }
+
+  static List<String>? getCustomTags() {
+    return _preferences?.getStringList(_customTags);
   }
 
   //user sign form

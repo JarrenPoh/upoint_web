@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+
 import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
@@ -5,10 +7,25 @@ import 'package:flutter_quill/quill_delta.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:upoint_web/globals/user_simple_preference.dart';
 import 'package:upoint_web/models/post_model.dart';
+import 'package:upoint_web/models/tag_model.dart';
 
 class CreateStep1Bloc {
   CreateStep1Bloc(PostModel postModel) {
     valueNotifier = ValueNotifier(postModel);
+    // 加初始
+    if (UserSimplePreference.getCustomTags() != null) {
+      List<String> _list = UserSimplePreference.getCustomTags()!;
+      for (var i in _list) {
+        tagList[1].tagValue.insert(
+          0,
+          {
+            "index": i,
+            "isChecked": false,
+            "isCustom": true,
+          },
+        );
+      }
+    }
   }
   late ValueNotifier<PostModel> valueNotifier;
   List createInformList = [
@@ -20,6 +37,16 @@ class CreateStep1Bloc {
     {
       "title": "活動地點",
       "index": "location",
+      "type": "normal",
+    },
+    {
+      "title": "活動負責人（稱謂）",
+      "index": "contact",
+      "type": "normal",
+    },
+    {
+      "title": "聯絡方式",
+      "index": "phoneNumber",
       "type": "normal",
     },
     {
@@ -54,29 +81,39 @@ class CreateStep1Bloc {
     },
   ];
 
-  List tagList = [
-    {
-      "title": "獎勵標籤（限選1項）",
-      "type": "rewardTag",
-      "tag": [
+  List<TagModel> tagList = [
+    TagModel(
+      type: "rewardTag",
+      title: "獎勵標籤（限選1項）",
+      tagValue: [
         {"index": "無", "id": null, "isChecked": false},
         {"index": "中式便當", "id": "002", "isChecked": false},
         {"index": "麵包餐盒", "id": "004", "isChecked": false},
         {"index": "麥當勞", "id": "001", "isChecked": false},
         {"index": "飲料", "id": "005", "isChecked": false},
-      ]
-    },
-    {
-      "title": "獎勵標籤（選填）",
-      "type": "tag",
-      "tag": [
+      ],
+    ),
+    TagModel(
+      type: "tags",
+      title: "搜尋標籤（增加搜尋時的觸及關鍵字，不限次數）",
+      tagValue: [
         {"index": "體驗活動", "isChecked": false},
         {"index": "實習就業", "isChecked": false},
         {"index": "語言學習", "isChecked": false},
         {"index": "志工服務", "isChecked": false},
         {"index": "藝文欣賞", "isChecked": false},
-      ]
-    },
+        {"index": "DIY手作", "isChecked": false},
+        {"index": "電腦軟體", "isChecked": false},
+        {"index": "程式語言", "isChecked": false},
+        {"index": "戶外活動", "isChecked": false},
+        {"index": "系學會", "isChecked": false},
+        {"index": "運動", "isChecked": false},
+        {"index": "大自然", "isChecked": false},
+        {"index": "文化交流", "isChecked": false},
+        {"index": "營隊", "isChecked": false},
+        {"index": "藝術人文", "isChecked": false},
+      ],
+    ),
   ];
 
   //選取照片
@@ -91,7 +128,6 @@ class CreateStep1Bloc {
       Uint8List imageBytes = await image.readAsBytes();
       String base64Image = base64Encode(imageBytes);
       valueNotifier.value.photo = base64Image;
-      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       valueNotifier.notifyListeners();
       await UserSimplePreference.setpost(
         jsonEncode(PostModel.toMap(valueNotifier.value)),
@@ -113,6 +149,12 @@ class CreateStep1Bloc {
         case "location":
           valueNotifier.value.location = text;
           break;
+        case "contact":
+          valueNotifier.value.contact = text;
+          break;
+        case "phoneNumber":
+          valueNotifier.value.phoneNumber = text;
+          break;
         case "capacity":
           valueNotifier.value.capacity = text == null ? null : int.parse(text);
           break;
@@ -125,24 +167,49 @@ class CreateStep1Bloc {
         case "link":
           valueNotifier.value.link = text;
       }
-      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       await UserSimplePreference.setpost(
         jsonEncode(PostModel.toMap(valueNotifier.value)),
       );
     });
   }
 
+  deleteCustomTag(String text) async {
+    // 元數據刪除標籤
+    tagList[1].tagValue.removeWhere((e) => e["index"] == text);
+    // 電腦刪除標籤
+    List<String> _list = UserSimplePreference.getCustomTags() ?? [];
+    _list.removeWhere((e) => e == text);
+    await UserSimplePreference.setCustomTags(_list);
+    // valueNotifier刪除
+    if (valueNotifier.value.tags!.contains(text)) {
+      valueNotifier.value.tags!.removeWhere((e) => e == text);
+    }
+    valueNotifier.notifyListeners();
+  }
+
+  addCustomTag(String text) async {
+    // 元數據新增標籤
+    Map _map = {"index": text, "isChecked": true, "isCustom": true};
+    tagList[1].tagValue.insert(0, _map);
+    // 新增標籤加到電腦
+    List<String> _list = UserSimplePreference.getCustomTags() ?? [];
+    _list.add(text);
+    await UserSimplePreference.setCustomTags(_list);
+    // 加到valueNotifier
+    tagPick(1, text);
+    valueNotifier.notifyListeners();
+  }
+
   //選取tag
   tagPick(int index, String text) async {
-    String _type = tagList[index]["type"];
+    String _type = tagList[index].type;
     switch (_type) {
       case "rewardTag":
-        int i = (tagList[index]["tag"] as List)
-            .indexWhere((e) => e["index"] == text);
-        String? rewardTagId = tagList[index]["tag"][i]["id"];
+        int i = tagList[index].tagValue.indexWhere((e) => e["index"] == text);
+        String? rewardTagId = tagList[index].tagValue[i]["id"];
         valueNotifier.value.rewardTagId = rewardTagId;
         break;
-      case "tag":
+      case "tags":
         if (valueNotifier.value.tags!.contains(text)) {
           valueNotifier.value.tags!.removeWhere((e) => e == text);
         } else {
@@ -162,7 +229,6 @@ class CreateStep1Bloc {
     debounce01 = Timer(const Duration(milliseconds: 250), () async {
       String json = jsonEncode(delta.toJson());
       valueNotifier.value.content = json;
-      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       await UserSimplePreference.setpost(
         jsonEncode(PostModel.toMap(valueNotifier.value)),
       );
@@ -178,7 +244,6 @@ class CreateStep1Bloc {
       case "endDate":
         valueNotifier.value.endDateTime = "$dateText/$timeText";
     }
-    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     valueNotifier.notifyListeners();
     await UserSimplePreference.setpost(
       jsonEncode(PostModel.toMap(valueNotifier.value)),
@@ -228,6 +293,10 @@ class CreateStep1Bloc {
       text = '“不限人數”尚未填寫';
     } else if (_check(post.location)) {
       text = '“活動地點”尚未填寫';
+    } else if (_check(post.contact)) {
+      text = '“活動負責人”尚未填寫';
+    } else if (_check(post.phoneNumber)) {
+      text = '“聯絡方式”尚未填寫';
     } else if (_check(_startList[0])) {
       text = '“開始日期”尚未填寫';
     } else if (_check(_startList[1])) {

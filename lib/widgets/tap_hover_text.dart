@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 
-class TopHoverText extends StatefulWidget {
+class TapHoverText extends StatefulWidget {
   final String text;
   final double? textSize;
   final Color color;
   final Color hoverColor;
   final Function onTap;
-  const TopHoverText({
+  const TapHoverText({
     super.key,
     required this.text,
     required this.hoverColor,
@@ -17,10 +17,10 @@ class TopHoverText extends StatefulWidget {
   });
 
   @override
-  State<TopHoverText> createState() => _TopHoverTextState();
+  State<TapHoverText> createState() => _TapHoverTextState();
 }
 
-class _TopHoverTextState extends State<TopHoverText> {
+class _TapHoverTextState extends State<TapHoverText> {
   bool isHover = false;
   @override
   Widget build(BuildContext context) {

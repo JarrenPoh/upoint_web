@@ -88,7 +88,7 @@ class CenterPostLayout extends StatelessWidget {
           const SizedBox(height: 25),
           CenterPostBarLayout(post: post),
           const SizedBox(height: 15),
-          CenterPostInformLayout(post: post),
+          CenterPostInformLayout(post: post, organnizer: organizer),
         ],
       ),
     );
@@ -128,7 +128,7 @@ class CenterPostLayout extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CenterPostInformLayout(post: post),
+              CenterPostInformLayout(post: post, organnizer: organizer),
               SizedBox(width: 300, child: CenterPostBarLayout(post: post)),
             ],
           ),

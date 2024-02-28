@@ -4,6 +4,8 @@ class PostModel {
   String? photo;
   String? title;
   String? location;
+  String? contact;
+  String? phoneNumber;
   var startDateTime;
   var endDateTime;
   var formDateTime;
@@ -46,6 +48,8 @@ class PostModel {
     this.form,
     this.tags,
     this.formDateTime,
+    this.contact,
+    this.phoneNumber,
   });
 
   static Map toMap(PostModel cart) {
@@ -55,7 +59,7 @@ class PostModel {
       "title": cart.title,
       "startDateTime": cart.startDateTime,
       "endDateTime": cart.endDateTime,
-      "remindDateTime":cart.remindDateTime,
+      "remindDateTime": cart.remindDateTime,
       "location": cart.location,
       "introduction": cart.introduction,
       "content": cart.content,
@@ -70,7 +74,9 @@ class PostModel {
       "organizerPic": cart.organizerPic,
       "form": cart.form,
       "tags": cart.tags,
-      "formDateTime":cart.formDateTime,
+      "formDateTime": cart.formDateTime,
+      "contact":cart.contact,
+      "phoneNumber":cart.phoneNumber,
     };
   }
 
@@ -83,7 +89,7 @@ class PostModel {
       title: snapshot['title'],
       startDateTime: snapshot['startDateTime'],
       endDateTime: snapshot['endDateTime'],
-      remindDateTime:snapshot['remindDateTime'],
+      remindDateTime: snapshot['remindDateTime'],
       introduction: snapshot['introduction'],
       content: snapshot['content'],
       capacity: snapshot['capacity'],
@@ -98,7 +104,9 @@ class PostModel {
       organizerPic: snapshot['organizerPic'],
       form: snapshot['form'],
       tags: snapshot['tags'],
-      formDateTime:snapshot['formDateTime'],
+      formDateTime: snapshot['formDateTime'],
+      contact:snapshot["contact"],
+      phoneNumber:snapshot["phoneNumber"],
     );
   }
 
@@ -108,7 +116,7 @@ class PostModel {
         "title": title,
         "startDateTime": startDateTime,
         "endDateTime": endDateTime,
-        "remindDateTime":remindDateTime,
+        "remindDateTime": remindDateTime,
         "introduction": introduction,
         "content": content,
         "reward": reward,
@@ -122,8 +130,10 @@ class PostModel {
         "organizerPic": organizerPic,
         "form": form,
         "tags": tags,
-        "formDateTime":formDateTime,
-        "signFormsLength":signFormsLength,
+        "formDateTime": formDateTime,
+        "signFormsLength": signFormsLength,
+        "contact":contact,
+        "phoneNumber":phoneNumber,
       };
 
   static PostModel fromMap(Map map) {
@@ -133,7 +143,7 @@ class PostModel {
       title: map['title'],
       startDateTime: map['startDateTime'],
       endDateTime: map['endDateTime'],
-      remindDateTime:map['remindDateTime'],
+      remindDateTime: map['remindDateTime'],
       introduction: map["introduction"],
       content: map['content'],
       capacity: map['capacity'],
@@ -147,8 +157,10 @@ class PostModel {
       organizerPic: map['organizerPic'],
       form: map['form'],
       tags: map['tags'],
-      formDateTime:map['formDateTime'],
-      signFormsLength:map['signFormsLength'],
+      formDateTime: map['formDateTime'],
+      signFormsLength: map['signFormsLength'],
+      contact:map["contact"],
+      phoneNumber:map["phoneNumber"],
     );
   }
 }

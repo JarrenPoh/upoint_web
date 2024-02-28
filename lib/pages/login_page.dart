@@ -238,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
                           //   onTap: () {},
                           // ),
                           Expanded(child: Column(children: [])),
-                          TopHoverText(
+                          TapHoverText(
                             text: "忘記密碼",
                             textSize: 12,
                             hoverColor: grey300,

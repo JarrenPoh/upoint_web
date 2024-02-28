@@ -202,14 +202,14 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                               style: TextStyle(
                                 fontSize: 24,
                                 color: primaryColor,
-                                fontFamily: 'NotoSansBpold',
+                                fontFamily: 'NotoSansBold',
                               ),
                             ),
-                            const TextSpan(
+                            TextSpan(
                               text: 'Point',
                               style: TextStyle(
                                 fontSize: 24,
-                                color: Colors.black,
+                                color: grey500,
                                 fontFamily: 'NotoSansBold',
                               ),
                             ),

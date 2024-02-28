@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
+import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/globals/regular_text.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
+import 'package:upoint_web/widgets/tap_hover_text.dart';
+
+import '../../models/tag_model.dart';
 
 class TagPickRow extends StatefulWidget {
-  final Map tagMap;
+  final TagModel tagModel;
   final Function(String) tagPick;
+  final Function(String) addCustomTag;
+  final Function(String) deleteCustomTag;
   const TagPickRow({
     super.key,
-    required this.tagMap,
+    required this.tagModel,
     required this.tagPick,
+    required this.addCustomTag,
+    required this.deleteCustomTag,
   });
 
   @override
@@ -18,18 +26,18 @@ class TagPickRow extends StatefulWidget {
 
 class _TagPickRowState extends State<TagPickRow> {
   Color color = grey100;
-  late Map tagMap;
+  late TagModel tagModel;
   @override
   void initState() {
     super.initState();
-    tagMap = widget.tagMap;
+    tagModel = widget.tagModel;
   }
 
   onTap(String text) {
-    String _type = tagMap["type"];
+    String _type = tagModel.type;
     switch (_type) {
       case "rewardTag":
-        (tagMap["tag"] as List).forEach((e) {
+        tagModel.tagValue.forEach((e) {
           if (e["index"] == text) {
             e["isChecked"] = true;
           } else {
@@ -37,9 +45,9 @@ class _TagPickRowState extends State<TagPickRow> {
           }
         });
         break;
-      case "tag":
-        int i = (tagMap["tag"] as List).indexWhere((e) => e["index"] == text);
-        tagMap["tag"][i]["isChecked"] = !tagMap["tag"][i]["isChecked"];
+      case "tags":
+        int i = tagModel.tagValue.indexWhere((e) => e["index"] == text);
+        tagModel.tagValue[i]["isChecked"] = !tagModel.tagValue[i]["isChecked"];
         break;
     }
     setState(() {});
@@ -73,48 +81,105 @@ class _TagPickRowState extends State<TagPickRow> {
                       RegularText(
                         color: grey400,
                         size: 16,
-                        text: widget.tagMap["title"],
+                        text: widget.tagModel.title,
                       ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
-                  child: Wrap(
-                    runSpacing: 12,
-                    children: List.generate(
-                      tagMap["tag"].length,
-                      (index) {
-                        bool _isChecked = tagMap["tag"][index]["isChecked"];
-                        return IntrinsicWidth(
-                          child: Container(
-                            height: 31,
-                            // padding: const EdgeInsets.symmetric(horizontal: 16),
-                            margin: const EdgeInsets.only(right: 18),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
+                  padding: const EdgeInsets.only(
+                      left: 24, right: 24, bottom: 18, top: 5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (tagModel.type == "tags")
+                        Column(
+                          children: [
+                            TapHoverText(
+                              textSize: 14,
+                              text: "+ 新增「」標籤",
+                              hoverColor: secondColor,
+                              color: primaryColor,
+                              onTap: () async {
+                                Map _map = await Messenger.addTagsDialog(
+                                    "新增標籤", context);
+                                if (_map["status"] == "success") {
+                                  widget.addCustomTag(_map["value"] ?? "null");
+                                }
+                              },
                             ),
-                            child: Center(
-                              child: TapHoverContainer(
-                                text: tagMap["tag"][index]["index"],
-                                padding: 16,
-                                hoverColor: _isChecked
-                                    ? Color.fromRGBO(241, 231, 216, 1)
-                                    : grey200,
-                                borderColor: _isChecked ? subColor : grey100,
-                                textColor: grey500,
-                                color: _isChecked ? subColor : grey100,
-                                onTap: () {
-                                  widget.tagPick(tagMap["tag"][index]["index"]);
-                                  onTap(tagMap["tag"][index]["index"]);
-                                },
+                            const SizedBox(height: 5),
+                          ],
+                        ),
+                      Wrap(
+                        runSpacing: 12,
+                        children: List.generate(
+                          tagModel.tagValue.length,
+                          (index) {
+                            bool _isChecked =
+                                tagModel.tagValue[index]["isChecked"];
+                            return IntrinsicWidth(
+                              child: Stack(
+                                alignment: Alignment(0.6, -1),
+                                children: [
+                                  Container(
+                                    height: 31,
+                                    // padding: const EdgeInsets.symmetric(horizontal: 16),
+                                    margin: const EdgeInsets.only(right: 18),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Center(
+                                      child: TapHoverContainer(
+                                        text: tagModel.tagValue[index]["index"],
+                                        padding: 16,
+                                        hoverColor: _isChecked
+                                            ? Color.fromRGBO(241, 231, 216, 1)
+                                            : grey200,
+                                        borderColor:
+                                            _isChecked ? subColor : grey100,
+                                        textColor: grey500,
+                                        color: _isChecked ? subColor : grey100,
+                                        onTap: () {
+                                          widget.tagPick(tagModel
+                                              .tagValue[index]["index"]);
+                                          onTap(tagModel.tagValue[index]
+                                              ["index"]);
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  if (tagModel.tagValue[index]["isCustom"] !=
+                                      null)
+                                    GestureDetector(
+                                      onTap: () async {
+                                        String status = await Messenger.dialog(
+                                            "提醒", "確定要刪除此標籤", context);
+                                        if (status == "success") {
+                                          widget.deleteCustomTag(tagModel
+                                              .tagValue[index]["index"]);
+                                        }
+                                      },
+                                      child: const MouseRegion(
+                                        cursor: SystemMouseCursors.click,
+                                        child: SizedBox(
+                                          height: 20,
+                                          width: 20,
+                                          child: Icon(
+                                            Icons.cancel,
+                                            color: Colors.red,
+                                            size: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

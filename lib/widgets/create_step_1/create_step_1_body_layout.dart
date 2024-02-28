@@ -4,6 +4,7 @@ import 'package:upoint_web/bloc/create_step_1_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/models/post_model.dart';
+import 'package:upoint_web/models/tag_model.dart';
 import 'package:upoint_web/widgets/create_step_1/check_null_row.dart';
 import 'package:upoint_web/widgets/create_step_1/date_pick_row.dart';
 import 'package:upoint_web/widgets/create_step_1/quill_field.dart';
@@ -68,7 +69,7 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
                             height: 374,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: Color(0xFFF4F4F4),
+                              color: const Color(0xFFF4F4F4),
                               image:
                                   widget.bloc.valueNotifier.value.photo != null
                                       ? DecorationImage(
@@ -113,7 +114,7 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
                       width: 8,
                       height: 29,
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     MediumText(
                       color: grey500,
                       size: 20,
@@ -196,13 +197,16 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
                   children: List.generate(
                     widget.bloc.tagList.length,
                     (index) {
-                      Map tagMap = widget.bloc.tagList[index];
-                      initTagMap(tagMap, index);
+                      TagModel tagModel = widget.bloc.tagList[index];
+                      initTagMap(tagModel, index);
                       return Column(
                         children: [
                           TagPickRow(
-                            tagMap: tagMap,
+                            tagModel: tagModel,
                             tagPick: (e) => widget.bloc.tagPick(index, e),
+                            addCustomTag: (e) => widget.bloc.addCustomTag(e),
+                            deleteCustomTag: (e) =>
+                                widget.bloc.deleteCustomTag(e),
                           ),
                           const SizedBox(height: 24),
                         ],
@@ -252,8 +256,8 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
     );
   }
 
-  initTagMap(Map tagMap, int index) {
-    (tagMap["tag"] as List).forEach((e) {
+  initTagMap(TagModel tagModel, int index) {
+    tagModel.tagValue.forEach((e) {
       if (index == 0) {
         if (e["id"] == widget.bloc.valueNotifier.value.rewardTagId) {
           e["isChecked"] = true;
@@ -278,6 +282,12 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
         break;
       case "location":
         text = widget.bloc.valueNotifier.value.location;
+        break;
+      case "contact":
+        text = widget.bloc.valueNotifier.value.contact;
+        break;
+      case "phoneNumber":
+        text = widget.bloc.valueNotifier.value.phoneNumber;
         break;
       case "capacity":
         text = widget.bloc.valueNotifier.value.capacity.toString();

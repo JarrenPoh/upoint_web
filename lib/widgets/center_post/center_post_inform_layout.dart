@@ -4,16 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
+import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/models/post_model.dart';
+import 'package:upoint_web/widgets/tap_hover_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../../globals/global.dart';
 import '../../globals/regular_text.dart';
 import '../../globals/time_transfer.dart';
 
 class CenterPostInformLayout extends StatelessWidget {
   final PostModel post;
+  final OrganizerModel organnizer;
   const CenterPostInformLayout({
     super.key,
     required this.post,
+    required this.organnizer,
   });
 
   @override
@@ -39,6 +45,27 @@ class CenterPostInformLayout extends StatelessWidget {
         "icon": Icons.local_play,
         "text": post.reward ?? "無",
       },
+      {
+        "type": "back",
+        "icon": Icons.home,
+        "text": organnizer.username,
+      },
+      {
+        "type": "back",
+        "icon": Icons.person,
+        "text": post.contact ?? "無",
+      },
+      {
+        "type": "back",
+        "icon": Icons.phone,
+        "text": post.phoneNumber ?? "無",
+      },
+      {
+        "type": "back",
+        "icon": Icons.link,
+        "text": post.link ?? "無",
+        "index": "link"
+      },
     ];
     return Container(
       width: 612,
@@ -61,23 +88,25 @@ class CenterPostInformLayout extends StatelessWidget {
           MediumText(color: grey500, size: 32, text: post.title!),
           const SizedBox(height: 12),
           // 活動標籤
-          Wrap(
-            runSpacing: 8,
-            spacing: 12,
-            children: [
-              for (var i in post.tags!) _tagWidget(i),
-            ],
-          ),
+          if (post.tags != null)
+            Wrap(
+              runSpacing: 8,
+              spacing: 12,
+              children: [
+                for (var i in post.tags!) _tagWidget(i),
+              ],
+            ),
           const SizedBox(height: 15),
-          Divider(color: divColor),
-          const SizedBox(height: 16),
+          Divider(color: grey200),
+          const SizedBox(height: 18),
           // 時間 地點 獎勵
           SizedBox(
             height: 88,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                for (var inform in informList)
+                for (var inform
+                    in informList.where((e) => e["type"] == "front").toList())
                   Row(
                     children: [
                       Icon(
@@ -96,7 +125,7 @@ class CenterPostInformLayout extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 18),
           // 介紹內容
           Container(
             width: double.infinity,
@@ -106,7 +135,7 @@ class CenterPostInformLayout extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: divColor),
+              border: Border.all(color: grey200),
             ),
             child: RegularText(
               color: grey500,
@@ -115,7 +144,58 @@ class CenterPostInformLayout extends StatelessWidget {
               maxLines: 20,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 18),
+          // 主辦資訊
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
+            child: MediumText(
+              color: grey500,
+              size: 16,
+              text: "主辦資訊",
+            ),
+          ),
+          Divider(color: grey200),
+          const SizedBox(height: 12),
+          // 主辦資訊內容
+          SizedBox(
+            height: 110,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                for (var inform
+                    in informList.where((e) => e["type"] == "back").toList())
+                  Row(
+                    children: [
+                      Icon(
+                        inform["icon"],
+                        size: 24,
+                        color: grey400,
+                      ),
+                      const SizedBox(width: 6),
+                      inform["index"] == "link"
+                          ? TapHoverText(
+                            textSize: 14,
+                              text: inform["text"],
+                              hoverColor: secondColor,
+                              color: primaryColor,
+                              onTap: () => launchUrl(
+                                Uri.parse(inform["text"]),
+                              ),
+                            )
+                          : RegularText(
+                              color: grey500,
+                              size: 14,
+                              text: inform["text"],
+                            ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 18),
           // 活動詳情標題
           Container(
             padding: const EdgeInsets.symmetric(
@@ -124,12 +204,12 @@ class CenterPostInformLayout extends StatelessWidget {
             ),
             child: MediumText(
               color: grey500,
-              size: 20,
+              size: 16,
               text: "活動詳情",
             ),
           ),
-          Divider(color: divColor),
-          const SizedBox(height: 20),
+          Divider(color: grey200),
+          const SizedBox(height: 12),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.symmetric(
@@ -138,7 +218,7 @@ class CenterPostInformLayout extends StatelessWidget {
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              border: Border.all(color: divColor),
+              border: Border.all(color: grey200),
             ),
             child: QuillEditor.basic(
               configurations: QuillEditorConfigurations(
@@ -163,7 +243,7 @@ class CenterPostInformLayout extends StatelessWidget {
         vertical: 6,
       ),
       decoration: BoxDecoration(
-        color: grey100,
+        color: grey200,
         borderRadius: BorderRadius.circular(10),
       ),
       child: IntrinsicWidth(

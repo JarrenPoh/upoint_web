@@ -69,6 +69,65 @@ class Messenger {
         'dismissed'; // Return 'dismissed' if the dialog is dismissed without selection
   }
 
+  //彈窗Dialog
+  static Future<Map> addTagsDialog(String title, BuildContext context) async {
+    final TextEditingController controller = TextEditingController();
+    final Map? result = await showDialog<Map>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: MediumText(
+            color: grey500,
+            size: 16,
+            text: title,
+          ),
+          content: TextField(
+            controller: controller,
+            autofocus: true,
+            style: TextStyle(color: grey500),
+            cursorColor: primaryColor,
+            decoration: InputDecoration(
+              hintText: "輸入您的標籤",
+              hintStyle: TextStyle(color: grey400),
+              contentPadding: const EdgeInsets.only(
+                left: 0,
+              ),
+              enabledBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: MediumText(
+                color: grey300,
+                size: 16,
+                text: "取消",
+              ),
+              onPressed: () => Navigator.of(context)
+                  .pop({"status": 'cancel'}), // Return 'cancel' when cancelled
+            ),
+            TextButton(
+              child: MediumText(
+                color: grey500,
+                size: 16,
+                text: "確定",
+              ),
+              onPressed: () => Navigator.of(context).pop({
+                "status": 'success',
+                "value": controller.text.trim()
+              }), // Return 'success' when confirmed
+            ),
+          ],
+        );
+      },
+    );
+    return result ??
+        {
+          "status": 'cancel'
+        }; 
+  }
+
   //選日期
   static Future<DateTime?> selectDate(
     BuildContext context,
