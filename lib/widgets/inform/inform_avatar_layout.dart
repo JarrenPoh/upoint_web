@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:upoint_web/bloc/inform_bloc.dart';
 import 'package:upoint_web/color.dart';
-import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/models/organizer_model.dart';
 
 import '../tap_hover_container.dart';
 
 class InformAvatarLayout extends StatefulWidget {
   final OrganizerModel organizer;
+  final InformBloc bloc;
   const InformAvatarLayout({
     super.key,
     required this.organizer,
+    required this.bloc,
   });
 
   @override
@@ -17,6 +19,7 @@ class InformAvatarLayout extends StatefulWidget {
 }
 
 class _InformAvatarLayoutState extends State<InformAvatarLayout> {
+  late String pic = widget.organizer.pic!;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -34,7 +37,7 @@ class _InformAvatarLayoutState extends State<InformAvatarLayout> {
                 color: grey100,
                 borderRadius: BorderRadius.circular(80),
                 image: DecorationImage(
-                  image: NetworkImage(widget.organizer.pic!),
+                  image: NetworkImage(pic),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -48,7 +51,12 @@ class _InformAvatarLayoutState extends State<InformAvatarLayout> {
             borderColor: primaryColor,
             textColor: primaryColor,
             color: Colors.white,
-            onTap: () => Messenger.snackBar(context, "尚未開放此功能"),
+            onTap: () async {
+              Map res = await widget.bloc.pickImage(widget.organizer, context);
+              setState(() {
+                pic = res["pic"];
+              });
+            },
           ),
         ],
       ),

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:upoint_web/bloc/inform_bloc.dart';
 import 'package:upoint_web/color.dart';
-import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/globals/medium_text.dart';
+import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
 
 class InformPage extends StatefulWidget {
   final bool isWeb;
+  final OrganizerModel organizer;
   final InformBloc bloc;
   final Widget child;
   const InformPage({
@@ -14,6 +15,7 @@ class InformPage extends StatefulWidget {
     required this.isWeb,
     required this.bloc,
     required this.child,
+    required this.organizer,
   });
 
   @override
@@ -65,20 +67,30 @@ class _InformPageState extends State<InformPage> {
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TapHoverContainer(
-                        text: "編輯個資",
-                        padding: widget.isWeb ? 84 : 22,
-                        hoverColor: secondColor,
-                        borderColor: Colors.transparent,
-                        textColor: Colors.white,
-                        color: primaryColor,
-                        onTap: () => Messenger.snackBar(context, "尚未開放此功能"),
-                      ),
-                    ],
-                  ),
+                  ValueListenableBuilder(
+                      valueListenable: widget.bloc.isEditValue,
+                      builder: (context, value, child) {
+                        if (!value) {
+                          return Container();
+                        }
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            TapHoverContainer(
+                              text: "確認修改",
+                              padding: widget.isWeb ? 84 : 22,
+                              hoverColor: secondColor,
+                              borderColor: Colors.transparent,
+                              textColor: Colors.white,
+                              color: primaryColor,
+                              onTap: () => widget.bloc.changeEdit(
+                                widget.organizer.uid,
+                                context,
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
                   const SizedBox(height: 45),
                 ],
               ),

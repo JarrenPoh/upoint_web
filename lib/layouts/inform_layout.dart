@@ -13,7 +13,7 @@ class InformLayout extends StatelessWidget {
     super.key,
     required this.organizer,
   });
-  final InformBloc _bloc = InformBloc();
+  late final InformBloc _bloc = InformBloc(organizer);
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
@@ -24,6 +24,7 @@ class InformLayout extends StatelessWidget {
 
   Widget tabletLayout() {
     return InformPage(
+      organizer: organizer,
       isWeb: false,
       bloc: _bloc,
       child: Column(
@@ -31,22 +32,20 @@ class InformLayout extends StatelessWidget {
           //頭像
           Row(
             children: [
-              InformAvatarLayout(organizer: organizer),
+              InformAvatarLayout(organizer: organizer, bloc: _bloc),
             ],
           ),
           const SizedBox(height: 30),
           //基本資料
           InformCommonLayout(
-            list: _bloc.commonList,
+            bloc: _bloc,
             isWeb: false,
-            organizer: organizer,
           ),
           const SizedBox(height: 30),
           //第二列
           InformContactLayout(
-            list: _bloc.contactList,
+            bloc: _bloc,
             isWeb: false,
-            organizer: organizer,
           ),
           const SizedBox(height: 40),
         ],
@@ -56,6 +55,7 @@ class InformLayout extends StatelessWidget {
 
   Widget webLayout() {
     return InformPage(
+      organizer: organizer,
       isWeb: true,
       bloc: _bloc,
       child: Column(
@@ -63,24 +63,22 @@ class InformLayout extends StatelessWidget {
           Row(
             children: [
               //頭像
-              InformAvatarLayout(organizer: organizer),
+              InformAvatarLayout(organizer: organizer, bloc: _bloc),
               const SizedBox(width: 37),
               //基本資料
               Expanded(
                 child: InformCommonLayout(
-                  list: _bloc.commonList,
-                  isWeb: true,
-                  organizer: organizer,
+                  bloc: _bloc,
+                  isWeb: false,
                 ),
-              )
+              ),
             ],
           ),
           const SizedBox(height: 57),
           //第二列
           InformContactLayout(
-            list: _bloc.contactList,
-            isWeb: true,
-            organizer: organizer,
+            bloc: _bloc,
+            isWeb: false,
           ),
           const SizedBox(height: 96),
         ],
