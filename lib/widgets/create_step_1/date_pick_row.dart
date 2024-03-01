@@ -67,8 +67,8 @@ class _DatePickRowState extends State<DatePickRow> {
         hintText = "報名截止時間";
         break;
       case "remindDateTime":
-        if (widget.post.formDateTime != null) {
-          _list = (widget.post.formDateTime as String).split('/');
+        if (widget.post.remindDateTime != null) {
+          _list = (widget.post.remindDateTime as String).split('/');
         }
         title = "發送活動提醒日期";
         hintText = "發送活動提醒時間";

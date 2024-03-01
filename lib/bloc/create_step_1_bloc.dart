@@ -262,7 +262,7 @@ class CreateStep1Bloc {
       case "endDate":
         valueNotifier.value.endDateTime = "$dateText/$timeText";
     }
-    valueNotifier.notifyListeners();
+    // valueNotifier.notifyListeners();
     await UserSimplePreference.setpost(
       jsonEncode(PostModel.toMap(valueNotifier.value)),
     );

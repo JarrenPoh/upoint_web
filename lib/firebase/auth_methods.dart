@@ -88,7 +88,7 @@ class AuthMethods {
 
   Future<DocumentSnapshot?> getUserData() async {
     int retries = 0;
-    while (retries < 3) {
+    while (retries < 2) {
       try {
         debugPrint("索取使用者的firestore");
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
