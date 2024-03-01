@@ -22,7 +22,7 @@ class CenterSignFormBloc {
     "signFormList": null
   });
   PostModel? _post;
-  List<SignFormModel>? signFormList;
+  List<SignFormModel> signFormList=[];
 
   fetchForm(String postId) async {
     if (postId == "") {
@@ -68,7 +68,7 @@ class CenterSignFormBloc {
   }
 
   exportExcel(BuildContext context) {
-    if (signFormList == null) {
+    if (signFormList.isEmpty) {
       //沒有人報名
       Messenger.dialog("錯誤", "目前該活動無人報名，無法匯出檔案", context);
     } else {
@@ -76,7 +76,7 @@ class CenterSignFormBloc {
       String? sheetName = "Sheet1";
       Sheet sheetObject = excel[sheetName]; // Or create a new sheet.
       List<List> listsOfLists =
-          signFormList!.map((e) => (jsonDecode(e.body) as List)).toList();
+          signFormList.map((e) => (jsonDecode(e.body) as List)).toList();
       // 創建一個Set來存儲所有唯一的標題（即subtitle）
       Set<String> allSubtitles = {};
 

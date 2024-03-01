@@ -1,16 +1,16 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/bloc/center_sign_form_bloc.dart';
-import '../../color.dart';
-import '../../globals/medium_text.dart';
-import '../../models/sign_form_model.dart';
-import '../tap_hover_container.dart';
+import '../../../color.dart';
+import '../../../globals/medium_text.dart';
+import '../../../models/sign_form_model.dart';
+import '../../tap_hover_container.dart';
 
-class CenterSignFormSignList extends StatelessWidget {
+class CenterSignInformSignList extends StatelessWidget {
   final bool isWeb;
-  final List<SignFormModel>? signFormList;
+  final List<SignFormModel> signFormList;
   final CenterSignFormBloc bloc;
-  const CenterSignFormSignList({
+  const CenterSignInformSignList({
     super.key,
     required this.isWeb,
     required this.signFormList,
@@ -79,19 +79,24 @@ class CenterSignFormSignList extends StatelessWidget {
             ],
           ),
         ),
-        if (signFormList == null)
-          Expanded(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+        if (signFormList.isEmpty)
+          Column(
             children: [
-              MediumText(color: grey500, size: 16, text: "目前還沒有人報名參加此活動")
+              const SizedBox(height: 150),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  MediumText(color: grey500, size: 16, text: "目前還沒有人報名參加此活動")
+                ],
+              ),
+              const SizedBox(height: 150),
             ],
-          )),
+          ),
         // 名單內容
-        if (signFormList != null)
+        if (signFormList.isNotEmpty)
           Column(
             children: List.generate(
-              signFormList!.length,
+              signFormList.length,
               (lindex) {
                 List lllist = [];
                 lllist.add((lindex + 1).toString());
@@ -106,7 +111,7 @@ class CenterSignFormSignList extends StatelessWidget {
                       (index) {
                         const order = ['學號', '姓名', '聯絡電話', 'email'];
                         List<dynamic> _list =
-                            jsonDecode(signFormList![lindex].body);
+                            jsonDecode(signFormList[lindex].body);
                         for (var field in order) {
                           var found = _list.firstWhere(
                             (element) => element['subtitle'] == field,

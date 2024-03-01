@@ -2,9 +2,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:upoint_web/color.dart';
+import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/models/post_model.dart';
+import 'package:upoint_web/widgets/tap_hover_container.dart';
 import 'package:upoint_web/widgets/tap_hover_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../globals/regular_text.dart';
@@ -86,7 +88,26 @@ class CenterPostInformLayout extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // 大標題
-          MediumText(color: grey500, size: 32, text: post.title!),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              MediumText(color: grey500, size: 32, text: post.title!),
+              TapHoverContainer(
+                text: "編輯",
+                height: 32,
+                textSize: 14,
+                padding: 13,
+                hoverColor: secondColor,
+                borderColor: Colors.transparent,
+                textColor: Colors.white,
+                color: primaryColor,
+                onTap: () => Messenger.snackBar(
+                  context,
+                  "尚未開放此功能，敬請期待",
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 12),
           // 活動標籤
           if (post.tags != null)

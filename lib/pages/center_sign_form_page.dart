@@ -3,17 +3,23 @@ import 'package:upoint_web/bloc/center_sign_form_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/models/sign_form_model.dart';
-import 'package:upoint_web/widgets/center_sign_form/center_sign_form_sign_list.dart';
+import 'package:upoint_web/widgets/center_sign_form/layouts/center_sign_inform_sign_form.dart';
+import 'package:upoint_web/widgets/center_sign_form/layouts/center_sign_inform_sign_list.dart';
+import '../models/form_model.dart';
 
 class CenterSignFormPage extends StatefulWidget {
   final bool isWeb;
-  final List<SignFormModel>? signFormList;
+  final List<SignFormModel> signFormList;
   final CenterSignFormBloc bloc;
+  final String postId;
+  final List<FormModel> formList;
   const CenterSignFormPage({
     super.key,
     required this.isWeb,
     required this.signFormList,
     required this.bloc,
+    required this.postId,
+    required this.formList,
   });
 
   @override
@@ -32,55 +38,62 @@ class _CenterSignFormPageState extends State<CenterSignFormPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 48),
-              child: Container(
-                width: widget.isWeb ? 1076 : 543,
-                height: 1534,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 66, horizontal: 64),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 篩選
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border(bottom: BorderSide(color: grey200)),
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 48),
+                child: Container(
+                  width: widget.isWeb ? 1076 : 543,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 66, horizontal: 64),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 篩選
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border(bottom: BorderSide(color: grey200)),
+                        ),
+                        child: Row(
+                          children: [
+                            _pickWidget(
+                              isSignList == true,
+                              () => isSignList = true,
+                              "活動名單",
+                            ),
+                            _pickWidget(
+                              isSignList == false,
+                              () => isSignList = false,
+                              "報名表單",
+                            ),
+                          ],
+                        ),
                       ),
-                      child: Row(
-                        children: [
-                          _pickWidget(
-                            isSignList == true,
-                            () => isSignList = true,
-                            "活動名單",
-                          ),
-                          _pickWidget(
-                            isSignList == false,
-                            () => isSignList = false,
-                            "報名表單",
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    // 名單標題
-                    if (isSignList)
-                      CenterSignFormSignList(
-                        isWeb: widget.isWeb,
-                        signFormList: widget.signFormList,
-                        bloc: widget.bloc,
-                      ),                      
-                  ],
+                      const SizedBox(height: 20),
+                      // 名單標題
+                      if (isSignList)
+                        CenterSignInformSignList(
+                          isWeb: widget.isWeb,
+                          signFormList: widget.signFormList,
+                          bloc: widget.bloc,
+                        ),
+                      // 預覽報名表單
+                      if (!isSignList)
+                        CenterSignInformSignForm(
+                          formList: widget.formList,
+                          postId: widget.postId,
+                        ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );

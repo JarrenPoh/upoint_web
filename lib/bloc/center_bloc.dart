@@ -25,41 +25,46 @@ class CenterBloc {
     var _a = FirebaseFirestore.instance
         .collection('posts')
         .where('organizerUid', isEqualTo: organizer.uid);
+    debugPrint(organizer.uid);
     bool _descending = true;
-    switch (searchStatus) {
-      case "全選":
-        _allList = (await _a.get()).docs.toList();
-        break;
-      case "即將開始的活動":
-        _allList = (await _a
-                .where('startDateTime', isGreaterThan: _now)
-                .orderBy("startDateTime", descending: _descending)
-                .get())
-            .docs
-            .toList();
+    try {
+      switch (searchStatus) {
+        case "全選":
+          _allList = (await _a.get()).docs.toList();
+          break;
+        case "即將開始的活動":
+          _allList = (await _a
+                  .where('startDateTime', isGreaterThan: _now)
+                  .orderBy("startDateTime", descending: _descending)
+                  .get())
+              .docs
+              .toList();
 
-        break;
-      case "進行中的活動":
-        _allList = (await _a
-                .where('endDateTime', isGreaterThan: _now)
-                .orderBy("endDateTime", descending: _descending)
-                .get())
-            .docs
-            .where((doc) {
-          var startDateTime = doc['startDateTime'] as Timestamp;
-          return startDateTime.toDate().isBefore(_now);
-        }).toList();
+          break;
+        case "進行中的活動":
+          _allList = (await _a
+                  .where('endDateTime', isGreaterThan: _now)
+                  .orderBy("endDateTime", descending: _descending)
+                  .get())
+              .docs
+              .where((doc) {
+            var startDateTime = doc['startDateTime'] as Timestamp;
+            return startDateTime.toDate().isBefore(_now);
+          }).toList();
 
-        break;
-      case "已結束的活動":
-        _allList = (await _a
-                .where('endDateTime', isLessThan: _now)
-                .orderBy("endDateTime", descending: _descending)
-                .get())
-            .docs
-            .toList();
+          break;
+        case "已結束的活動":
+          _allList = (await _a
+                  .where('endDateTime', isLessThan: _now)
+                  .orderBy("endDateTime", descending: _descending)
+                  .get())
+              .docs
+              .toList();
 
-        break;
+          break;
+      }
+    } catch (e) {
+      debugPrint("error: ${e.toString()}");
     }
   }
 
@@ -71,8 +76,9 @@ class CenterBloc {
         postValueNotifier.value = [];
       } else {
         postValueNotifier.value = [];
-        int _end = (_allList.length) >= limit ? limit : (_allList.length) % limit;
-        List<QueryDocumentSnapshot> _list =  _allList;
+        int _end =
+            (_allList.length) >= limit ? limit : (_allList.length) % limit;
+        List<QueryDocumentSnapshot> _list = _allList;
         postValueNotifier.value = (_list
             .getRange(0, _end)
             .map((e) => PostModel.fromSnap(e))
@@ -96,7 +102,8 @@ class CenterBloc {
         ? limit
         : (_allList.length - _start) % limit;
 
-   List<QueryDocumentSnapshot> _list =  _allList.getRange(_start, _start + _end).toList();
+    List<QueryDocumentSnapshot> _list =
+        _allList.getRange(_start, _start + _end).toList();
     postValueNotifier.value =
         (_list.map((doc) => PostModel.fromSnap(doc)).toList());
     postValueNotifier.notifyListeners();

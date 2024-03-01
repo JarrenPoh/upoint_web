@@ -50,7 +50,8 @@ class CenterSignFormLayout extends StatelessWidget {
           if (post == null || isForm == false) {
             return const Center(child: Text("page not found"));
           } else {
-            return child({"post": post, "form": form, "signFormList": signFormList});
+            return child(
+                {"post": post, "form": form, "signFormList": signFormList});
           }
         }
       },
@@ -60,26 +61,30 @@ class CenterSignFormLayout extends StatelessWidget {
   Widget tabletLayout(
     PostModel post,
     List<FormModel> formList,
-    List<SignFormModel>? signFormList,
+    List<SignFormModel> signFormList,
     CenterSignFormBloc bloc,
   ) {
     return CenterSignFormPage(
       isWeb: false,
       signFormList: signFormList,
       bloc: bloc,
+      formList: formList,
+      postId: postId,
     );
   }
 
   Widget webLayout(
     PostModel post,
     List<FormModel> formList,
-    List<SignFormModel>? signFormList,
+    List<SignFormModel> signFormList,
     CenterSignFormBloc bloc,
   ) {
     return CenterSignFormPage(
       isWeb: true,
       signFormList: signFormList,
       bloc: bloc,
+      formList: formList,
+      postId: postId,
     );
   }
 }

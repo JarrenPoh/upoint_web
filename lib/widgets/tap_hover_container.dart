@@ -10,6 +10,7 @@ class TapHoverContainer extends StatefulWidget {
   final Color textColor;
   final Function onTap;
   final double padding;
+  final double? height;
   const TapHoverContainer({
     super.key,
     required this.text,
@@ -20,6 +21,8 @@ class TapHoverContainer extends StatefulWidget {
     required this.color,
     required this.onTap,
     this.textSize = 16,
+        this.height = 39,
+
   });
 
   @override
@@ -41,7 +44,7 @@ class _TapHoverContainerState extends State<TapHoverContainer> {
       },
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: widget.padding),
-        height: 39,
+        height: widget.height,
         decoration: BoxDecoration(
           color: isHover ? widget.hoverColor : widget.color,
           border: Border.all(color: widget.borderColor),
