@@ -136,7 +136,7 @@ class _CenterPageState extends State<CenterPage> {
                             RegularText(
                                 color: grey500,
                                 size: 16,
-                                text: "/ ${_allPage}"),
+                                text: "/ $_allPage"),
                             const SizedBox(width: 12),
                             MouseRegion(
                               cursor: SystemMouseCursors.click,

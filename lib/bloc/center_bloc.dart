@@ -15,7 +15,7 @@ class CenterBloc {
   final int limit = 5;
   ValueNotifier<Map> pageValueNotifier = ValueNotifier({
     "currPage": 1,
-    "allPage": 0,
+    "allPage": 1,
   });
   ValueNotifier<List<PostModel>?> postValueNotifier = ValueNotifier(null);
   String searchStatus = "即將開始的活動";
@@ -84,7 +84,8 @@ class CenterBloc {
             .map((e) => PostModel.fromSnap(e))
             .toList());
       }
-      pageValueNotifier.value["allPage"] = (_allList.length / limit).ceil();
+      pageValueNotifier.value["allPage"] =
+          _allList.isEmpty ? 1 : (_allList.length / limit).ceil();
       pageValueNotifier.notifyListeners();
       postValueNotifier.notifyListeners();
     } catch (e) {

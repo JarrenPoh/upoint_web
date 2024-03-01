@@ -22,11 +22,11 @@ class CenterLayout extends StatelessWidget {
     final CenterBloc _bloc = CenterBloc(organizer);
     return ResponsiveLayout(
       tabletLayout: valueWidget(
-        (v) => tabletLayout(_bloc, v!),
+        (v) => tabletLayout(_bloc, v),
         _bloc,
       ),
       webLayout: valueWidget(
-        (v) => webLayout(_bloc, v!),
+        (v) => webLayout(_bloc, v),
         _bloc,
       ),
     );
@@ -39,104 +39,124 @@ class CenterLayout extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: _bloc.postValueNotifier,
       builder: ((context, value, c) {
-        if (value == null) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (value.isEmpty) {
-          return Center(
-            child: MediumText(
-              color: grey500,
-              size: 16,
-              text: "還沒創建過活動",
-            ),
-          );
-        } else {
-          return child(value);
-        }
+        return child(value);
       }),
     );
   }
 
   Widget tabletLayout(
     CenterBloc _bloc,
-    List<PostModel> v,
+    List<PostModel>? v,
   ) {
     return CenterPage(
       isWeb: false,
       bloc: _bloc,
-      child: Column(
-        children: List.generate(
-          v.length,
-          (index) {
-            return Column(
-              children: [
-                CenterPicLayout(
-                  post: v[index],
-                  width: double.infinity,
-                ),
-                CenterInformLayout(
-                  post: v[index],
-                  width: double.infinity,
-                ),
-                const SizedBox(height: 12),
-              ],
-            );
-          },
-        ),
-      ),
+      child: Builder(builder: (context) {
+        if (v == null) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (v.isEmpty) {
+          return Center(
+            child: MediumText(
+              color: grey500,
+              size: 16,
+              text: "無活動",
+            ),
+          );
+        } else {
+          return Column(
+            children: List.generate(
+              v.length,
+              (index) {
+                return Column(
+                  children: [
+                    CenterPicLayout(
+                      post: v[index],
+                      width: double.infinity,
+                    ),
+                    CenterInformLayout(
+                      post: v[index],
+                      width: double.infinity,
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                );
+              },
+            ),
+          );
+        }
+      }),
     );
   }
 
   Widget webLayout(
     CenterBloc _bloc,
-    List<PostModel> v,
+    List<PostModel>? v,
   ) {
     return CenterPage(
       isWeb: true,
       bloc: _bloc,
-      child: Column(
-        children: List.generate(
-          v.length,
-          (index) {
+      child: Builder(
+        builder: (context) {
+          if (v == null) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (v.isEmpty) {
+            return Center(
+              child: MediumText(
+                color: grey500,
+                size: 16,
+                text: "無活動",
+              ),
+            );
+          } else {
             return Column(
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(
+                v.length,
+                (index) {
+                  return Column(
+                    children: [
+                      Row(
                         children: [
-                          CenterPicLayout(
-                            post: v[index],
-                            width: 300,
-                          ),
-                          const SizedBox(width: 24),
                           Expanded(
-                            child: CenterInformLayout(
-                              post: v[index],
-                              width: null,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CenterPicLayout(
+                                  post: v[index],
+                                  width: 300,
+                                ),
+                                const SizedBox(width: 24),
+                                Expanded(
+                                  child: CenterInformLayout(
+                                    post: v[index],
+                                    width: null,
+                                  ),
+                                ),
+                                const SizedBox(width: 24),
+                              ],
                             ),
                           ),
-                          const SizedBox(width: 24),
+                          if (v[index].form != null)
+                            SizedBox(
+                              width: 120,
+                              height: 120,
+                              child: CenterBarLayout(
+                                post: v[index],
+                              ),
+                            ),
                         ],
                       ),
-                    ),
-                    if (v[index].form != null)
-                      SizedBox(
-                        width: 120,
-                        height: 120,
-                        child: CenterBarLayout(
-                          post: v[index],
-                        ),
-                      ),
-                  ],
-                ),
-                const SizedBox(height: 30),
-              ],
+                      const SizedBox(height: 30),
+                    ],
+                  );
+                },
+              ),
             );
-          },
-        ),
+          }
+        },
       ),
     );
   }
