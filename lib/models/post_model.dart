@@ -16,6 +16,7 @@ class PostModel {
   String? reward;
   String? rewardTagId;
   List<dynamic>? tags;
+  String? postType;
   String? link;
   //以下尚未填
   String? form;
@@ -50,6 +51,7 @@ class PostModel {
     this.formDateTime,
     this.contact,
     this.phoneNumber,
+    this.postType,
   });
 
   static Map toMap(PostModel cart) {
@@ -77,6 +79,7 @@ class PostModel {
       "formDateTime": cart.formDateTime,
       "contact":cart.contact,
       "phoneNumber":cart.phoneNumber,
+      "postType":cart.postType,
     };
   }
 
@@ -107,6 +110,7 @@ class PostModel {
       formDateTime: snapshot['formDateTime'],
       contact:snapshot["contact"],
       phoneNumber:snapshot["phoneNumber"],
+      postType:snapshot["postType"],
     );
   }
 
@@ -134,6 +138,7 @@ class PostModel {
         "signFormsLength": signFormsLength,
         "contact":contact,
         "phoneNumber":phoneNumber,
+        "postType":postType,
       };
 
   static PostModel fromMap(Map map) {
@@ -161,6 +166,7 @@ class PostModel {
       signFormsLength: map['signFormsLength'],
       contact:map["contact"],
       phoneNumber:map["phoneNumber"],
+      postType:map["postType"],
     );
   }
 }

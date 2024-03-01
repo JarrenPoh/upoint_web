@@ -259,6 +259,12 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
   initTagMap(TagModel tagModel, int index) {
     tagModel.tagValue.forEach((e) {
       if (index == 0) {
+        if (e["index"] == widget.bloc.valueNotifier.value.postType) {
+          e["isChecked"] = true;
+        } else {
+          e["isChecked"] = false;
+        }
+      } else if (index == 1) {
         if (e["id"] == widget.bloc.valueNotifier.value.rewardTagId) {
           e["isChecked"] = true;
         } else {

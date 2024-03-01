@@ -36,6 +36,15 @@ class _TagPickRowState extends State<TagPickRow> {
   onTap(String text) {
     String _type = tagModel.type;
     switch (_type) {
+      case "postType":
+        tagModel.tagValue.forEach((e) {
+          if (e["index"] == text) {
+            e["isChecked"] = true;
+          } else {
+            e["isChecked"] = false;
+          }
+        });
+        break;
       case "rewardTag":
         tagModel.tagValue.forEach((e) {
           if (e["index"] == text) {
@@ -92,6 +101,8 @@ class _TagPickRowState extends State<TagPickRow> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      if(tagModel.type!="tags")
+                      const SizedBox(height: 13),
                       if (tagModel.type == "tags")
                         Column(
                           children: [

@@ -83,6 +83,20 @@ class CreateStep1Bloc {
 
   List<TagModel> tagList = [
     TagModel(
+      type: "postType",
+      title: "活動類別（APP內活動分類）",
+      tagValue: [
+        {"index": "演講講座", "isChecked": false},
+        {"index": "實習就業", "isChecked": false},
+        {"index": "志工服務", "isChecked": false},
+        {"index": "藝術人文", "isChecked": false},
+        {"index": "資訊科技", "isChecked": false},
+        {"index": "學習成長", "isChecked": false},
+        {"index": "戶外探索", "isChecked": false},
+        {"index": "競賽活動", "isChecked": false},
+      ],
+    ),
+    TagModel(
       type: "rewardTag",
       title: "獎勵標籤（限選1項）",
       tagValue: [
@@ -90,7 +104,9 @@ class CreateStep1Bloc {
         {"index": "中式便當", "id": "002", "isChecked": false},
         {"index": "麵包餐盒", "id": "004", "isChecked": false},
         {"index": "麥當勞", "id": "001", "isChecked": false},
+        {"index": "附餐", "id": "003", "isChecked": false},
         {"index": "飲料", "id": "005", "isChecked": false},
+        {"index": "獎金", "id": "006", "isChecked": false},
       ],
     ),
     TagModel(
@@ -204,6 +220,8 @@ class CreateStep1Bloc {
   tagPick(int index, String text) async {
     String _type = tagList[index].type;
     switch (_type) {
+      case "postType":
+        valueNotifier.value.postType = text;
       case "rewardTag":
         int i = tagList[index].tagValue.indexWhere((e) => e["index"] == text);
         String? rewardTagId = tagList[index].tagValue[i]["id"];
