@@ -85,6 +85,13 @@ exports.createPostReminderTask = functions.region('asia-east1').https.onRequest(
           const subscriber = doc.data();
           const subscriberTokens = subscriber.fcmToken;
           const subscriberUid = subscriber.uuid;
+
+          if (!subscriberUid) {
+            console.error('Missing uuid for subscriber:', subscriber);
+            // 可以選擇跳過這個訂閱者，或處理這種錯誤的其他方式
+            return; // 跳過這次迭代
+          }
+          
           if (Array.isArray(subscriberTokens)) {
               tokens.push(...subscriberTokens);
           }

@@ -43,9 +43,10 @@ class _SignFormPageState extends State<SignFormPage> {
             RichText(
               text: TextSpan(
                 style: TextStyle(
-                    color: grey500,
-                    fontSize: 18,
-                    fontFamily: "NotoSansRegular"),
+                  color: grey500,
+                  fontSize: 18,
+                  fontFamily: "NotoSansRegular",
+                ),
                 children: <TextSpan>[
                   const TextSpan(
                     text: "掃描或",
