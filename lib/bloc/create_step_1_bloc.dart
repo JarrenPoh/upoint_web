@@ -16,7 +16,7 @@ class CreateStep1Bloc {
     if (UserSimplePreference.getCustomTags() != null) {
       List<String> _list = UserSimplePreference.getCustomTags()!;
       for (var i in _list) {
-        tagList[1].tagValue.insert(
+        tagList[2].tagValue.insert(
           0,
           {
             "index": i,
@@ -191,7 +191,7 @@ class CreateStep1Bloc {
 
   deleteCustomTag(String text) async {
     // 元數據刪除標籤
-    tagList[1].tagValue.removeWhere((e) => e["index"] == text);
+    tagList[2].tagValue.removeWhere((e) => e["index"] == text);
     // 電腦刪除標籤
     List<String> _list = UserSimplePreference.getCustomTags() ?? [];
     _list.removeWhere((e) => e == text);
@@ -206,17 +206,17 @@ class CreateStep1Bloc {
   addCustomTag(String text) async {
     // 元數據新增標籤
     Map _map = {"index": text, "isChecked": true, "isCustom": true};
-    tagList[1].tagValue.insert(0, _map);
+    tagList[2].tagValue.insert(0, _map);
     // 新增標籤加到電腦
     List<String> _list = UserSimplePreference.getCustomTags() ?? [];
     _list.add(text);
     await UserSimplePreference.setCustomTags(_list);
     // 加到valueNotifier
-    tagPick(1, text);
+    tagPick(2, text);
     valueNotifier.notifyListeners();
   }
 
-  //選取tag
+  // 選取tag
   tagPick(int index, String text) async {
     String _type = tagList[index].type;
     switch (_type) {

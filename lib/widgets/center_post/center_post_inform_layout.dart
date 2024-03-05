@@ -48,7 +48,7 @@ class CenterPostInformLayout extends StatelessWidget {
         "title": "主辦單位：",
         "type": "back",
         "icon": Icons.home,
-        "text": organnizer.username,
+        "text": post.organizerName,
       },
       {
         "title": "聯絡人：",

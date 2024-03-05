@@ -124,7 +124,7 @@ class _CreateStep2PickLayoutState extends State<CreateStep2PickLayout> {
               case "form":
                 _w = Column(
                   children: [
-                    formDateField(),
+                    formDateField(widget.bloc.signOptions),
                     const SizedBox(height: 48),
                     widget.child,
                   ],
@@ -132,7 +132,11 @@ class _CreateStep2PickLayoutState extends State<CreateStep2PickLayout> {
                 break;
               case "link":
                 _w = Column(children: [
-                  formDateField(),
+                  formDateField(
+                    widget.bloc.signOptions
+                        .where((e) => e["index"] == "formDateTime")
+                        .toList(),
+                  ),
                   const SizedBox(height: 48),
                   linkField((e) => widget.bloc.linkTextChanged(e))
                 ]);
@@ -225,7 +229,7 @@ class _CreateStep2PickLayoutState extends State<CreateStep2PickLayout> {
     );
   }
 
-  Widget formDateField() {
+  Widget formDateField(List<Map> signOptions) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -253,7 +257,7 @@ class _CreateStep2PickLayoutState extends State<CreateStep2PickLayout> {
                   ),
                 ),
               ),
-              for (var _map in widget.bloc.signOptions)
+              for (var _map in signOptions)
                 Container(
                   height: 48,
                   margin:
