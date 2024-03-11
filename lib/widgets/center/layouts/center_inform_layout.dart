@@ -7,7 +7,7 @@ import 'package:upoint_web/widgets/center/components/link_field.dart';
 
 import '../../../models/post_model.dart';
 
-class CenterInformLayout extends StatefulWidget {
+class CenterInformLayout extends StatelessWidget {
   final PostModel post;
   final double? width;
   const CenterInformLayout({
@@ -17,30 +17,20 @@ class CenterInformLayout extends StatefulWidget {
   });
 
   @override
-  State<CenterInformLayout> createState() => _CenterInformLayoutState();
-}
-
-class _CenterInformLayoutState extends State<CenterInformLayout> {
-  String? formUrl;
-  String dateDuration = "";
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (widget.post.form?.substring(0, 4) == "http") {
-      formUrl = widget.post.form!;
-    } else if (widget.post.form != null) {
-      formUrl = "https://upoint.tw/signForm?id=${widget.post.postId}";
+    String? formUrl;
+    String dateDuration = "";
+    if (post.form?.substring(0, 4) == "http") {
+      formUrl = post.form!;
+    } else if (post.form != null) {
+      formUrl = "https://upoint.tw/signForm?id=${post.postId}";
     }
     dateDuration = TimeTransfer.timeTrans05(
-        widget.post.startDateTime, widget.post.endDateTime);
+        post.startDateTime, post.endDateTime);
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 17),
       height: 300 / 16 * 9,
-      width: widget.width,
+      width: width,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +44,7 @@ class _CenterInformLayoutState extends State<CenterInformLayout> {
             child: MediumText(
               color: grey500,
               size: 16,
-              text: widget.post.title!,
+              text: post.title!,
             ),
           ),
           Padding(
@@ -68,7 +58,7 @@ class _CenterInformLayoutState extends State<CenterInformLayout> {
                 RegularText(
                     color: grey500,
                     size: 14,
-                    text: "活動地點：${widget.post.location}"),
+                    text: "活動地點：${post.location}"),
               ],
             ),
           ),

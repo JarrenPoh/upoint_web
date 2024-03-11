@@ -96,7 +96,7 @@ class InformBloc {
       isEditValue.value = false;
       res = "success";
     } catch (e) {
-      print("error: ${e.toString()}");
+      debugPrint("error: ${e.toString()}");
       res = e.toString();
       Messenger.snackBar(context, "更改失敗");
     }

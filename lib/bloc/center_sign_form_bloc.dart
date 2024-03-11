@@ -45,7 +45,7 @@ class CenterSignFormBloc {
     // 處理表單
     String? _form = _post?.form;
     if (_form == null || _form.substring(0, 4) == 'http') {
-      print('沒有用UPoint表單');
+      debugPrint('沒有用UPoint表單');
       postValueNotifier.value["isForm"] = false;
     } else {
       List<FormModel> formModel =
@@ -91,7 +91,7 @@ class CenterSignFormBloc {
 
       // 將標題轉換成List並排序（如果需要的話）
       List<String> headers = allSubtitles.toList()..sort();
-      print('header:${headers.map((e) => TextCellValue(e)).toList()}');
+      debugPrint('header:${headers.map((e) => TextCellValue(e)).toList()}');
       // 將標題行加入到Excel
       sheetObject.appendRow(headers.map((e) => TextCellValue(e)).toList());
 
@@ -110,7 +110,7 @@ class CenterSignFormBloc {
         });
         // 根據headers順序添加值到行
         List<String> row = headers.map((header) => rowValues[header]!).toList();
-        print('row:${row.map((e) => TextCellValue(e)).toList()}');
+        debugPrint('row:${row.map((e) => TextCellValue(e)).toList()}');
 
         sheetObject.appendRow(row.map((e) => TextCellValue(e)).toList());
       });

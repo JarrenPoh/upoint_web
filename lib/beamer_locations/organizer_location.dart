@@ -19,7 +19,7 @@ import '../layouts/center_post_layout.dart';
 import '../layouts/center_sign_form_layout.dart';
 
 class OrganizerLocation extends BeamLocation {
-  List<String> get pathBlueprints => [
+  List<String> get pathBluedebugPrints => [
         '/organizer',
         '/organizer/inform',
         '/organizer/center',
@@ -56,7 +56,7 @@ class OrganizerLocation extends BeamLocation {
     } else if (uri.pathSegments.contains('post')) {
       // 活動中心點進去的貼文頁面
       final id = uri.queryParameters['id'];
-      print('id:$id');
+      debugPrint('id:$id');
       if (id != null) {
         page = (o) => CenterPostLayout(
               organizer: o,
@@ -68,7 +68,7 @@ class OrganizerLocation extends BeamLocation {
     } else if (uri.pathSegments.contains('signForm')) {
       // 貼文的報名資訊
       final id = uri.queryParameters['id'];
-      print('id:$id');
+      debugPrint('id:$id');
       if (id != null) {
         page = (o) => CenterSignFormLayout(
               organizer: o,
@@ -195,5 +195,5 @@ class OrganizerLocation extends BeamLocation {
   }
 
   @override
-  List<Pattern> get pathPatterns => pathBlueprints;
+  List<Pattern> get pathPatterns => pathBluedebugPrints;
 }
