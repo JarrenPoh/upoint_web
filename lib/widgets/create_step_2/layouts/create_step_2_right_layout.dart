@@ -7,6 +7,8 @@ import 'package:upoint_web/models/option_model.dart';
 import 'package:upoint_web/widgets/create_step_2/components/container_with_checkbox.dart';
 import 'package:upoint_web/widgets/mouse_grab_widget.dart';
 
+import '../../../models/form_model.dart';
+
 class CreateStep2RightLayout extends StatelessWidget {
   final CreateFormBloc bloc;
   const CreateStep2RightLayout({
@@ -46,7 +48,7 @@ class CreateStep2RightLayout extends StatelessWidget {
             child: Column(
               children: [
                 // 基本資訊標題
-                title("基本資訊", ValueKey(""), null),
+                title("基本資訊", ValueKey(""), null, null),
                 //固定基本資訊
                 Column(
                   children: List.generate(
@@ -71,11 +73,8 @@ class CreateStep2RightLayout extends StatelessWidget {
                 ValueListenableBuilder(
                   valueListenable: bloc.valueNotifier,
                   builder: (context, value, child) {
-                    for (var v in value) {
-                      debugPrint("title: ${v.title}");
-                      for (var i in v.options) {
-                        debugPrint("options: ${i.toJson()}");
-                      }
+                    for (FormModel f in value) {
+                      print("value:${f.toJson()}");
                     }
                     List<Map> _options = [];
                     List _lengths = [];
@@ -104,7 +103,7 @@ class CreateStep2RightLayout extends StatelessWidget {
                             varInt,
                       );
                     }
-                    // print("lengths: $_lengths");
+                    debugPrint("lengths: $_lengths");
                     debugPrint("_options: $_options");
                     return ReorderableListView(
                       shrinkWrap: true,
@@ -160,12 +159,14 @@ class CreateStep2RightLayout extends StatelessWidget {
                                 bloc.valueNotifier
                                     .value[_options[index]["lindex"] + 1],
                               ),
+                              () => bloc.removeTitleFromForm(
+                                  _lengths.indexWhere((e) => e == index - 1)),
                             );
                           } else {
                             return ListTile(
                               dense: true,
                               minVerticalPadding: 0,
-                              contentPadding: EdgeInsets.only(top: 18),
+                              contentPadding: const EdgeInsets.only(top: 18),
                               horizontalTitleGap: 0,
                               key: ValueKey(index.toString()),
                               titleAlignment: ListTileTitleAlignment.top,
@@ -211,6 +212,7 @@ class CreateStep2RightLayout extends StatelessWidget {
     String text,
     ValueKey key,
     Function(String)? onTitleChanged,
+    Function()? removeTitle,
   ) {
     TextEditingController titleController = TextEditingController(text: text);
     bool enabled = text == "基本資訊" || text == "學校相關";
@@ -247,9 +249,22 @@ class CreateStep2RightLayout extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(width: 5),
+            if (!enabled)
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: InkWell(
+                  onTap: removeTitle == null ? () {} : () => removeTitle(),
+                  child: const Icon(
+                    Icons.clear,
+                    color: Colors.red,
+                    size: 20,
+                  ),
+                ),
+              )
           ],
         ),
-        SizedBox(height: 6),
+        const SizedBox(height: 6),
       ],
     );
   }

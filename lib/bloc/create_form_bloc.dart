@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+
 import 'dart:async';
 import 'dart:convert';
 
@@ -40,7 +42,6 @@ class CreateFormBloc {
     } else {
       valueNotifier.value[_index].options.add(option);
     }
-    // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
     valueNotifier.notifyListeners();
     UserSimplePreference.setform(
         jsonEncode(valueNotifier.value.map((form) => form.toJson()).toList()));
@@ -59,6 +60,12 @@ class CreateFormBloc {
     checkTitleIsEmpty(_value);
   }
 
+  removeTitleFromForm(int index) {
+    List<FormModel> _value = valueNotifier.value;
+    _value.removeAt(index + 1);
+    checkTitleIsEmpty(_value);
+  }
+
   addLeftOrangeOuter(String feildType, int index) {
     ValueNotifier<List<dynamic>> _leftValue;
     if (feildType == "common") {
@@ -69,7 +76,6 @@ class CreateFormBloc {
       _leftValue = customLeftValue;
     }
     _leftValue.value[index]['selected'] = true;
-    // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
     _leftValue.notifyListeners();
   }
 
@@ -78,12 +84,10 @@ class CreateFormBloc {
     if (commonFields.any((e) => e["type"] == type)) {
       index = commonFields.indexWhere((e) => e["type"] == type);
       commonLeftValue.value[index]['selected'] = false;
-      // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
       commonLeftValue.notifyListeners();
     } else if (schoolFields.any((e) => e["type"] == type)) {
       index = schoolFields.indexWhere((e) => e["type"] == type);
       schoolLeftValue.value[index]['selected'] = false;
-      // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
       schoolLeftValue.notifyListeners();
     }
   }
@@ -93,7 +97,6 @@ class CreateFormBloc {
     //檢查如果區塊下沒東西，刪掉標題
     _value.removeWhere((e) => e.title != "基本資料" && e.options.isEmpty);
     valueNotifier.value = _value;
-    // ignore: invalid_use_of_visible_for_testing_member,, invalid_use_of_protected_member
     valueNotifier.notifyListeners();
     UserSimplePreference.setform(
         jsonEncode(valueNotifier.value.map((form) => form.toJson()).toList()));
@@ -130,7 +133,6 @@ class CreateFormBloc {
         option.body.add("");
         break;
     }
-    // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
     valueNotifier.notifyListeners();
     UserSimplePreference.setform(
         jsonEncode(valueNotifier.value.map((form) => form.toJson()).toList()));
