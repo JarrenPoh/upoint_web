@@ -3,7 +3,7 @@ import 'package:upoint_web/bloc/create_step_2_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/globals/regular_text.dart';
-import 'package:upoint_web/widgets/create_step_1/date_pick_row.dart';
+import 'package:upoint_web/widgets/create_step_2/components/form_date_pick_field.dart';
 
 class CreateStep2PickLayout extends StatefulWidget {
   final CreateStep2Bloc bloc;
@@ -124,7 +124,11 @@ class _CreateStep2PickLayoutState extends State<CreateStep2PickLayout> {
               case "form":
                 _w = Column(
                   children: [
-                    formDateField(widget.bloc.signOptions),
+                    FormDatePickField(
+                      signOptions: widget.bloc.signOptions,
+                      bloc: widget.bloc,
+                      isWeb: widget.isWeb,
+                    ),
                     const SizedBox(height: 48),
                     widget.child,
                   ],
@@ -132,10 +136,12 @@ class _CreateStep2PickLayoutState extends State<CreateStep2PickLayout> {
                 break;
               case "link":
                 _w = Column(children: [
-                  formDateField(
-                    widget.bloc.signOptions
+                  FormDatePickField(
+                    signOptions: widget.bloc.signOptions
                         .where((e) => e["index"] == "formDateTime")
                         .toList(),
+                    bloc: widget.bloc,
+                    isWeb: widget.isWeb,
                   ),
                   const SizedBox(height: 48),
                   linkField((e) => widget.bloc.linkTextChanged(e))
@@ -222,59 +228,6 @@ class _CreateStep2PickLayoutState extends State<CreateStep2PickLayout> {
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget formDateField(List<Map> signOptions) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Container(
-          width: 948,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: grey300),
-          ),
-          child: Column(
-            children: [
-              Container(
-                height: 59,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(10),
-                  ),
-                  color: grey100,
-                ),
-                child: Center(
-                  child: MediumText(
-                    color: grey500,
-                    size: 18,
-                    text: '報名時程',
-                  ),
-                ),
-              ),
-              for (var _map in signOptions)
-                Container(
-                  height: 48,
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                  child: ValueListenableBuilder(
-                    valueListenable: widget.bloc.postValue,
-                    builder: (context, value, child) {
-                      return DatePickRow(
-                        post: value,
-                        index: _map["index"],
-                        isWeb: widget.isWeb,
-                        dateTimeFunc: (e, ee) =>
-                            widget.bloc.dateFunc(_map["index"], e, ee),
-                      );
-                    },
-                  ),
-                ),
             ],
           ),
         ),

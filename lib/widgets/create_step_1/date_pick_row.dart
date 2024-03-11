@@ -75,8 +75,8 @@ class _DatePickRowState extends State<DatePickRow> {
         break;
     }
     if (_list.isNotEmpty) {
-      _date = _list[0];
-      _time = _list[1];
+      _date = _list[0] == "null" ? null : _list[0];
+      _time = _list[1] == "null" ? null : _list[1];
     }
     if (_date != null) {
       dateText = _date;

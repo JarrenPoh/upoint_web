@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -14,8 +16,12 @@ class CreateStep2Bloc {
     createFormBloc = CreateFormBloc(formModel);
     String getPost = UserSimplePreference.getpost();
     postValue = ValueNotifier(PostModel.fromMap(jsonDecode(getPost)));
+    if (postValue.value.remindDateTime != null) {
+      needReminder.value = true;
+    }
   }
   ValueNotifier<String> formOptionValue = ValueNotifier("form");
+  ValueNotifier<bool> needReminder = ValueNotifier(false);
   List<Map> formOptions = [
     {
       "text": "使用本系統表單",
@@ -46,7 +52,6 @@ class CreateStep2Bloc {
 
   tapOption(String type) {
     formOptionValue.value = type;
-    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     formOptionValue.notifyListeners();
   }
 
@@ -59,13 +64,28 @@ class CreateStep2Bloc {
     if (index == "formDateTime") {
       postValue.value.formDateTime = "$dateText/$timeText";
     } else if (index == "remindDateTime") {
-      postValue.value.remindDateTime = "$dateText/$timeText";
+      if (dateText == null && timeText == null) {
+        postValue.value.remindDateTime = null;
+      } else {
+        postValue.value.remindDateTime = "$dateText/$timeText";
+      }
     }
-    // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
     postValue.notifyListeners();
     await UserSimplePreference.setpost(
       jsonEncode(PostModel.toMap(postValue.value)),
     );
+  }
+
+  changeNeedReminder(bool _b, String _index) {
+    needReminder.value = _b;
+    needReminder.notifyListeners();
+    if (_b == false) {
+      dateFunc(
+        _index,
+        null,
+        null,
+      );
+    }
   }
 
   //  檢查step2有沒有沒寫完的
@@ -102,12 +122,14 @@ class CreateStep2Bloc {
           } else if (_check(_formList[1])) {
             errorText = '“表單截止時間”尚未填寫';
             break;
-          } else if (_check(_remindList[1])) {
-            errorText = '“發送活動提醒日期”尚未填寫';
-            break;
-          } else if (_check(_remindList[1])) {
-            errorText = '“發送活動提醒時間”尚未填寫';
-            break;
+          } else if (needReminder.value) {
+            if (_check(_remindList[0])) {
+              errorText = '“發送活動提醒日期”尚未填寫';
+              break;
+            } else if (_check(_remindList[1])) {
+              errorText = '“發送活動提醒時間”尚未填寫';
+              break;
+            }
           }
           if (_check(form.title)) {
             errorText = '大標題不能為空！';
