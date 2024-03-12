@@ -19,7 +19,11 @@ class UserSimplePreference {
   //organizer create post
   static Future setpost(String post) async {
     debugPrint('存：$post');
-    await _preferences?.setString(_post, post);
+    try {
+       await _preferences?.setString(_post, post);
+    } on Exception catch (e) {
+      debugPrint("發生錯誤: ${e.toString()}");
+    }
   }
 
   static Future removepost() async {
@@ -33,7 +37,10 @@ class UserSimplePreference {
   //organizer create form
   static Future setform(String form) async {
     debugPrint('存：$form');
-    await _preferences?.setString(_form, form);
+    check(
+      await _preferences?.setString(_form, form),
+      removeform,
+    );
   }
 
   static Future removeform() async {
@@ -69,5 +76,14 @@ class UserSimplePreference {
 
   static String getSignForm() {
     return _preferences?.getString(_signForm) ?? "";
+  }
+
+  static check(execute, clear) async {
+    try {
+      await execute;
+    } on Exception catch (e) {
+      debugPrint("發生錯誤: ${e.toString()}");
+      clear;
+    }
   }
 }

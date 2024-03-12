@@ -315,13 +315,13 @@ class CreateStep1Bloc {
       text = '“活動負責人”尚未填寫';
     } else if (_check(post.phoneNumber)) {
       text = '“聯絡方式”尚未填寫';
-    } else if (_check(_startList[0])) {
+    } else if (_check(_startList[0] == "null" ? null : _startList[0])) {
       text = '“開始日期”尚未填寫';
-    } else if (_check(_startList[1])) {
+    } else if (_check(_startList[1] == "null" ? null : _startList[1])) {
       text = '“開始時間”尚未填寫';
-    } else if (_check(_endList[0])) {
+    } else if (_check(_endList[0] == "null" ? null : _endList[0])) {
       text = '“結束日期”尚未填寫';
-    } else if (_check(_endList[1])) {
+    } else if (_check(_endList[1] == "null" ? null : _endList[1])) {
       text = '“結束時間”尚未填寫';
     } else if (_check(post.introduction)) {
       text = '“活動簡介”尚未填寫';

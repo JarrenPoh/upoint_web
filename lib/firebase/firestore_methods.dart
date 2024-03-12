@@ -113,12 +113,14 @@ class FirestoreMethods {
         // 本表單
         formUrl = "https://upoint.tw/signForm?id=$postId";
         // 觸發創建通知task
-        await FunctionMethods().createPostReminderTask(
-          postId,
-          "活動提醒",
-          "提醒您報名的活動 “${post.title}” 將在${TimeTransfer.timeTrans06(Timestamp.fromDate(post.startDateTime))}開始，活動地點於 “${post.location}進行”",
-          post.remindDateTime,
-        );
+        if (post.remindDateTime != null) {
+          await FunctionMethods().createPostReminderTask(
+            postId,
+            "活動提醒",
+            "提醒您報名的活動 “${post.title}” 將在${TimeTransfer.timeTrans06(Timestamp.fromDate(post.startDateTime))}開始，活動地點於 “${post.location}進行”",
+            post.remindDateTime,
+          );
+        }
       }
       // 幫organizer的postLength加一
       await _firestore.collection('organizers').doc(organizer.uid).update({
