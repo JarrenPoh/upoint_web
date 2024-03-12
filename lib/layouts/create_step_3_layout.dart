@@ -23,6 +23,7 @@ class CreateStep3Layout extends StatelessWidget {
         future: FirestoreMethods().uploadPost(organizer),
         builder: (context, snapshot) {
           bool isSuccess = snapshot.data?["status"] == "success";
+          String res = snapshot.data?["status"];
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: SizedBox(
@@ -36,8 +37,8 @@ class CreateStep3Layout extends StatelessWidget {
           } else {
             String? formUrl = snapshot.data?["formUrl"];
             return ResponsiveLayout(
-              tabletLayout: tabletLayout(isSuccess, context, formUrl),
-              webLayout: webLayout(isSuccess, context, formUrl),
+              tabletLayout: tabletLayout(isSuccess, context, formUrl, res),
+              webLayout: webLayout(isSuccess, context, formUrl, res),
             );
           }
         });
@@ -51,6 +52,7 @@ class CreateStep3Layout extends StatelessWidget {
     bool isSuccess,
     BuildContext context,
     String? formUrl,
+    String res,
   ) {
     debugPrint('切換到 tabletLayout');
     return CreatePage(
@@ -76,7 +78,8 @@ class CreateStep3Layout extends StatelessWidget {
             MediumText(
               color: grey500,
               size: 20,
-              text: isSuccess ? "創建成功" : "創建失敗，請聯絡service.upoint@gmail.com",
+              text:
+                  isSuccess ? "創建成功" : "創建失敗，請聯絡service.upoint@gmail.com：$res",
             ),
             const SizedBox(height: 50),
             if (isSuccess && formUrl != null) LinkField(formUrl: formUrl),
@@ -90,6 +93,7 @@ class CreateStep3Layout extends StatelessWidget {
     bool isSuccess,
     BuildContext context,
     String? formUrl,
+    String res,
   ) {
     debugPrint('切換到 desktopLayout');
     return CreatePage(
@@ -105,9 +109,11 @@ class CreateStep3Layout extends StatelessWidget {
               width: 152,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage(isSuccess
-                      ? "assets/create_success.png"
-                      : "assets/create_failed.png"),
+                  image: AssetImage(
+                    isSuccess
+                        ? "assets/create_success.png"
+                        : "assets/create_failed.png",
+                  ),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -115,7 +121,8 @@ class CreateStep3Layout extends StatelessWidget {
             MediumText(
               color: grey500,
               size: 20,
-              text: isSuccess ? "創建成功" : "創建失敗，請聯絡service.upoint@gmail.com",
+              text:
+                  isSuccess ? "創建成功" : "創建失敗，請聯絡service.upoint@gmail.com：$res",
             ),
             const SizedBox(height: 50),
             if (isSuccess && formUrl != null) LinkField(formUrl: formUrl),

@@ -129,8 +129,11 @@ class FirestoreMethods {
     } catch (err) {
       res = err.toString();
       debugPrint(res);
-      await UserSimplePreference.removeform();
-      await UserSimplePreference.removepost();
+    }
+    if (res != "success") {
+      // 失敗情除local storage
+      UserSimplePreference.removeform();
+      UserSimplePreference.removepost();
     }
     return {
       "status": res,
