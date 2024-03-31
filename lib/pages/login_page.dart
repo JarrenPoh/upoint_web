@@ -1,9 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/firebase/auth_methods.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/globals/regular_text.dart';
+import 'package:upoint_web/pages/reset_password_page.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
 import 'package:upoint_web/widgets/tap_hover_text.dart';
 import '../globals/custom_messengers.dart';
@@ -11,10 +11,12 @@ import '../globals/custom_messengers.dart';
 class LoginPage extends StatefulWidget {
   final String role;
   final bool isWeb;
+  final Function(int) navigateToPage;
   const LoginPage({
     super.key,
     required this.role,
     required this.isWeb,
+    required this.navigateToPage,
   });
 
   @override
@@ -25,8 +27,6 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool isLoading = false;
-  String errorEmail = "";
-  String errorPassword = "";
   @override
   void initState() {
     super.initState();
@@ -63,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
       "index": "email",
       "obscureText": false,
       "icon": Icons.people_alt_rounded,
-      "errorText": errorEmail,
+      "errorText": "",
       "controller": _emailController,
     },
     {
@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
       "index": "password",
       "obscureText": true,
       "icon": Icons.lock,
-      "errorText": errorPassword,
+      "errorText": "",
       "controller": _passwordController,
     },
   ];
@@ -114,19 +114,19 @@ class _LoginPageState extends State<LoginPage> {
 
   void signIn(res) async {
     if (res == "success") {
-      if (FirebaseAuth.instance.currentUser!.emailVerified) {
-        // await Provider.of<AuthMethods>(context, listen: false).getUserDetails();
-        // ignore: use_build_context_synchronously
-        // Navigator.pop(context, true);
-      } else {
-        Messenger.dialog(
-          '如有問題，請洽詢官方:service.upoint@gmail.com',
-          '你尚未驗證你的Gmail',
-          context,
-        );
-        await AuthMethods().signOut();
-        // ignore: use_build_context_synchronously
-      }
+      // if (FirebaseAuth.instance.currentUser!.emailVerified) {
+      //   // await Provider.of<AuthMethods>(context, listen: false).getUserDetails();
+      //   // ignore: use_build_context_synchronously
+      //   // Navigator.pop(context, true);
+      // } else {
+      //   Messenger.dialog(
+      //     '如有問題，請洽詢官方:service.upoint@gmail.com',
+      //     '你尚未驗證你的Gmail',
+      //     context,
+      //   );
+      //   await AuthMethods().signOut();
+      //   // ignore: use_build_context_synchronously
+      // }
     } else {
       setState(() {
         isLoading = false;
@@ -191,7 +191,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               child: Row(
                                 children: [
-                                  SizedBox(width: 20),
+                                  const SizedBox(width: 20),
                                   Expanded(
                                     child: textWidget(
                                       i["obscureText"],
@@ -205,9 +205,10 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                             if (i["errorText"].isNotEmpty)
                               RegularText(
-                                  color: Colors.red,
-                                  size: 12,
-                                  text: i["errorText"])
+                                color: Colors.red,
+                                size: 12,
+                                text: i["errorText"],
+                              )
                           ],
                         ),
                       //  login
@@ -225,25 +226,30 @@ class _LoginPageState extends State<LoginPage> {
                       const SizedBox(height: 20),
                       Row(
                         children: [
-                          // MediumText(
-                          //   color: grey400,
-                          //   size: 12,
-                          //   text: "還沒有帳號嗎？",
-                          // ),
-                          // TopHoverText(
-                          //   text: "點此註冊",
-                          //   textSize: 14,
-                          //   hoverColor: secondColor,
-                          //   color: primaryColor,
-                          //   onTap: () {},
-                          // ),
-                          Expanded(child: Column(children: [])),
+                          MediumText(
+                            color: grey400,
+                            size: 12,
+                            text: "還沒有帳號嗎？",
+                          ),
+                          TapHoverText(
+                            text: "點此註冊",
+                            textSize: 14,
+                            hoverColor: secondColor,
+                            color: primaryColor,
+                            onTap: () => widget.navigateToPage(1),
+                          ),
+                          const Expanded(child: Column(children: [])),
                           TapHoverText(
                             text: "忘記密碼",
                             textSize: 12,
                             hoverColor: grey300,
                             color: grey400,
-                            onTap: () {},
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return const ResetPasswordPage();
+                              }),
+                            ),
                           ),
                         ],
                       ),
@@ -272,12 +278,12 @@ class _LoginPageState extends State<LoginPage> {
                               setState(() {
                                 isLoading = true;
                               });
-                              await AuthMethods().signInWithGoogle(widget.role);
+                              await AuthMethods().signInWithGoogle();
                             },
                             child: Container(
                               height: 64,
                               width: 64,
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(16),
                               decoration: BoxDecoration(
                                 border: Border.all(color: Colors.grey.shade200),
                                 borderRadius: BorderRadius.circular(16),

@@ -35,7 +35,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Flutter Demo',
+      title: 'UPoint',
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: ColorScheme.light(
@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
       routeInformationParser: BeamerParser(),
       routerDelegate: BeamerDelegate(
         initialPath: '/main',
+        setBrowserTabTitle: false,
         transitionDelegate: const NoAnimationTransitionDelegate(),
         locationBuilder: BeamerLocationBuilder(
           beamLocations: [

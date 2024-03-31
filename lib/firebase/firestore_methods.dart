@@ -19,38 +19,39 @@ class FirestoreMethods {
 
   //註冊用戶
   Future<String> signUpToStore(
-    String role,
     String email,
     User currentUser,
   ) async {
     String res = 'some error occur';
     try {
-      switch (role) {
-        case "organizer":
-          OrganizerModel user = OrganizerModel(
-            email: email,
-            uid: currentUser.uid,
-            postLength: 0,
-          );
-          //上傳firestore
-          await _firestore
-              .collection('organizers')
-              .doc(currentUser.uid)
-              .set(user.toJson());
-          break;
-        case "user":
-          UserModel user = UserModel(
-            email: email,
-            uuid: currentUser.uid,
-          );
-          //上傳firestore
-          await _firestore
-              .collection('users')
-              .doc(currentUser.uid)
-              .set(user.toJson());
-          break;
-      }
+      UserModel user = UserModel(
+        email: email,
+        uuid: currentUser.uid,
+      );
+      //上傳firestore
+      await _firestore
+          .collection('users')
+          .doc(currentUser.uid)
+          .set(user.toJson());
+      res = 'success';
+    } catch (e) {
+      res = e.toString();
+      debugPrint(res);
+    }
+    return res;
+  }
 
+  //註冊用戶
+  Future<String> signUpOrganizerToStore(
+    OrganizerModel organizer,
+  ) async {
+    String res = 'some error occur';
+    try {
+      //上傳firestore
+      await _firestore
+          .collection('organizers')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .set(organizer.toJson());
       res = 'success';
     } catch (e) {
       res = e.toString();

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/firebase/auth_methods.dart';
@@ -39,6 +40,23 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       "isSelected": false,
     },
   ];
+  String? pic;
+  String? username;
+  String? email;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.organizer == null) {
+      pic = null;
+      username = "";
+      email = "";
+    } else {
+      pic = widget.organizer!.pic;
+      username = widget.organizer!.username;
+      email = FirebaseAuth.instance.currentUser?.email;
+    }
+  }
+
   bool _isOverlayShown = false;
   late final OverlayEntry _overlayEntry = OverlayEntry(
     builder: (context) => Positioned(
@@ -66,10 +84,12 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: Image.network(
-                      widget.organizer!.pic!,
-                      fit: BoxFit.cover,
-                    ),
+                    child: pic == null
+                        ? Image.asset("assets/profile.png")
+                        : Image.network(
+                            pic!,
+                            fit: BoxFit.cover,
+                          ),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -79,13 +99,13 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                         RegularText(
                           color: grey500,
                           size: 16,
-                          text: widget.organizer!.username!,
+                          text: username!,
                           maxLines: 2,
                         ),
                         RegularText(
                           color: grey500,
                           size: 12,
-                          text: widget.organizer!.email,
+                          text: email!,
                           maxLines: 2,
                         ),
                       ],

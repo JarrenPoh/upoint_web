@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:upoint_web/globals/medium_text.dart';
+import 'package:upoint_web/bloc/apply_organizer_bloc.dart';
 import 'package:upoint_web/pages/apply_organizer_page.dart';
+import 'package:upoint_web/widgets/apply_organizer/apply_organizer_avatar_layout.dart';
+import 'package:upoint_web/widgets/apply_organizer/apply_organizer_common_layout.dart';
+import 'package:upoint_web/widgets/apply_organizer/apply_organizer_contact_layout.dart';
 import 'package:upoint_web/widgets/responsive_layout.dart';
-import 'package:upoint_web/widgets/underscore_textfield.dart';
-
-import '../color.dart';
-import '../widgets/tap_hover_container.dart';
 
 class ApplyLayout extends StatelessWidget {
   ApplyLayout({super.key});
+  final ApplyOrganizerBloc bloc = ApplyOrganizerBloc();
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
@@ -20,6 +20,7 @@ class ApplyLayout extends StatelessWidget {
   Widget tabletLayout() {
     return ApplyOrganizerPage(
       isWeb: false,
+      bloc: bloc,
       child: Column(
         children: [
           //頭像
@@ -43,6 +44,7 @@ class ApplyLayout extends StatelessWidget {
   Widget webLayout() {
     return ApplyOrganizerPage(
       isWeb: true,
+      bloc: bloc,
       child: Column(
         children: [
           Row(
@@ -66,91 +68,14 @@ class ApplyLayout extends StatelessWidget {
   }
 
   Widget _avaterLayout() {
-    return Column(
-      children: [
-        const CircleAvatar(
-          radius: 90,
-          backgroundColor: Color(0xFFFFF5E7),
-          child: CircleAvatar(
-            radius: 80,
-          ),
-        ),
-        const SizedBox(height: 10),
-        TapHoverContainer(
-          text: "上傳照片",
-          padding: 58,
-          hoverColor: grey100,
-          borderColor: primaryColor,
-          textColor: primaryColor,
-          color: Colors.white,
-          onTap: () {},
-        ),
-      ],
-    );
+    return ApplyOrganizerAvatarLayout(bloc: bloc);
   }
 
   Widget _commonLayout(bool isWeb) {
-    List commonList = [
-      "主辦單位所屬學校",
-      "主辦單位名稱",
-      "主辦單位簡介",
-    ];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 8),
-        MediumText(
-          color: grey500,
-          size: 18,
-          text: "基本資料",
-        ),
-        for (var i in commonList)
-          Column(
-            children: [
-              const SizedBox(height: 25),
-              UnderscoreTextField(
-                text: null,
-                padLeft: isWeb ? 22 : 6,
-                hintText: i,
-                onChanged: (String e) {
-                  debugPrint(e);
-                },
-              ),
-            ],
-          ),
-      ],
-    );
+    return ApplyOrganizerCommonLayout(isWeb: isWeb, bloc: bloc);
   }
 
   Widget _contactLayout(bool isWeb) {
-    List contactList = [
-      "聯絡人姓名",
-      "聯絡電話",
-      "Email",
-    ];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        MediumText(
-          color: grey500,
-          size: 18,
-          text: "聯絡人資料",
-        ),
-        for (var i in contactList)
-          Column(
-            children: [
-              const SizedBox(height: 24),
-              UnderscoreTextField(
-                text: null,
-                padLeft: isWeb ? 22 : 6,
-                hintText: i,
-                onChanged: (String e) {
-                  debugPrint(e);
-                },
-              ),
-            ],
-          ),
-      ],
-    );
+    return ApplyOrganizerContactLayout(isWeb: isWeb, bloc: bloc);
   }
 }

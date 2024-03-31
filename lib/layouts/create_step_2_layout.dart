@@ -12,23 +12,33 @@ import 'package:upoint_web/pages/create_page.dart';
 import 'package:upoint_web/widgets/create_step_2/layouts/create_step_2_left_layout.dart';
 import 'package:upoint_web/widgets/create_step_2/layouts/create_step_2_right_layout.dart';
 
-class CreateStep2Layout extends StatelessWidget {
-  CreateStep2Layout({
+class CreateStep2Layout extends StatefulWidget {
+  const CreateStep2Layout({
     super.key,
     required this.organizer,
     required this.jumpToPage,
   });
-  final String getForm = UserSimplePreference.getform();
   final Function(int) jumpToPage;
 
   final OrganizerModel organizer;
+
+  @override
+  State<CreateStep2Layout> createState() => _CreateStep2LayoutState();
+}
+
+class _CreateStep2LayoutState extends State<CreateStep2Layout> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  final String getForm = UserSimplePreference.getform();
+
   @override
   Widget build(BuildContext context) {
-    debugPrint('asd:$getForm');
     final CreateStep2Bloc _bloc = CreateStep2Bloc((jsonDecode(getForm) as List)
         .map((jsonItem) => FormModel.fromMap(jsonItem))
         .toList());
-    debugPrint('asdad');
     return ResponsiveLayout(
       tabletLayout: tabletLayout(context, _bloc),
       webLayout: webLayout(context, _bloc),
@@ -50,7 +60,7 @@ class CreateStep2Layout extends StatelessWidget {
       isWeb: false,
       step: 2,
       nextStep: () => nextStep(context, _bloc),
-      jumpToPage: jumpToPage,
+      jumpToPage: widget.jumpToPage,
       child: CreateStep2PickLayout(
         bloc: _bloc,
         child: formWidget,
@@ -75,7 +85,7 @@ class CreateStep2Layout extends StatelessWidget {
       isWeb: true,
       step: 2,
       nextStep: () => nextStep(context, _bloc),
-      jumpToPage: jumpToPage,
+      jumpToPage: widget.jumpToPage,
       child: CreateStep2PickLayout(
         bloc: _bloc,
         child: formWidget,
@@ -95,7 +105,7 @@ class CreateStep2Layout extends StatelessWidget {
         context,
       );
       if (res == "success") {
-        _bloc.confirmSend(context, organizer, jumpToPage);
+        _bloc.confirmSend(context, widget.organizer, widget.jumpToPage);
       }
     }
   }

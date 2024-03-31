@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/firebase/auth_methods.dart';
 import 'package:upoint_web/globals/medium_text.dart';
+import 'package:upoint_web/layouts/apply_organizer_layout.dart';
 import 'package:upoint_web/layouts/center_layout.dart';
 import 'package:upoint_web/layouts/create_step_1_layout.dart';
 import 'package:upoint_web/layouts/create_step_2_layout.dart';
@@ -12,11 +13,11 @@ import 'package:upoint_web/layouts/create_step_3_layout.dart';
 import 'package:upoint_web/layouts/inform_layout.dart';
 import 'package:upoint_web/layouts/login_layout.dart';
 import 'package:upoint_web/models/organizer_model.dart';
+import 'package:upoint_web/pages/email_verified_page.dart';
 import 'package:upoint_web/widgets/custom_navigation_bar.dart';
-import 'package:upoint_web/widgets/tap_hover_container.dart';
-
 import '../layouts/center_post_layout.dart';
 import '../layouts/center_sign_form_layout.dart';
+import '../widgets/tap_hover_container.dart';
 
 class OrganizerLocation extends BeamLocation {
   List<String> get pathBluedebugPrints => [
@@ -43,7 +44,7 @@ class OrganizerLocation extends BeamLocation {
       Beamer.of(context).beamToNamed('/organizer$url');
     }
 
-    Widget Function(OrganizerModel) page =
+    Widget Function(OrganizerModel?) page =
         (o) => const Center(child: Text("page not found"));
     Uri uri = state.toRouteInformation().uri;
     if (uri.pathSegments.length == 1 && uri.pathSegments.first == 'organizer') {
@@ -52,34 +53,37 @@ class OrganizerLocation extends BeamLocation {
     }
     if (uri.pathSegments.contains('inform')) {
       // 個人簡介
-      page = (o) => InformLayout(organizer: o);
+      page = (o) => o == null ? ApplyLayout() : InformLayout(organizer: o);
     } else if (uri.pathSegments.contains('post')) {
       // 活動中心點進去的貼文頁面
       final id = uri.queryParameters['id'];
-      debugPrint('id:$id');
       if (id != null) {
-        page = (o) => CenterPostLayout(
-              organizer: o,
-              postId: id,
-            );
+        page = (o) => o == null
+            ? notOrganizerText(context)
+            : CenterPostLayout(
+                organizer: o,
+                postId: id,
+              );
       } else {
         page = (u) => const Center(child: Text("Page not found"));
       }
     } else if (uri.pathSegments.contains('signForm')) {
       // 貼文的報名資訊
       final id = uri.queryParameters['id'];
-      debugPrint('id:$id');
       if (id != null) {
-        page = (o) => CenterSignFormLayout(
-              organizer: o,
-              postId: id,
-            );
+        page = (o) => o == null
+            ? notOrganizerText(context)
+            : CenterSignFormLayout(
+                organizer: o,
+                postId: id,
+              );
       } else {
         page = (u) => const Center(child: Text("Page not found"));
       }
     } else if (uri.pathSegments.contains('center')) {
       // 活動中心
-      page = (o) => CenterLayout(organizer: o);
+      page = (o) =>
+          o == null ? notOrganizerText(context) : CenterLayout(organizer: o);
     } else if (uri.pathSegments.contains('create')) {
       //創建列表頁面
       final PageController _controller = PageController();
@@ -91,18 +95,24 @@ class OrganizerLocation extends BeamLocation {
             controller: _controller,
             physics: const NeverScrollableScrollPhysics(),
             children: [
-              CreateStep1Layout(
-                organizer: o,
-                jumpToPage: jumpToPage,
-              ),
-              CreateStep2Layout(
-                organizer: o,
-                jumpToPage: jumpToPage,
-              ),
-              CreateStep3Layout(
-                organizer: o,
-                jumpToPage: jumpToPage,
-              ),
+              o == null
+                  ? notOrganizerText(context)
+                  : CreateStep1Layout(
+                      organizer: o,
+                      jumpToPage: jumpToPage,
+                    ),
+              o == null
+                  ? notOrganizerText(context)
+                  : CreateStep2Layout(
+                      organizer: o,
+                      jumpToPage: jumpToPage,
+                    ),
+              o == null
+                  ? notOrganizerText(context)
+                  : CreateStep3Layout(
+                      organizer: o,
+                      jumpToPage: jumpToPage,
+                    ),
             ],
           );
     }
@@ -113,11 +123,9 @@ class OrganizerLocation extends BeamLocation {
           body: StreamBuilder<User?>(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              } else if (snapshot.hasData) {
+              debugPrint("監測到更改");
+              if (snapshot.hasData) {
+                User? user = snapshot.data;
                 return FutureBuilder(
                   future: FirebaseFirestore.instance
                       .collection('organizers')
@@ -129,54 +137,36 @@ class OrganizerLocation extends BeamLocation {
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      OrganizerModel? organizer =
-                          OrganizerModel.fromMap(snapshot.data?.data());
-                      debugPrint('拿了身份：${organizer?.toJson()}');
-                      if (organizer == null) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              MediumText(
-                                color: grey500,
-                                size: 18,
-                                text: "非常抱歉，此帳號似乎並非官方核准的主辦方帳號",
+                      if (user != null) {
+                        debugPrint("用戶驗證過");
+                        // 用戶驗證過
+                        if (user.emailVerified) {
+                          OrganizerModel? organizer =
+                              OrganizerModel.fromMap(snapshot.data?.data());
+                          debugPrint('拿了身份：${organizer?.toJson()}');
+
+                          return Scaffold(
+                            backgroundColor: bgColor,
+                            appBar: PreferredSize(
+                              preferredSize: Size(screenSize.width, 80),
+                              child: CustomNavigationBar(
+                                onIconTapped: onIconTapped,
+                                organizer: organizer,
+                                isForm: false,
                               ),
-                              MediumText(
-                                color: grey500,
-                                size: 18,
-                                text:
-                                    "如想加入UPoint活動主辦方，請洽詢service.upoint@gmail.com",
-                              ),
-                              const SizedBox(height: 15),
-                              SizedBox(
-                                width: 150,
-                                child: TapHoverContainer(
-                                  text: "登出",
-                                  padding: 15,
-                                  hoverColor: secondColor,
-                                  borderColor: Colors.transparent,
-                                  textColor: Colors.white,
-                                  color: primaryColor,
-                                  onTap: () => AuthMethods().signOut(),
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return Scaffold(
-                          backgroundColor: bgColor,
-                          appBar: PreferredSize(
-                            preferredSize: Size(screenSize.width, 80),
-                            child: CustomNavigationBar(
-                              onIconTapped: onIconTapped,
-                              organizer: organizer,
-                              isForm: false,
                             ),
-                          ),
-                          body: page(organizer),
-                        );
+                            body: page(organizer),
+                          );
+                        } else {
+                          debugPrint("用戶尚未驗證");
+                          // 尚未驗證
+                          return VerifyEmailPage(
+                            email: user.email ?? "",
+                            role: "organizer",
+                          );
+                        }
+                      } else {
+                        return Center(child: LoginLayout(role: "organizer"));
                       }
                     }
                   },
@@ -192,6 +182,60 @@ class OrganizerLocation extends BeamLocation {
         ),
       )
     ];
+  }
+
+  Widget notOrganizerText(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          MediumText(
+            color: grey500,
+            size: 18,
+            text: "非常抱歉，此帳號似乎並非官方核准的主辦方帳號",
+          ),
+          const SizedBox(height: 10),
+          MediumText(
+            color: grey500,
+            size: 18,
+            text: "如想加入UPoint活動主辦方，請點擊下方“成為主辦方”或請洽詢service.upoint@gmail.com",
+          ),
+          const SizedBox(height: 30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 150,
+                child: TapHoverContainer(
+                  text: "成為主辦方",
+                  padding: 15,
+                  hoverColor: secondColor,
+                  borderColor: Colors.transparent,
+                  textColor: Colors.white,
+                  color: primaryColor,
+                  onTap: () =>
+                      Beamer.of(context).beamToNamed('/organizer/inform'),
+                ),
+              ),
+              const SizedBox(width: 15),
+              SizedBox(
+                width: 150,
+                child: TapHoverContainer(
+                  text: "登出",
+                  padding: 15,
+                  hoverColor: grey100,
+                  borderColor: secondColor,
+                  textColor: secondColor,
+                  color: Colors.white,
+                  onTap: () => AuthMethods().signOut(),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   @override
