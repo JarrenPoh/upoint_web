@@ -3,14 +3,11 @@ import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/pages/sign_form_page.dart';
 import 'package:upoint_web/widgets/responsive_layout.dart';
-import '../models/user_model.dart';
 
 class SignFormFinishLayout extends StatelessWidget {
-  final UserModel user;
   final String res;
   const SignFormFinishLayout({
     super.key,
-    required this.user,
     required this.res,
   });
 

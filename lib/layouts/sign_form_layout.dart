@@ -3,18 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:upoint_web/bloc/sign_form_bloc.dart';
 import 'package:upoint_web/models/form_model.dart';
 import 'package:upoint_web/models/post_model.dart';
+import 'package:upoint_web/models/user_model.dart';
 import 'package:upoint_web/pages/sign_form_page.dart';
 import 'package:upoint_web/widgets/responsive_layout.dart';
 import 'package:upoint_web/widgets/sign_form/layouts/sign_form_left_layouts.dart';
-
 import '../color.dart';
 import '../globals/medium_text.dart';
-import '../models/user_model.dart';
 import '../widgets/sign_form/layouts/sign_form_right_layout.dart';
 
 class SignFormLayout extends StatelessWidget {
   final String postId;
-  final UserModel user;
+  final UserModel? user;
   const SignFormLayout({
     super.key,
     required this.postId,
@@ -23,7 +22,7 @@ class SignFormLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final SignFormBloc _bloc = SignFormBloc(postId);
+    final SignFormBloc _bloc = SignFormBloc(postId, user);
     return ResponsiveLayout(
       tabletLayout: valueWidget(
         (v) => tabletLayout(v['post'], v['form'], _bloc),
@@ -80,7 +79,6 @@ class SignFormLayout extends StatelessWidget {
               : SignFormRightLayout(
                   formList: formList,
                   bloc: bloc,
-                  user: user,
                   postId: postId,
                 ),
         ],
@@ -106,7 +104,6 @@ class SignFormLayout extends StatelessWidget {
               : SignFormRightLayout(
                   formList: formList,
                   bloc: bloc,
-                  user: user,
                   postId: postId,
                 ),
         ],
@@ -122,7 +119,7 @@ class SignFormLayout extends StatelessWidget {
           Container(
             width: 152,
             height: 152,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage("assets/create_failed.png"),
                 fit: BoxFit.cover,

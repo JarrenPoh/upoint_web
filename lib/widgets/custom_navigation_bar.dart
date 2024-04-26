@@ -3,18 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/firebase/auth_methods.dart';
 import 'package:upoint_web/globals/regular_text.dart';
-import 'package:upoint_web/models/organizer_model.dart';
 
 class CustomNavigationBar extends StatefulWidget {
   // final double opacity;
   final bool isForm;
-  final OrganizerModel? organizer;
+  final Map inform;
   final Function onIconTapped;
   const CustomNavigationBar({
     super.key,
     required this.onIconTapped,
     required this.isForm,
-    required this.organizer,
+    required this.inform,
     // required this.opacity,
   });
 
@@ -46,15 +45,9 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
   @override
   void initState() {
     super.initState();
-    if (widget.organizer == null) {
-      pic = null;
-      username = "";
-      email = "";
-    } else {
-      pic = widget.organizer!.pic;
-      username = widget.organizer!.username;
-      email = FirebaseAuth.instance.currentUser?.email;
-    }
+    pic = widget.inform["pic"];
+    username = widget.inform["username"];
+    email = widget.inform["email"];
   }
 
   bool _isOverlayShown = false;
@@ -99,13 +92,13 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                         RegularText(
                           color: grey500,
                           size: 16,
-                          text: username!,
+                          text: username ?? "未登入",
                           maxLines: 2,
                         ),
                         RegularText(
                           color: grey500,
                           size: 12,
-                          text: email!,
+                          text: email ?? "未登入",
                           maxLines: 2,
                         ),
                       ],
@@ -267,7 +260,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                             },
                           ),
                         ),
-                      if (!widget.isForm)
+                      if (FirebaseAuth.instance.currentUser != null)
                         MouseRegion(
                           cursor: SystemMouseCursors.click,
                           child: GestureDetector(

@@ -1,14 +1,12 @@
 // ignore_for_file: invalid_use_of_protected_member
-
 import 'package:beamer/beamer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
-import 'package:upoint_web/firebase/auth_methods.dart';
-import 'package:upoint_web/layouts/login_layout.dart';
 import 'package:upoint_web/layouts/sign_form_layout.dart';
 import 'package:upoint_web/models/user_model.dart';
+import 'package:upoint_web/pages/email_verified_page.dart';
 import 'package:upoint_web/widgets/custom_navigation_bar.dart';
 
 class SignFormLocation extends BeamLocation {
@@ -21,7 +19,7 @@ class SignFormLocation extends BeamLocation {
       BuildContext context, RouteInformationSerializable state) {
     var screenSize = MediaQuery.of(context).size;
 
-    Widget Function(UserModel) page =
+    Widget Function(UserModel?) page =
         (u) => const Center(child: Text("page not found"));
     Uri uri = state.toRouteInformation().uri;
     final id = uri.queryParameters['id'];
@@ -37,51 +35,80 @@ class SignFormLocation extends BeamLocation {
     return [
       BeamPage(
         key: ValueKey('Sign_form_$id'),
-        child: Scaffold(
-          backgroundColor: bgColor,
-          appBar: PreferredSize(
-            preferredSize: Size(screenSize.width, 80),
-            child: CustomNavigationBar(
-              organizer: null,
-              onIconTapped: () {},
-              isForm: true,
-            ),
-          ),
-          body: StreamBuilder<User?>(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
+        child: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            debugPrint("監測到更改");
+            if (snapshot.hasData) {
+              User? user = snapshot.data;
+              if (user != null && user.emailVerified == false) {
+                debugPrint("用戶尚未驗證");
+                return Scaffold(
+                  backgroundColor: bgColor,
+                  body: VerifyEmailPage(
+                    email: user.email!,
+                    role: "user",
+                  ),
                 );
-              } else if (snapshot.hasData) {
-                return FutureBuilder<DocumentSnapshot?>(
-                  future: AuthMethods().getUserData(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
-                    } else if (snapshot.hasError || snapshot.data == null) {
-                      FirebaseAuth.instance.signOut();
-                      debugPrint('發生錯誤，系統先登出');
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      UserModel? user =
-                          UserModel.fromMap(snapshot.data?.data()as Map);
-                      debugPrint('拿了身份：${user?.toJson()}');
-                      return SingleChildScrollView(child: page(user!));
-                    }
-                  },
-                );
-              } else if (snapshot.hasError) {
-                debugPrint('firebase authState error');
-                return Center(child: Text('${snapshot.error}'));
-              } else {
-                return  Center(child:LoginLayout(role: "user"));
               }
-            },
-          ),
+              return FutureBuilder(
+                future: FirebaseFirestore.instance
+                    .collection('users')
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    UserModel? userModel =
+                        UserModel.fromMap(snapshot.data?.data());
+                    return Scaffold(
+                      backgroundColor: bgColor,
+                      appBar: PreferredSize(
+                        preferredSize: Size(screenSize.width, 80),
+                        child: CustomNavigationBar(
+                          inform: {
+                            "pic": userModel?.pic,
+                            "username": userModel?.username ?? "",
+                            "email": userModel?.email ??
+                                FirebaseAuth.instance.currentUser?.email,
+                          },
+                          onIconTapped: () {},
+                          isForm: true,
+                        ),
+                      ),
+                      body: SingleChildScrollView(
+                        child: page(userModel),
+                      ),
+                    );
+                  }
+                },
+              );
+            } else {
+              return Scaffold(
+                backgroundColor: bgColor,
+                appBar: PreferredSize(
+                  preferredSize: Size(screenSize.width, 80),
+                  child: CustomNavigationBar(
+                    inform: const {
+                      "pic": null,
+                      "username": "",
+                      "email": "",
+                    },
+                    onIconTapped: () {},
+                    isForm: true,
+                  ),
+                ),
+                body: SingleChildScrollView(
+                  child: page(null),
+                ),
+              );
+            }
+          },
         ),
-      )
+      ),
     ];
   }
 

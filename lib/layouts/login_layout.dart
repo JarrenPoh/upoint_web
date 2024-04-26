@@ -28,9 +28,9 @@ class LoginLayout extends StatelessWidget {
 
   Widget tabletLayout() {
     return PageView(
+      controller: _pageController,
       children: [
         LoginPage(
-          role: role,
           isWeb: false,
           navigateToPage: _navigateToPage,
         ),
@@ -48,7 +48,6 @@ class LoginLayout extends StatelessWidget {
       controller: _pageController,
       children: [
         LoginPage(
-          role: role,
           isWeb: true,
           navigateToPage: _navigateToPage,
         ),

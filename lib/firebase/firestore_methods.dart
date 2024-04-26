@@ -143,16 +143,16 @@ class FirestoreMethods {
   }
 
   //上傳報名表單
-  Future<String> uploadSignForm(UserModel user, String postId) async {
+  Future<String> uploadSignForm(UserModel? user, String postId) async {
     String res = "some error occur";
     String signFormId = const Uuid().v1();
     String getSignFormBody = UserSimplePreference.getSignForm();
-    List<String> _signList = user.signList ?? [];
+    List<String> _signList = user?.signList ?? [];
     try {
       //以下尚未填過
       SignFormModel signForm = SignFormModel(
-        uuid: user.uuid,
-        fcmToken: user.fcmToken,
+        uuid: user?.uuid ?? "匿名登入",
+        fcmToken: user?.fcmToken,
         body: getSignFormBody,
         datePublished: DateTime.now(),
         signFormId: signFormId,
@@ -169,10 +169,12 @@ class FirestoreMethods {
         "signFormsLength": FieldValue.increment(1),
       });
       // 幫users文件的signList加上postId
-      _signList.add(postId);
-      await _firestore.collection('users').doc(user.uuid).update({
-        "signList": _signList,
-      });
+      if (user != null) {
+        _signList.add(postId);
+        await _firestore.collection('users').doc(user.uuid).update({
+          "signList": _signList,
+        });
+      }
       res = 'success';
       await UserSimplePreference.removeSignForm();
     } catch (err) {

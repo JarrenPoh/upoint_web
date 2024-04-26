@@ -9,12 +9,10 @@ import 'package:upoint_web/widgets/tap_hover_text.dart';
 import '../globals/custom_messengers.dart';
 
 class LoginPage extends StatefulWidget {
-  final String role;
   final bool isWeb;
   final Function(int) navigateToPage;
   const LoginPage({
     super.key,
-    required this.role,
     required this.isWeb,
     required this.navigateToPage,
   });
@@ -106,7 +104,6 @@ class _LoginPageState extends State<LoginPage> {
           email: _emailController.text,
           password: _passwordController.text,
         );
-
         signIn(res);
       }
     }

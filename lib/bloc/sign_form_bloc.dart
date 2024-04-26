@@ -1,7 +1,10 @@
+// ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
+
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/firebase/firestore_methods.dart';
+import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/globals/user_simple_preference.dart';
 import 'package:upoint_web/layouts/sign_form_finish_layout.dart';
 import 'package:upoint_web/models/form_model.dart';
@@ -10,8 +13,14 @@ import 'package:upoint_web/models/post_model.dart';
 import 'package:upoint_web/models/user_model.dart';
 
 class SignFormBloc {
-  SignFormBloc(String postId) {
+  UserModel? user;
+  SignFormBloc(String postId, UserModel? _user) {
     fetchForm(postId);
+    user = _user;
+    if (user != null) {
+      choseLoginButtonGroup[0]["text"] = "已 ${user!.email} 登入";
+      loginBtnValue.value = 0;
+    }
   }
   final ValueNotifier<Map> postValueNotifier = ValueNotifier({
     "post": null,
@@ -47,7 +56,6 @@ class SignFormBloc {
       }
       postValueNotifier.value["post"] = _post;
       postValueNotifier.value["isLoading"] = false;
-      // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       postValueNotifier.notifyListeners();
     } catch (e) {
       debugPrint('error:$e');
@@ -100,23 +108,71 @@ class SignFormBloc {
         _i++;
       }
     }
+    if (loginBtnValue.value == null) {
+      _errorText = "請選擇是否登入UPoint帳號";
+    }
     return _errorText;
   }
 
-  confirmSend(UserModel user, String postId, BuildContext context) async {
-    debugPrint('傳送報名表單');
-    String res = await FirestoreMethods().uploadSignForm(user, postId);
-    // ignore: use_build_context_synchronously
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => SignFormFinishLayout(
-          user: user,
-          res: res,
+  confirmSend(String postId, BuildContext context) async {
+    if (loginBtnValue.value == 0) {
+      debugPrint('已${user?.email}傳送');
+      String res = await FirestoreMethods().uploadSignForm(user!, postId);
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SignFormFinishLayout(
+            res: res,
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      debugPrint('不登入傳送');
+      String res = await FirestoreMethods().uploadSignForm(null, postId);
+      // ignore: use_build_context_synchronously
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SignFormFinishLayout(
+            res: res,
+          ),
+        ),
+      );
+    }
   }
+
+  tapLoginBtn({
+    required bool index,
+    required BuildContext context,
+  }) {
+    if (index) {
+      if (user == null) {
+        Messenger.loginDialog(context);
+      } else {
+        loginBtnValue.value = 0;
+        loginBtnValue.notifyListeners();
+      }
+    } else {
+      loginBtnValue.value = 1;
+      loginBtnValue.notifyListeners();
+    }
+  }
+
+  ValueNotifier<int?> loginBtnValue = ValueNotifier<int?>(null);
+
+  List<Map> choseLoginButtonGroup = [
+    {
+      "index": true,
+      "text": "是，我要登入",
+      "isActive": false,
+    },
+    {
+      "index": false,
+      "text": "否，略過（將失去活動紀錄）",
+      "isActive": false,
+    },
+  ];
 
   List<OptionModel> fixCommon = [
     OptionModel(

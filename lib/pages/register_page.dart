@@ -8,7 +8,6 @@ import '../globals/medium_text.dart';
 import '../globals/regular_text.dart';
 import '../widgets/tap_hover_container.dart';
 import '../widgets/tap_hover_text.dart';
-import 'email_verified_page.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function(int) navigateToPage;
@@ -105,17 +104,17 @@ class _RegisterPageState extends State<RegisterPage> {
           setState(() {
             isLoading = false;
           });
-          // navigate to the home screen
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) {
-                return VerifyEmailPage(
-                  email: _emailController.text,
-                  role: widget.role,
-                );
-              },
-            ),
-          );
+          // // navigate to the home screen
+          // Navigator.of(context).pushReplacement(
+          //   MaterialPageRoute(
+          //     builder: (context) {
+          //       return VerifyEmailPage(
+          //         email: _emailController.text,
+          //         role: widget.role,
+          //       );
+          //     },
+          //   ),
+          // );
         } else {
           setState(() {
             isLoading = false;
@@ -212,7 +211,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       //  login
                       const SizedBox(height: 20),
                       TapHoverContainer(
-                        text: "登入",
+                        text: "創建帳號",
                         padding: 20,
                         hoverColor: secondColor,
                         borderColor: Colors.transparent,

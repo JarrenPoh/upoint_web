@@ -1,6 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
+import 'package:upoint_web/pages/login_page.dart';
+import 'package:upoint_web/widgets/tap_hover_container.dart';
+
+import '../pages/register_page.dart';
 
 class Messenger {
   // 下方彈出的toast
@@ -18,7 +23,7 @@ class Messenger {
           borderRadius: BorderRadius.circular(20),
         ),
         margin: const EdgeInsets.symmetric(horizontal: 200, vertical: 30),
-        duration: const Duration(seconds: 1),
+        duration: const Duration(seconds: 3),
       ),
     );
   }
@@ -30,6 +35,7 @@ class Messenger {
       context: context,
       builder: (context) {
         return AlertDialog(
+          surfaceTintColor: Colors.white,
           title: MediumText(
             color: grey400,
             size: 16,
@@ -76,6 +82,7 @@ class Messenger {
       context: context,
       builder: (context) {
         return AlertDialog(
+          surfaceTintColor: Colors.white,
           title: MediumText(
             color: grey500,
             size: 16,
@@ -122,10 +129,7 @@ class Messenger {
         );
       },
     );
-    return result ??
-        {
-          "status": 'cancel'
-        }; 
+    return result ?? {"status": 'cancel'};
   }
 
   //選日期
@@ -178,5 +182,94 @@ class Messenger {
       },
     );
     return picked;
+  }
+
+  // 登入Dialog
+  static Future<String> loginDialog(BuildContext context) async {
+    final _pageController = PageController(initialPage: 0);
+    void _navigateToPage(int page) {
+      _pageController.animateToPage(
+        page,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.ease,
+      );
+    }
+
+    final result = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          scrollable: true,
+          surfaceTintColor: Colors.white,
+          content: StreamBuilder<User?>(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                // User? user = snapshot.data;
+                return SizedBox(
+                  width: 240,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: 170,
+                          height: 88,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/logo_group.png"),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        MediumText(
+                          color: grey500,
+                          size: 18,
+                          text: "登入成功!",
+                        ),
+                        const SizedBox(height: 20),
+                        TapHoverContainer(
+                          text: "確認",
+                          padding: 10,
+                          hoverColor: secondColor,
+                          borderColor: Colors.transparent,
+                          textColor: Colors.white,
+                          color: primaryColor,
+                          onTap: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              } else {
+                return SizedBox(
+                  height: 781,
+                  width: 543,
+                  child: PageView(
+                    controller: _pageController,
+                    children: [
+                      LoginPage(
+                        isWeb: false,
+                        navigateToPage: _navigateToPage,
+                      ),
+                      RegisterPage(
+                        navigateToPage: _navigateToPage,
+                        isWeb: false,
+                        role: "user",
+                      ),
+                    ],
+                  ),
+                );
+              }
+            },
+          ),
+        );
+      },
+    );
+
+    // Return 'result' which will be 'success' or 'cancel'
+    return result ??
+        'dismissed'; // Return 'dismissed' if the dialog is dismissed without selection
   }
 }

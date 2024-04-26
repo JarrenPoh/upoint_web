@@ -110,7 +110,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
         auth.FirebaseAuth.instance.currentUser!,
       );
       if (res == 'success') {
-        Messenger.snackBar(context, "成功，歡迎加入，趕快發一則貼文吧!");
+        Messenger.snackBar(context, "註冊成功，請重新登入！");
         await AuthMethods().signOut();
       } else {
         Messenger.snackBar(context, "失敗，$res ，請洽詢官方發現問題");

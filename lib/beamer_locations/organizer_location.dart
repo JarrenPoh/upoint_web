@@ -49,7 +49,6 @@ class OrganizerLocation extends BeamLocation {
     Uri uri = state.toRouteInformation().uri;
     if (uri.pathSegments.length == 1 && uri.pathSegments.first == 'organizer') {
       Beamer.of(context).beamToNamed('/organizer/inform');
-      return []; // Return an empty list as beamToNamed will handle navigation
     }
     if (uri.pathSegments.contains('inform')) {
       // 個人簡介
@@ -144,14 +143,18 @@ class OrganizerLocation extends BeamLocation {
                           OrganizerModel? organizer =
                               OrganizerModel.fromMap(snapshot.data?.data());
                           debugPrint('拿了身份：${organizer?.toJson()}');
-
                           return Scaffold(
                             backgroundColor: bgColor,
                             appBar: PreferredSize(
                               preferredSize: Size(screenSize.width, 80),
                               child: CustomNavigationBar(
                                 onIconTapped: onIconTapped,
-                                organizer: organizer,
+                                inform: {
+                                  "pic": organizer?.pic,
+                                  "username": organizer?.username ?? "",
+                                  "email": organizer?.email ??
+                                      FirebaseAuth.instance.currentUser?.email,
+                                },
                                 isForm: false,
                               ),
                             ),

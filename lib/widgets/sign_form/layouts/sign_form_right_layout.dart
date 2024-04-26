@@ -2,23 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:upoint_web/bloc/sign_form_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
-import 'package:upoint_web/models/user_model.dart';
+import 'package:upoint_web/widgets/sign_form/components/login_button_group.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
-
 import '../../../globals/custom_messengers.dart';
+import '../../../globals/regular_text.dart';
 import '../../../models/form_model.dart';
 import '../components/option_row.dart';
 
 class SignFormRightLayout extends StatefulWidget {
   final List<FormModel> formList;
   final SignFormBloc bloc;
-  final UserModel user;
   final String postId;
   const SignFormRightLayout({
     super.key,
     required this.formList,
     required this.bloc,
-    required this.user,
     required this.postId,
   });
 
@@ -33,7 +31,7 @@ class _SignFormRightLayoutState extends State<SignFormRightLayout> {
     if (errorText != null) {
       Messenger.dialog("有欄位尚未填寫完畢", errorText, context);
     } else {
-      widget.bloc.confirmSend(widget.user, widget.postId, context);
+      widget.bloc.confirmSend(widget.postId, context);
     }
   }
 
@@ -46,6 +44,7 @@ class _SignFormRightLayoutState extends State<SignFormRightLayout> {
         border: Border.all(color: grey300),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             height: 73,
@@ -64,7 +63,7 @@ class _SignFormRightLayoutState extends State<SignFormRightLayout> {
           ),
           const SizedBox(height: 20),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
+            padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: List.generate(
                 widget.formList.length,
@@ -93,21 +92,71 @@ class _SignFormRightLayoutState extends State<SignFormRightLayout> {
               ),
             ),
           ),
-          const SizedBox(height: 37),
-          SizedBox(
-            width: 185,
-            height: 39,
-            child: TapHoverContainer(
-              text: "送出",
-              padding: 12,
-              hoverColor: secondColor,
-              borderColor: Colors.transparent,
-              textColor: Colors.white,
-              color: primaryColor,
-              onTap: () {
-                onTap();
-              },
+          const SizedBox(height: 45),
+          Divider(color: grey300),
+          // 用戶登入
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: RegularText(
+                    color: grey500,
+                    size: 16,
+                    text: "# 登入 UPoint 帳號保存活動紀錄",
+                  ),
+                ),
+                ValueListenableBuilder(
+                  valueListenable: widget.bloc.loginBtnValue,
+                  builder: (context,value,child) {
+                    int? v = value;
+                    return Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.start,
+                      alignment: WrapAlignment.start,
+                      runSpacing: 15,
+                      children: List.generate(
+                        widget.bloc.choseLoginButtonGroup.length,
+                        (index) {
+                          Map ref = widget.bloc.choseLoginButtonGroup[index];
+                          return ChoseLoginButton(
+                            user: widget.bloc.user,
+                            text: ref["text"],
+                            isActive: v==index,
+                            onTap: () => widget.bloc.tapLoginBtn(
+                              index: ref["index"],
+                              context: context,
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }
+                ),
+              ],
             ),
+          ),
+          const SizedBox(height: 37),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: 185,
+                height: 39,
+                child: TapHoverContainer(
+                  text: "送出",
+                  padding: 12,
+                  hoverColor: secondColor,
+                  borderColor: Colors.transparent,
+                  textColor: Colors.white,
+                  color: primaryColor,
+                  onTap: () {
+                    onTap();
+                  },
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 29),
         ],
