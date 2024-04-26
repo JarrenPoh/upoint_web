@@ -1,4 +1,6 @@
 // ignore_for_file: invalid_use_of_protected_member
+import 'dart:async';
+
 import 'package:beamer/beamer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,6 +33,22 @@ class SignFormLocation extends BeamLocation {
       // 如果没有id参数，显示“Page not found”
       page = (u) => const Center(child: Text("Page not found"));
     }
+    Future fetchUser() async {
+      print("找");
+      var userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .get();
+      if (!userDoc.exists) {
+        await Future.delayed(const Duration(seconds: 1));
+        userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get();
+      }
+
+      return userDoc;
+    }
 
     return [
       BeamPage(
@@ -52,13 +70,14 @@ class SignFormLocation extends BeamLocation {
                 );
               }
               return FutureBuilder(
-                future: FirebaseFirestore.instance
-                    .collection('users')
-                    .doc(FirebaseAuth.instance.currentUser!.uid)
-                    .get(),
+                future: fetchUser(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
+                    return const Scaffold(
+                      body: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
