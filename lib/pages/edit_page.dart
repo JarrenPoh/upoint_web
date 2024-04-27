@@ -3,22 +3,24 @@ import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
 
-class CenterPostEditPage extends StatefulWidget {
+class EditPage extends StatefulWidget {
   final Widget child;
   final bool isWeb;
   final Function send;
-  const CenterPostEditPage({
+  final String title;
+  const EditPage({
     super.key,
     required this.child,
     required this.isWeb,
     required this.send,
+    required this.title,
   });
 
   @override
-  State<CenterPostEditPage> createState() => _CenterPostEditPageState();
+  State<EditPage> createState() => EditPageState();
 }
 
-class _CenterPostEditPageState extends State<CenterPostEditPage> {
+class EditPageState extends State<EditPage> {
   @override
   void initState() {
     super.initState();
@@ -30,7 +32,7 @@ class _CenterPostEditPageState extends State<CenterPostEditPage> {
     return Scaffold(
       backgroundColor: bgColor,
       appBar: AppBar(
-        title: MediumText(color: grey500, size: 20, text: "編輯貼文"),
+        title: MediumText(color: grey500, size: 20, text: widget.title),
       ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,

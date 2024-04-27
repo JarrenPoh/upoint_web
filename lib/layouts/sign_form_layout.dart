@@ -9,6 +9,7 @@ import 'package:upoint_web/widgets/responsive_layout.dart';
 import 'package:upoint_web/widgets/sign_form/layouts/sign_form_left_layouts.dart';
 import '../color.dart';
 import '../globals/medium_text.dart';
+import '../widgets/circular_loading.dart';
 import '../widgets/sign_form/layouts/sign_form_right_layout.dart';
 
 class SignFormLayout extends StatelessWidget {
@@ -48,7 +49,7 @@ class SignFormLayout extends StatelessWidget {
         List<FormModel>? form = value["form"];
         if (isLoading == true) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularLoading(),
           );
         } else {
           if (post == null || isForm == false) {

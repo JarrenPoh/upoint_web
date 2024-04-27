@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:upoint_web/bloc/center_sign_form_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
+import 'package:upoint_web/models/post_model.dart';
 import 'package:upoint_web/models/sign_form_model.dart';
 import 'package:upoint_web/widgets/center_sign_form/layouts/center_sign_inform_sign_form.dart';
 import 'package:upoint_web/widgets/center_sign_form/layouts/center_sign_inform_sign_list.dart';
@@ -11,14 +12,14 @@ class CenterSignFormPage extends StatefulWidget {
   final bool isWeb;
   final List<SignFormModel> signFormList;
   final CenterSignFormBloc bloc;
-  final String postId;
+  final PostModel post;
   final List<FormModel> formList;
   const CenterSignFormPage({
     super.key,
     required this.isWeb,
     required this.signFormList,
     required this.bloc,
-    required this.postId,
+    required this.post,
     required this.formList,
   });
 
@@ -86,7 +87,7 @@ class _CenterSignFormPageState extends State<CenterSignFormPage> {
                       if (!isSignList)
                         CenterSignInformSignForm(
                           formList: widget.formList,
-                          postId: widget.postId,
+                          post: widget.post,
                         ),
                     ],
                   ),

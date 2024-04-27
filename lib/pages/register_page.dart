@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
+import 'package:upoint_web/widgets/circular_loading.dart';
 import '../../globals/custom_messengers.dart';
 import '../firebase/auth_methods.dart';
 import '../globals/medium_text.dart';
@@ -245,7 +246,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
         if (isLoading)
-          CircularProgressIndicator(backgroundColor: grey300, color: grey400)
+         const CircularLoading()
       ],
     );
   }

@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:upoint_web/globals/user_simple_preference.dart';
 import 'package:upoint_web/models/form_model.dart';
@@ -14,7 +13,9 @@ class CreateFormBloc {
   late final ValueNotifier<List> schoolLeftValue;
   late final ValueNotifier<List> customLeftValue;
 
-  CreateFormBloc(List<FormModel> formModel) {
+  late bool _isEdit;
+  CreateFormBloc({required List<FormModel> formModel, required bool isEdit}) {
+    _isEdit = isEdit;
     valueNotifier = ValueNotifier(formModel);
     commonLeftValue = ValueNotifier(commonFields);
     schoolLeftValue = ValueNotifier(schoolFields);
@@ -43,8 +44,10 @@ class CreateFormBloc {
       valueNotifier.value[_index].options.add(option);
     }
     valueNotifier.notifyListeners();
-    UserSimplePreference.setform(
-        jsonEncode(valueNotifier.value.map((form) => form.toJson()).toList()));
+    if (!_isEdit) {
+      UserSimplePreference.setform(jsonEncode(
+          valueNotifier.value.map((form) => form.toJson()).toList()));
+    }
   }
 
   removeFromForm(Map optionMap, bool isTapDesignBlock) {
@@ -98,8 +101,10 @@ class CreateFormBloc {
     _value.removeWhere((e) => e.title != "基本資料" && e.options.isEmpty);
     valueNotifier.value = _value;
     valueNotifier.notifyListeners();
-    UserSimplePreference.setform(
-        jsonEncode(valueNotifier.value.map((form) => form.toJson()).toList()));
+    if (!_isEdit) {
+      UserSimplePreference.setform(jsonEncode(
+          valueNotifier.value.map((form) => form.toJson()).toList()));
+    }
   }
 
   //說明文字, 其他, 必填
@@ -134,8 +139,10 @@ class CreateFormBloc {
         break;
     }
     valueNotifier.notifyListeners();
-    UserSimplePreference.setform(
-        jsonEncode(valueNotifier.value.map((form) => form.toJson()).toList()));
+    if (!_isEdit) {
+      UserSimplePreference.setform(jsonEncode(
+          valueNotifier.value.map((form) => form.toJson()).toList()));
+    }
   }
 
   //解釋的文字
@@ -144,8 +151,10 @@ class CreateFormBloc {
     if (debounce?.isActive ?? false) debounce!.cancel();
     debounce = Timer(const Duration(milliseconds: 250), () async {
       option.explain = text;
-      UserSimplePreference.setform(jsonEncode(
-          valueNotifier.value.map((form) => form.toJson()).toList()));
+      if (!_isEdit) {
+        UserSimplePreference.setform(jsonEncode(
+            valueNotifier.value.map((form) => form.toJson()).toList()));
+      }
     });
   }
 
@@ -154,8 +163,10 @@ class CreateFormBloc {
     if (debounce?.isActive ?? false) debounce!.cancel();
     debounce = Timer(const Duration(milliseconds: 250), () async {
       option.body[index] = text;
-      UserSimplePreference.setform(jsonEncode(
-          valueNotifier.value.map((form) => form.toJson()).toList()));
+      if (!_isEdit) {
+        UserSimplePreference.setform(jsonEncode(
+            valueNotifier.value.map((form) => form.toJson()).toList()));
+      }
     });
   }
 
@@ -163,8 +174,10 @@ class CreateFormBloc {
     if (debounce?.isActive ?? false) debounce!.cancel();
     debounce = Timer(const Duration(milliseconds: 250), () async {
       option.subtitle = text;
-      UserSimplePreference.setform(jsonEncode(
-          valueNotifier.value.map((form) => form.toJson()).toList()));
+      if (!_isEdit) {
+        UserSimplePreference.setform(jsonEncode(
+            valueNotifier.value.map((form) => form.toJson()).toList()));
+      }
     });
   }
 
@@ -173,8 +186,10 @@ class CreateFormBloc {
     if (debounce?.isActive ?? false) debounce!.cancel();
     debounce = Timer(const Duration(milliseconds: 250), () async {
       form.title = text;
-      UserSimplePreference.setform(jsonEncode(
-          valueNotifier.value.map((form) => form.toJson()).toList()));
+      if (!_isEdit) {
+        UserSimplePreference.setform(jsonEncode(
+            valueNotifier.value.map((form) => form.toJson()).toList()));
+      }
     });
   }
 

@@ -4,6 +4,7 @@ import 'package:upoint_web/firebase/auth_methods.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/globals/regular_text.dart';
 import 'package:upoint_web/pages/reset_password_page.dart';
+import 'package:upoint_web/widgets/circular_loading.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
 import 'package:upoint_web/widgets/tap_hover_text.dart';
 import '../globals/custom_messengers.dart';
@@ -302,7 +303,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
         if (isLoading)
-          CircularProgressIndicator(backgroundColor: grey300, color: grey400)
+         const CircularLoading()
       ],
     );
   }

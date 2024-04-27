@@ -6,18 +6,19 @@ import 'package:upoint_web/widgets/responsive_layout.dart';
 import '../bloc/center_sign_form_bloc.dart';
 import '../models/form_model.dart';
 import '../models/post_model.dart';
+import '../widgets/circular_loading.dart';
 
 class CenterSignFormLayout extends StatelessWidget {
   final OrganizerModel organizer;
-  final String postId;
+  final PostModel post;
   const CenterSignFormLayout({
     super.key,
     required this.organizer,
-    required this.postId,
+    required this.post,
   });
   @override
   Widget build(BuildContext context) {
-    final CenterSignFormBloc _bloc = CenterSignFormBloc(postId);
+    final CenterSignFormBloc _bloc = CenterSignFormBloc(post.postId!);
     return ResponsiveLayout(
       tabletLayout: valueWidget(
         (v) => tabletLayout(v['post'], v['form'], v['signFormList'], _bloc),
@@ -44,7 +45,7 @@ class CenterSignFormLayout extends StatelessWidget {
         List<SignFormModel>? signFormList = value["signFormList"];
         if (isLoading == true) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularLoading(),
           );
         } else {
           if (post == null || isForm == false) {
@@ -69,7 +70,7 @@ class CenterSignFormLayout extends StatelessWidget {
       signFormList: signFormList,
       bloc: bloc,
       formList: formList,
-      postId: postId,
+      post: post,
     );
   }
 
@@ -84,7 +85,7 @@ class CenterSignFormLayout extends StatelessWidget {
       signFormList: signFormList,
       bloc: bloc,
       formList: formList,
-      postId: postId,
+      post: post,
     );
   }
 }

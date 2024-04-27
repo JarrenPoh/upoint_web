@@ -22,10 +22,10 @@ class CreateStep1Layout extends StatelessWidget {
   Widget build(BuildContext context) {
     String getPost = UserSimplePreference.getpost();
     final CreateStep1Bloc _bloc = CreateStep1Bloc(
-      getPost.isEmpty
+      post: getPost.isEmpty
           ? PostModel(tags: [], postType: "演講講座")
           : PostModel.fromMap(jsonDecode(getPost)),
-      false,
+      isEdit: false,
     );
 
     return ResponsiveLayout(

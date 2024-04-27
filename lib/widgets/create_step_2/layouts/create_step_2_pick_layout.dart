@@ -135,17 +135,17 @@ class _CreateStep2PickLayoutState extends State<CreateStep2PickLayout> {
                 );
                 break;
               case "link":
-                _w = Column(children: [
-                  FormDatePickField(
-                    signOptions: widget.bloc.signOptions
-                        .where((e) => e["index"] == "formDateTime")
-                        .toList(),
-                    bloc: widget.bloc,
-                    isWeb: widget.isWeb,
-                  ),
-                  const SizedBox(height: 48),
-                  linkField((e) => widget.bloc.linkTextChanged(e))
-                ]);
+                _w = Column(
+                  children: [
+                    FormDatePickField(
+                      signOptions: widget.bloc.signOptions,
+                      bloc: widget.bloc,
+                      isWeb: widget.isWeb,
+                    ),
+                    const SizedBox(height: 48),
+                    linkField((e) => widget.bloc.linkTextChanged(e))
+                  ],
+                );
                 break;
               case "null":
                 _w = nullField();

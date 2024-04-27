@@ -26,6 +26,7 @@ class PostModel {
   int? signFormsLength;
   var datePublished;
   String? organizerPic;
+  String? taskId;
 
   PostModel({
     this.photo,
@@ -52,6 +53,7 @@ class PostModel {
     this.contact,
     this.phoneNumber,
     this.postType,
+    this.taskId,
   });
 
   static Map toMap(PostModel cart) {
@@ -80,6 +82,7 @@ class PostModel {
       "contact": cart.contact,
       "phoneNumber": cart.phoneNumber,
       "postType": cart.postType,
+      "taskId": cart.taskId,
     };
   }
 
@@ -111,6 +114,7 @@ class PostModel {
       contact: snapshot["contact"],
       phoneNumber: snapshot["phoneNumber"],
       postType: snapshot["postType"],
+      taskId: snapshot["taskId"],
     );
   }
 
@@ -139,6 +143,7 @@ class PostModel {
         "contact": contact,
         "phoneNumber": phoneNumber,
         "postType": postType,
+        "taskId": taskId,
       };
 
   static PostModel fromMap(Map map) {
@@ -167,6 +172,7 @@ class PostModel {
       contact: map["contact"],
       phoneNumber: map["phoneNumber"],
       postType: map["postType"],
+      taskId: map["taskId"],
     );
   }
 }

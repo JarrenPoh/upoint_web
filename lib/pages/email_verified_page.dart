@@ -9,6 +9,7 @@ import '../color.dart';
 import '../firebase/auth_methods.dart';
 import '../firebase/firestore_methods.dart';
 import '../globals/medium_text.dart';
+import '../widgets/circular_loading.dart';
 
 class VerifyEmailPage extends StatefulWidget {
   final String email;
@@ -155,7 +156,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                   ),
                   child: isLoading
                       ? const Center(
-                          child: CircularProgressIndicator.adaptive(),
+                          child: CircularLoading(),
                         )
                       : MediumText(
                           color: Colors.white,
@@ -168,7 +169,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
           ),
         ),
         if (isLoading)
-          CircularProgressIndicator(backgroundColor: grey300, color: grey400)
+          const CircularLoading()
       ],
     );
   }

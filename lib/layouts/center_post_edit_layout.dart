@@ -6,7 +6,7 @@ import 'package:upoint_web/firebase/firestore_methods.dart';
 import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/models/post_model.dart';
-import 'package:upoint_web/pages/center_post_edit_page.dart';
+import 'package:upoint_web/pages/edit_page.dart';
 import 'package:upoint_web/widgets/create_step_1/create_step_1_body_layout.dart';
 import 'package:upoint_web/widgets/responsive_layout.dart';
 import 'dart:html';
@@ -36,7 +36,7 @@ class _CenterPostEditLayoutState extends State<CenterPostEditLayout> {
       widget.post.endDateTime = DateFormat("yyyy-MM-dd/h:mm a")
           .format((widget.post.endDateTime as Timestamp).toDate());
     }
-    _bloc = CreateStep1Bloc(widget.post, true);
+    _bloc = CreateStep1Bloc(post: widget.post, isEdit: true);
   }
 
   @override
@@ -51,8 +51,9 @@ class _CenterPostEditLayoutState extends State<CenterPostEditLayout> {
     CreateStep1Bloc _bloc,
     BuildContext context,
   ) {
-    return CenterPostEditPage(
+    return EditPage(
       isWeb: false,
+      title: "編輯貼文",
       child: CreateStep1BodyLayout(isWeb: false, bloc: _bloc),
       send: () => send(),
     );
@@ -62,8 +63,9 @@ class _CenterPostEditLayoutState extends State<CenterPostEditLayout> {
     CreateStep1Bloc _bloc,
     BuildContext context,
   ) {
-    return CenterPostEditPage(
+    return EditPage(
       isWeb: true,
+      title: "編輯貼文",
       child: CreateStep1BodyLayout(isWeb: true, bloc: _bloc),
       send: () => send(),
     );
@@ -75,7 +77,7 @@ class _CenterPostEditLayoutState extends State<CenterPostEditLayout> {
       Messenger.dialog("請確認填寫正確", text, context);
     } else {
       await FirestoreMethods().updatePost(_bloc.valueNotifier.value);
-       window.location.reload();
+      window.location.reload();
     }
   }
 }

@@ -7,6 +7,7 @@ import 'package:upoint_web/pages/create_page.dart';
 import 'package:upoint_web/widgets/responsive_layout.dart';
 import '../firebase/firestore_methods.dart';
 import '../widgets/center/components/link_field.dart';
+import '../widgets/circular_loading.dart';
 
 class CreateStep3Layout extends StatelessWidget {
   final OrganizerModel organizer;
@@ -22,19 +23,15 @@ class CreateStep3Layout extends StatelessWidget {
     return FutureBuilder<Map>(
         future: FirestoreMethods().uploadPost(organizer),
         builder: (context, snapshot) {
-          bool isSuccess = snapshot.data?["status"] == "success";
-          String res = snapshot.data?["status"];
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-              child: SizedBox(
-                width: 50,
-                height: 50,
-                child: CircularProgressIndicator(),
-              ),
+              child: CircularLoading(),
             );
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
+            bool isSuccess = snapshot.data?["status"] == "success";
+            String res = snapshot.data?["status"];
             String? formUrl = snapshot.data?["formUrl"];
             return ResponsiveLayout(
               tabletLayout: tabletLayout(isSuccess, context, formUrl, res),

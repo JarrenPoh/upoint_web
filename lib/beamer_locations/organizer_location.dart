@@ -13,7 +13,9 @@ import 'package:upoint_web/layouts/create_step_3_layout.dart';
 import 'package:upoint_web/layouts/inform_layout.dart';
 import 'package:upoint_web/layouts/login_layout.dart';
 import 'package:upoint_web/models/organizer_model.dart';
+import 'package:upoint_web/models/post_model.dart';
 import 'package:upoint_web/pages/email_verified_page.dart';
+import 'package:upoint_web/widgets/circular_loading.dart';
 import 'package:upoint_web/widgets/custom_navigation_bar.dart';
 import '../layouts/center_post_layout.dart';
 import '../layouts/center_sign_form_layout.dart';
@@ -70,12 +72,8 @@ class OrganizerLocation extends BeamLocation {
       // 貼文的報名資訊
       final id = uri.queryParameters['id'];
       if (id != null) {
-        page = (o) => o == null
-            ? notOrganizerText(context)
-            : CenterSignFormLayout(
-                organizer: o,
-                postId: id,
-              );
+        page = (o) =>
+            o == null ? notOrganizerText(context) : centerSignFormLayout(o, id);
       } else {
         page = (u) => const Center(child: Text("Page not found"));
       }
@@ -132,7 +130,7 @@ class OrganizerLocation extends BeamLocation {
                       .get(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularProgressIndicator();
+                      return const CircularLoading();
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
@@ -185,6 +183,24 @@ class OrganizerLocation extends BeamLocation {
         ),
       )
     ];
+  }
+
+  Widget centerSignFormLayout(OrganizerModel o, String id) {
+    return FutureBuilder(
+        future: FirebaseFirestore.instance.collection('posts').doc(id).get(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularLoading();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            PostModel post = PostModel.fromMap(snapshot.data!.data()!);
+            return CenterSignFormLayout(
+              organizer: o,
+              post: post,
+            );
+          }
+        });
   }
 
   Widget notOrganizerText(BuildContext context) {

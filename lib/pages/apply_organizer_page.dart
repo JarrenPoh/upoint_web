@@ -6,6 +6,7 @@ import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
 import '../bloc/apply_organizer_bloc.dart';
+import '../widgets/circular_loading.dart';
 
 class ApplyOrganizerPage extends StatefulWidget {
   final bool isWeb;
@@ -164,17 +165,7 @@ class _ApplyOrganizerPageState extends State<ApplyOrganizerPage> {
                   ),
                   // 轉圈圈
                   if (_isSend == true)
-                    Container(
-                      height: 70,
-                      width: 70,
-                      decoration: BoxDecoration(
-                        color: grey300,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const CircularProgressIndicator.adaptive(
-                        backgroundColor: Colors.white,
-                      ),
-                    ),
+                    const CircularLoading()
                 ],
               ),
             ),

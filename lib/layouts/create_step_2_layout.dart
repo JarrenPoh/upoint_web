@@ -12,6 +12,8 @@ import 'package:upoint_web/pages/create_page.dart';
 import 'package:upoint_web/widgets/create_step_2/layouts/create_step_2_left_layout.dart';
 import 'package:upoint_web/widgets/create_step_2/layouts/create_step_2_right_layout.dart';
 
+import '../models/post_model.dart';
+
 class CreateStep2Layout extends StatefulWidget {
   const CreateStep2Layout({
     super.key,
@@ -36,9 +38,13 @@ class _CreateStep2LayoutState extends State<CreateStep2Layout> {
 
   @override
   Widget build(BuildContext context) {
-    final CreateStep2Bloc _bloc = CreateStep2Bloc((jsonDecode(getForm) as List)
-        .map((jsonItem) => FormModel.fromMap(jsonItem))
-        .toList());
+    final CreateStep2Bloc _bloc = CreateStep2Bloc(
+      formModel: (jsonDecode(getForm) as List)
+          .map((jsonItem) => FormModel.fromMap(jsonItem))
+          .toList(),
+      isEdit: false,
+      post: PostModel.fromMap(jsonDecode(UserSimplePreference.getpost())),
+    );
     return ResponsiveLayout(
       tabletLayout: tabletLayout(context, _bloc),
       webLayout: webLayout(context, _bloc),

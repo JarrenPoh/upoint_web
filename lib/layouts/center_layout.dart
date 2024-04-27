@@ -10,6 +10,7 @@ import 'package:upoint_web/widgets/responsive_layout.dart';
 
 import '../models/post_model.dart';
 import '../pages/center_page.dart';
+import '../widgets/circular_loading.dart';
 
 class CenterLayout extends StatelessWidget {
   final OrganizerModel organizer;
@@ -54,7 +55,7 @@ class CenterLayout extends StatelessWidget {
       child: Builder(builder: (context) {
         if (v == null) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularLoading(),
           );
         } else if (v.isEmpty) {
           return Center(
@@ -101,7 +102,7 @@ class CenterLayout extends StatelessWidget {
         builder: (context) {
           if (v == null) {
             return const Center(
-              child: CircularProgressIndicator(),
+              child: CircularLoading(),
             );
           } else if (v.isEmpty) {
             return Center(

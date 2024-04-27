@@ -11,6 +11,8 @@ import 'package:upoint_web/models/user_model.dart';
 import 'package:upoint_web/pages/email_verified_page.dart';
 import 'package:upoint_web/widgets/custom_navigation_bar.dart';
 
+import '../widgets/circular_loading.dart';
+
 class SignFormLocation extends BeamLocation {
   List<String> get pathBluedebugPrints => [
         '/signForm',
@@ -75,7 +77,7 @@ class SignFormLocation extends BeamLocation {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Scaffold(
                       body: Center(
-                        child: CircularProgressIndicator(),
+                        child: CircularLoading(),
                       ),
                     );
                   } else if (snapshot.hasError) {

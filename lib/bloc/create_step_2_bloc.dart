@@ -12,10 +12,15 @@ import 'package:upoint_web/models/post_model.dart';
 class CreateStep2Bloc {
   late CreateFormBloc createFormBloc;
   late ValueNotifier<PostModel> postValue;
-  CreateStep2Bloc(List<FormModel> formModel) {
-    createFormBloc = CreateFormBloc(formModel);
-    String getPost = UserSimplePreference.getpost();
-    postValue = ValueNotifier(PostModel.fromMap(jsonDecode(getPost)));
+  late bool _isEdit;
+  CreateStep2Bloc({
+    required List<FormModel> formModel,
+    required bool isEdit,
+    required PostModel post,
+  }) {
+    createFormBloc = CreateFormBloc(formModel: formModel, isEdit: isEdit);
+    _isEdit = isEdit;
+    postValue = ValueNotifier(post);
     if (postValue.value.remindDateTime != null) {
       needReminder.value = true;
     }
@@ -55,9 +60,9 @@ class CreateStep2Bloc {
     formOptionValue.notifyListeners();
   }
 
-  String _link = "";
+  String link = "";
   linkTextChanged(String text) {
-    _link = text;
+    link = text;
   }
 
   dateFunc(String index, String? dateText, String? timeText) async {
@@ -71,9 +76,11 @@ class CreateStep2Bloc {
       }
     }
     postValue.notifyListeners();
-    await UserSimplePreference.setpost(
-      jsonEncode(PostModel.toMap(postValue.value)),
-    );
+    if (!_isEdit) {
+      await UserSimplePreference.setpost(
+        jsonEncode(PostModel.toMap(postValue.value)),
+      );
+    }
   }
 
   changeNeedReminder(bool _b, String _index) {
@@ -105,7 +112,7 @@ class CreateStep2Bloc {
         : (postValue.value.remindDateTime as String).split('/');
     switch (type) {
       case "link":
-        if (_link == "") {
+        if (link == "") {
           errorText = "請填寫外部報名連結";
         } else if (_check(_formList[0])) {
           errorText = '“表單截止日期”尚未填寫';
@@ -168,16 +175,20 @@ class CreateStep2Bloc {
     OrganizerModel organizer,
     Function(int) jumpToPage,
   ) async {
-    //確認是選什麼類型，link的話要換一下userSimplePreference
-    String type = formOptionValue.value;
-    if (type == "link") {
-      await UserSimplePreference.setform(_link);
-    } else if (type == "null") {
-      await UserSimplePreference.setform("null");
-    }
+    await _checkType();
     //到完成頁
     // ignore: use_build_context_synchronously
     Navigator.of(context).pop(true);
     jumpToPage(2);
+  }
+
+  //確認是選什麼類型，link的話要換一下userSimplePreference
+  _checkType() async {
+    String type = formOptionValue.value;
+    if (type == "link") {
+      await UserSimplePreference.setform(link);
+    } else if (type == "null") {
+      await UserSimplePreference.setform("null");
+    }
   }
 }

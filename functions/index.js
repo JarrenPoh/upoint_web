@@ -38,8 +38,10 @@ exports.createPostReminderTask = functions.region('asia-east1').https.onRequest(
         const location = 'asia-east1';
         const url = `https://${location}-${project}.cloudfunctions.net/sendReminderNotification`;
         const payload = { postId, title, text };
+        const taskId = uuidv1();
   
         const task = {
+            name: client.taskPath(project, location, queue, taskId),
             httpRequest: {
                 httpMethod: 'POST',
                 url,
@@ -57,8 +59,18 @@ exports.createPostReminderTask = functions.region('asia-east1').https.onRequest(
             parent: client.queuePath(project, location, queue),
             task,
         });
-  
-        logger.info('Task created:', postId, remindDateTime);
+        try {
+            await admin.firestore()
+                .collection("posts")
+                .doc(postId)
+                .update({ taskId: taskId });
+            logger.info('Firestore updated with taskId:', taskId);
+        } catch (firestoreError) {
+            logger.error('Failed to update Firestore:', firestoreError);
+            res.status(500).send('Failed to update Firestore');
+            return;  // 添加返回语句确保函数执行停止
+        }
+        logger.info('Task created:', taskId, remindDateTime);
         res.status(200).send('Task created successfully');
     } catch (error) {
         logger.error('Failed to create task:', error);
@@ -66,6 +78,53 @@ exports.createPostReminderTask = functions.region('asia-east1').https.onRequest(
     }
   })
 });
+
+exports.deletePostReminderTask = functions.region('asia-east1').https.onRequest(async (req, res) => {
+    cors(req, res, async () => {
+      if (req.method !== 'DELETE') {
+        res.status(405).send('Method Not Allowed');
+        return;
+      }
+  
+      // 從請求中提取任務 ID
+      const { taskId, postId } = req.body;
+      if (!taskId) {
+        res.status(400).send('Missing required field: taskId');
+        return;
+      }
+  
+      const client = new CloudTasksClient();
+  
+      const project = 'upoint-d4fc3';
+      const queue = 'upoint-remind';
+      const location = 'asia-east1';
+  
+      // 構建任務的完整路徑
+      const name = client.taskPath(project, location, queue, taskId);
+  
+      try {
+        // 調用 deleteTask 方法來刪除任務
+        await client.deleteTask({name});
+        logger.info('Task deleted:', taskId);
+        res.status(200).send('Task deleted successfully');
+      } catch (error) {
+        logger.error('Failed to delete task:', error);
+        res.status(500).send('Failed to delete task');
+      }
+      // 创建存储到貼文的taskId
+      try {
+        await admin.firestore()
+            .collection("posts")
+            .doc(postId)
+            .update({ taskId: null });
+        logger.info('Firestore updated with taskId:', null);
+      } catch (firestoreError) {
+        logger.error('Failed to update Firestore:', firestoreError);
+        res.status(500).send('Failed to update Firestore');
+        return;  // 添加返回语句确保函数执行停止
+      }
+    });
+  });
 
   exports.sendReminderNotification = functions.region('asia-east1').https.onRequest(async (req, res) => {
     try {

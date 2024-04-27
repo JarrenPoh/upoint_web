@@ -7,6 +7,7 @@ import 'package:upoint_web/widgets/responsive_layout.dart';
 import '../models/form_model.dart';
 import '../models/post_model.dart';
 import '../widgets/center_post/center_post_bar_layout.dart';
+import '../widgets/circular_loading.dart';
 
 class CenterPostLayout extends StatelessWidget {
   final OrganizerModel organizer;
@@ -43,7 +44,7 @@ class CenterPostLayout extends StatelessWidget {
         List<FormModel>? form = value["form"];
         if (isLoading == true) {
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularLoading(),
           );
         } else {
           if (post == null) {

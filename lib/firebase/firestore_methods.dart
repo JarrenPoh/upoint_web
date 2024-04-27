@@ -115,12 +115,13 @@ class FirestoreMethods {
         formUrl = "https://upoint.tw/signForm?id=$postId";
         // 觸發創建通知task
         if (post.remindDateTime != null) {
-          await FunctionMethods().createPostReminderTask(
+          String r = await FunctionMethods().createPostReminderTask(
             postId,
             "活動提醒",
             "提醒您報名的活動 “${post.title}” 將在${TimeTransfer.timeTrans06(Timestamp.fromDate(post.startDateTime))}開始，活動地點於 “${post.location}進行”",
             post.remindDateTime,
           );
+          res = r;
         }
       }
       // 幫organizer的postLength加一
@@ -140,6 +141,47 @@ class FirestoreMethods {
       "status": res,
       "formUrl": formUrl,
     };
+  }
+
+  // 更新報名表單
+  Future<String> updateForm({
+    required PostModel post,
+  }) async {
+    String res = "some error occur";
+    //以下尚未填過
+    if (post.formDateTime != null) {
+      post.formDateTime =
+          DateFormat("yyyy-MM-dd/h:mm a").parse(post.formDateTime);
+    }
+    if (post.remindDateTime != null) {
+      post.remindDateTime =
+          DateFormat("yyyy-MM-dd/h:mm a").parse(post.remindDateTime);
+    }
+    try {
+      await _firestore.collection('posts').doc(post.postId).update({
+        "form": post.form,
+        "formDateTime": post.formDateTime,
+        "remindDateTime": post.remindDateTime,
+      });
+      res = 'success';
+      // 無條件刪除cloud task
+      await FunctionMethods().deletePostReminderTask(post.taskId, post.postId!);
+      if (post.remindDateTime != null) {
+        // 創建cloud task
+        String r = await FunctionMethods().createPostReminderTask(
+          post.postId!,
+          "活動提醒",
+          "提醒您報名的活動 “${post.title}” 將在${TimeTransfer.timeTrans06(post.startDateTime)}開始，活動地點於 “${post.location}進行”",
+          post.remindDateTime,
+        );
+        res = r;
+      }
+      debugPrint('更新成功');
+    } catch (err) {
+      res = err.toString();
+      debugPrint(res);
+    }
+    return res;
   }
 
   // 更新貼文
@@ -185,7 +227,7 @@ class FirestoreMethods {
     return res;
   }
 
-  //上傳報名表單
+  // 學生上傳報名表單
   Future<String> uploadSignForm(UserModel? user, String postId) async {
     String res = "some error occur";
     String signFormId = const Uuid().v1();

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
+import 'package:upoint_web/widgets/circular_loading.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
 import '../firebase/auth_methods.dart';
 
@@ -69,7 +70,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     return Scaffold(
       body: Center(
         child: isLoading
-            ? const CircularProgressIndicator.adaptive()
+            ? const CircularLoading()
             : Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 300),
                 child: Column(
