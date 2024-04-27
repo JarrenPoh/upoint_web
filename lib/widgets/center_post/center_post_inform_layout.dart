@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:upoint_web/color.dart';
-import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/globals/medium_text.dart';
+import 'package:upoint_web/layouts/center_post_edit_layout.dart';
 import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/models/post_model.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
@@ -14,11 +14,11 @@ import '../../globals/time_transfer.dart';
 
 class CenterPostInformLayout extends StatelessWidget {
   final PostModel post;
-  final OrganizerModel organnizer;
+  final OrganizerModel organizer;
   const CenterPostInformLayout({
     super.key,
     required this.post,
-    required this.organnizer,
+    required this.organizer,
   });
 
   @override
@@ -101,10 +101,21 @@ class CenterPostInformLayout extends StatelessWidget {
                 borderColor: Colors.transparent,
                 textColor: Colors.white,
                 color: primaryColor,
-                onTap: () => Messenger.snackBar(
+                onTap: () => Navigator.push(
                   context,
-                  "尚未開放此功能，敬請期待",
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return CenterPostEditLayout(
+                        organizer: organizer,
+                        post: post,
+                      );
+                    },
+                  ),
                 ),
+                // onTap: () => Messenger.snackBar(
+                //   context,
+                //   "尚未開放此功能，敬請期待",
+                // ),
               ),
             ],
           ),

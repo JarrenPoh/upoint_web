@@ -74,7 +74,7 @@ class CenterPostLayout extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Color(0xFFF4F4F4),
+                      color: const Color(0xFFF4F4F4),
                       image: DecorationImage(
                         image: NetworkImage(post.photo!),
                         fit: BoxFit.cover,
@@ -88,7 +88,7 @@ class CenterPostLayout extends StatelessWidget {
           const SizedBox(height: 25),
           CenterPostBarLayout(post: post),
           const SizedBox(height: 15),
-          CenterPostInformLayout(post: post, organnizer: organizer),
+          CenterPostInformLayout(post: post, organizer: organizer),
         ],
       ),
     );
@@ -112,7 +112,7 @@ class CenterPostLayout extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10),
-                      color: Color(0xFFF4F4F4),
+                      color: const Color(0xFFF4F4F4),
                       image: DecorationImage(
                         image: NetworkImage(post.photo!),
                         fit: BoxFit.cover,
@@ -128,7 +128,7 @@ class CenterPostLayout extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CenterPostInformLayout(post: post, organnizer: organizer),
+              CenterPostInformLayout(post: post, organizer: organizer),
               SizedBox(width: 300, child: CenterPostBarLayout(post: post)),
             ],
           ),

@@ -77,9 +77,9 @@ class PostModel {
       "form": cart.form,
       "tags": cart.tags,
       "formDateTime": cart.formDateTime,
-      "contact":cart.contact,
-      "phoneNumber":cart.phoneNumber,
-      "postType":cart.postType,
+      "contact": cart.contact,
+      "phoneNumber": cart.phoneNumber,
+      "postType": cart.postType,
     };
   }
 
@@ -108,9 +108,9 @@ class PostModel {
       form: snapshot['form'],
       tags: snapshot['tags'],
       formDateTime: snapshot['formDateTime'],
-      contact:snapshot["contact"],
-      phoneNumber:snapshot["phoneNumber"],
-      postType:snapshot["postType"],
+      contact: snapshot["contact"],
+      phoneNumber: snapshot["phoneNumber"],
+      postType: snapshot["postType"],
     );
   }
 
@@ -136,9 +136,9 @@ class PostModel {
         "tags": tags,
         "formDateTime": formDateTime,
         "signFormsLength": signFormsLength,
-        "contact":contact,
-        "phoneNumber":phoneNumber,
-        "postType":postType,
+        "contact": contact,
+        "phoneNumber": phoneNumber,
+        "postType": postType,
       };
 
   static PostModel fromMap(Map map) {
@@ -164,9 +164,9 @@ class PostModel {
       tags: map['tags'],
       formDateTime: map['formDateTime'],
       signFormsLength: map['signFormsLength'],
-      contact:map["contact"],
-      phoneNumber:map["phoneNumber"],
-      postType:map["postType"],
+      contact: map["contact"],
+      phoneNumber: map["phoneNumber"],
+      postType: map["postType"],
     );
   }
 }

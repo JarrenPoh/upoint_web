@@ -28,7 +28,7 @@ class CenterPostBloc {
       postValueNotifier.value["isLoading"] = false;
       // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
       postValueNotifier.notifyListeners();
-    } catch (e) {
+    } catch (e) { 
       debugPrint('error:$e');
     }
   }

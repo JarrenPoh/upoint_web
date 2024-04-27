@@ -142,6 +142,49 @@ class FirestoreMethods {
     };
   }
 
+  // 更新貼文
+  Future<String> updatePost(PostModel post) async {
+    Uint8List file;
+    String postId = post.postId!;
+    String res = "some error occur";
+    try {
+      if (post.photo?.substring(0, 4) != "http") {
+        file = base64Decode(post.photo!);
+        String photoUrl = await StorageMethods()
+            .uploadImageToStorage('posts', file, true, postId);
+        post.photo = photoUrl;
+      }
+      //以下尚未填過
+      post.startDateTime =
+          DateFormat("yyyy-MM-dd/h:mm a").parse(post.startDateTime);
+      post.endDateTime =
+          DateFormat("yyyy-MM-dd/h:mm a").parse(post.endDateTime);
+      await _firestore.collection('posts').doc(postId).update({
+        "photo": post.photo,
+        "title": post.title,
+        "capacity": post.capacity,
+        "location": post.location,
+        "contact": post.contact,
+        "phoneNumber": post.phoneNumber,
+        "startDateTime": post.startDateTime,
+        "endDateTime": post.endDateTime,
+        "introduction": post.introduction,
+        "content": post.content,
+        "reward": post.reward,
+        "link": post.link,
+        "postType": post.postType,
+        "rewardTagId": post.rewardTagId,
+        "tags": post.tags,
+      });
+      res = 'success';
+      debugPrint('更新成功');
+    } catch (err) {
+      res = err.toString();
+      debugPrint(res);
+    }
+    return res;
+  }
+
   //上傳報名表單
   Future<String> uploadSignForm(UserModel? user, String postId) async {
     String res = "some error occur";

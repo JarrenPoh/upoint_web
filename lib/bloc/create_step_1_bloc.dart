@@ -10,9 +10,10 @@ import 'package:upoint_web/models/post_model.dart';
 import 'package:upoint_web/models/tag_model.dart';
 
 class CreateStep1Bloc {
-  CreateStep1Bloc(PostModel postModel) {
+  CreateStep1Bloc(PostModel postModel, bool _isEdit) {
     valueNotifier = ValueNotifier(postModel);
     // 加初始
+    isEdit = _isEdit;
     if (UserSimplePreference.getCustomTags() != null) {
       List<String> _list = UserSimplePreference.getCustomTags()!;
       for (var i in _list) {
@@ -28,6 +29,7 @@ class CreateStep1Bloc {
     }
   }
   late ValueNotifier<PostModel> valueNotifier;
+  late bool isEdit;
   List createInformList = [
     {
       "title": "活動名稱",
@@ -145,9 +147,11 @@ class CreateStep1Bloc {
       String base64Image = base64Encode(imageBytes);
       valueNotifier.value.photo = base64Image;
       valueNotifier.notifyListeners();
-      await UserSimplePreference.setpost(
-        jsonEncode(PostModel.toMap(valueNotifier.value)),
-      );
+      if (!isEdit) {
+        await UserSimplePreference.setpost(
+          jsonEncode(PostModel.toMap(valueNotifier.value)),
+        );
+      }
     }
   }
 
@@ -183,9 +187,11 @@ class CreateStep1Bloc {
         case "link":
           valueNotifier.value.link = text;
       }
-      await UserSimplePreference.setpost(
-        jsonEncode(PostModel.toMap(valueNotifier.value)),
-      );
+      if (!isEdit) {
+        await UserSimplePreference.setpost(
+          jsonEncode(PostModel.toMap(valueNotifier.value)),
+        );
+      }
     });
   }
 
@@ -235,9 +241,11 @@ class CreateStep1Bloc {
         }
         break;
     }
-    await UserSimplePreference.setpost(
-      jsonEncode(PostModel.toMap(valueNotifier.value)),
-    );
+    if (!isEdit) {
+      await UserSimplePreference.setpost(
+        jsonEncode(PostModel.toMap(valueNotifier.value)),
+      );
+    }
   }
 
   //  輸入quill
@@ -247,9 +255,11 @@ class CreateStep1Bloc {
     debounce01 = Timer(const Duration(milliseconds: 250), () async {
       String json = jsonEncode(delta.toJson());
       valueNotifier.value.content = json;
-      await UserSimplePreference.setpost(
-        jsonEncode(PostModel.toMap(valueNotifier.value)),
-      );
+      if (!isEdit) {
+        await UserSimplePreference.setpost(
+          jsonEncode(PostModel.toMap(valueNotifier.value)),
+        );
+      }
     });
   }
 
@@ -263,9 +273,11 @@ class CreateStep1Bloc {
         valueNotifier.value.endDateTime = "$dateText/$timeText";
     }
     // valueNotifier.notifyListeners();
-    await UserSimplePreference.setpost(
-      jsonEncode(PostModel.toMap(valueNotifier.value)),
-    );
+    if (!isEdit) {
+      await UserSimplePreference.setpost(
+        jsonEncode(PostModel.toMap(valueNotifier.value)),
+      );
+    }
   }
 
   // timeFunc(String text, int index) async {

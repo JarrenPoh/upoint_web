@@ -25,9 +25,11 @@ class CreateStep1BodyLayout extends StatefulWidget {
 }
 
 class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
+  ImageProvider? photoProvider;
+  String? photo;
   @override
-  void dispose() {
-    super.dispose();
+  void initState() {
+    super.initState();
   }
 
   @override
@@ -36,6 +38,12 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
       valueListenable: widget.bloc.valueNotifier,
       builder: (context, value, child) {
         value;
+        photo = value.photo;
+        if (photo != null && photo?.substring(0, 4) == "http") {
+          photoProvider = NetworkImage(photo!);
+        } else if (photo != null && photo?.substring(0, 4) != "http") {
+          photoProvider = MemoryImage(base64Decode(photo!));
+        }
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -70,18 +78,12 @@ class _CreateStep1BodyLayoutState extends State<CreateStep1BodyLayout> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: const Color(0xFFF4F4F4),
-                              image:
-                                  widget.bloc.valueNotifier.value.photo != null
-                                      ? DecorationImage(
-                                          image: MemoryImage(
-                                            base64Decode(
-                                              widget.bloc.valueNotifier.value
-                                                  .photo!,
-                                            ),
-                                          ),
-                                          fit: BoxFit.cover,
-                                        )
-                                      : null,
+                              image: photo != null
+                                  ? DecorationImage(
+                                      image: photoProvider!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : null,
                             ),
                             child: widget.bloc.valueNotifier.value.photo == null
                                 ? Center(
