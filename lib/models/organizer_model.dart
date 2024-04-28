@@ -10,6 +10,7 @@ class OrganizerModel {
   String? contact;
   String email;
   int postLength;
+  List<String>? myTags;
 
   OrganizerModel({
     this.username,
@@ -20,6 +21,7 @@ class OrganizerModel {
     this.bio,
     this.unit,
     this.contact,
+    this.myTags,
     required this.postLength,
   });
 
@@ -30,9 +32,10 @@ class OrganizerModel {
       "pic": cart.pic,
       "email": cart.email,
       "phoneNumber": cart.phoneNumber,
-      "bio":cart.bio,
-      "unit":cart.unit,
-      "contact":cart.contact,
+      "bio": cart.bio,
+      "unit": cart.unit,
+      "contact": cart.contact,
+      "myTags": cart.myTags,
     };
   }
 
@@ -45,10 +48,11 @@ class OrganizerModel {
       pic: snapshot['pic'],
       email: snapshot['email'],
       phoneNumber: snapshot['phoneNumber'],
-      bio:snapshot['bio'],
-      unit:snapshot['unit'],
-      contact:snapshot['contact'],
-      postLength:snapshot['postLength'],
+      bio: snapshot['bio'],
+      unit: snapshot['unit'],
+      contact: snapshot['contact'],
+      postLength: snapshot['postLength'],
+      myTags: snapshot["myTags"],
     );
   }
 
@@ -58,10 +62,11 @@ class OrganizerModel {
         "pic": pic,
         "email": email,
         "phoneNumber": phoneNumber,
-        "bio":bio,
-        "unit":unit,
-        "contact":contact,
-        "postLength":postLength,
+        "bio": bio,
+        "unit": unit,
+        "contact": contact,
+        "postLength": postLength,
+        "myTags": myTags,
       };
 
   static OrganizerModel? fromMap(Map? map) {
@@ -74,10 +79,11 @@ class OrganizerModel {
         pic: map['pic'],
         email: map['email'],
         phoneNumber: map['phoneNumber'],
-        bio:map['bio'],
-        unit:map['unit'],
-        contact:map['contact'],
-        postLength:map['postLength'],
+        bio: map['bio'],
+        unit: map['unit'],
+        contact: map['contact'],
+        postLength: map['postLength'],
+        myTags: map['myTags'] != null ? List<String>.from(map['myTags']) : null,
       );
     }
   }

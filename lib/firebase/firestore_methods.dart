@@ -268,4 +268,15 @@ class FirestoreMethods {
     }
     return res;
   }
+
+  // 更新主辦方自定義搜尋標前
+  Future<void> updateMyTags(String uid,List<String>? myTags) async {
+    try {
+      await _firestore.collection("organizers").doc(uid).update(
+        {"myTags": myTags},
+      );
+    } catch (e) {
+      debugPrint('err${e.toString()}');
+    }
+  }
 }

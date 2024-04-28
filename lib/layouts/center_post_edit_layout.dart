@@ -12,7 +12,7 @@ import 'package:upoint_web/widgets/responsive_layout.dart';
 import 'dart:html';
 
 class CenterPostEditLayout extends StatefulWidget {
-  final OrganizerModel? organizer;
+  final OrganizerModel organizer;
   final PostModel post;
   const CenterPostEditLayout({
     super.key,
@@ -36,7 +36,11 @@ class _CenterPostEditLayoutState extends State<CenterPostEditLayout> {
       widget.post.endDateTime = DateFormat("yyyy-MM-dd/h:mm a")
           .format((widget.post.endDateTime as Timestamp).toDate());
     }
-    _bloc = CreateStep1Bloc(post: widget.post, isEdit: true);
+    _bloc = CreateStep1Bloc(
+      post: widget.post,
+      isEdit: true,
+      organizer: widget.organizer,
+    );
   }
 
   @override

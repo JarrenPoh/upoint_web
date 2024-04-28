@@ -11,7 +11,7 @@ import 'package:upoint_web/widgets/responsive_layout.dart';
 import '../globals/custom_messengers.dart';
 
 class CreateStep1Layout extends StatelessWidget {
-  final OrganizerModel? organizer;
+  final OrganizerModel organizer;
   final Function(int) jumpToPage;
   const CreateStep1Layout({
     super.key,
@@ -26,6 +26,7 @@ class CreateStep1Layout extends StatelessWidget {
           ? PostModel(tags: [], postType: "演講講座")
           : PostModel.fromMap(jsonDecode(getPost)),
       isEdit: false,
+      organizer: organizer,
     );
 
     return ResponsiveLayout(

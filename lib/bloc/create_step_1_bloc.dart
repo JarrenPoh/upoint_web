@@ -5,22 +5,36 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_quill/quill_delta.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:upoint_web/firebase/firestore_methods.dart';
 import 'package:upoint_web/globals/user_simple_preference.dart';
+import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/models/post_model.dart';
 import 'package:upoint_web/models/tag_model.dart';
 
 class CreateStep1Bloc {
-  CreateStep1Bloc({required PostModel post,required bool isEdit}) {
+  CreateStep1Bloc({
+    required PostModel post,
+    required bool isEdit,
+    required OrganizerModel organizer,
+  }) {
     valueNotifier = ValueNotifier(post);
     // 加初始
     _isEdit = isEdit;
-    if (UserSimplePreference.getCustomTags() != null) {
-      List<String> _list = UserSimplePreference.getCustomTags()!;
-      for (var i in _list) {
+    _organizer = organizer;
+    getMyTags();
+  }
+  late ValueNotifier<PostModel> valueNotifier;
+  late bool _isEdit;
+  late OrganizerModel _organizer;
+
+  // 拿取myTags
+  getMyTags() {
+    if (_organizer.myTags != null) {
+      for (String myTag in _organizer.myTags ?? []) {
         tagList[2].tagValue.insert(
           0,
           {
-            "index": i,
+            "index": myTag,
             "isChecked": false,
             "isCustom": true,
           },
@@ -28,111 +42,6 @@ class CreateStep1Bloc {
       }
     }
   }
-  late ValueNotifier<PostModel> valueNotifier;
-  late bool _isEdit;
-  List createInformList = [
-    {
-      "title": "活動名稱",
-      "index": "title",
-      "type": "normal",
-    },
-    {
-      "title": "活動地點",
-      "index": "location",
-      "type": "normal",
-    },
-    {
-      "title": "活動負責人（稱謂）",
-      "index": "contact",
-      "type": "normal",
-    },
-    {
-      "title": "聯絡方式",
-      "index": "phoneNumber",
-      "type": "normal",
-    },
-    {
-      "title": "活動名額（限阿拉伯數字 如：10,20,30）",
-      "index": "capacity",
-      "type": "checkNull",
-    },
-    {
-      "title": "活動獎勵",
-      "index": "reward",
-      "type": "checkNull",
-    },
-    {
-      "title": "其他參考連結",
-      "index": "link",
-      "type": "checkNull",
-    },
-    {
-      "title": "活動開始日期",
-      "index": "startDate",
-      "type": "date",
-    },
-    {
-      "title": "活動結束日期",
-      "index": "endDate",
-      "type": "date",
-    },
-    {
-      "title": "活動簡介",
-      "index": "introduction",
-      "type": "normal",
-    },
-  ];
-
-  List<TagModel> tagList = [
-    TagModel(
-      type: "postType",
-      title: "活動類別（APP內活動分類）",
-      tagValue: [
-        {"index": "演講講座", "isChecked": false},
-        {"index": "實習就業", "isChecked": false},
-        {"index": "志工服務", "isChecked": false},
-        {"index": "藝術人文", "isChecked": false},
-        {"index": "資訊科技", "isChecked": false},
-        {"index": "學習成長", "isChecked": false},
-        {"index": "戶外探索", "isChecked": false},
-        {"index": "競賽活動", "isChecked": false},
-      ],
-    ),
-    TagModel(
-      type: "rewardTag",
-      title: "獎勵標籤（限選1項）",
-      tagValue: [
-        {"index": "無", "id": null, "isChecked": false},
-        {"index": "中式便當", "id": "002", "isChecked": false},
-        {"index": "麵包餐盒", "id": "004", "isChecked": false},
-        {"index": "麥當勞", "id": "001", "isChecked": false},
-        {"index": "附餐", "id": "003", "isChecked": false},
-        {"index": "飲料", "id": "005", "isChecked": false},
-        {"index": "獎金", "id": "006", "isChecked": false},
-      ],
-    ),
-    TagModel(
-      type: "tags",
-      title: "搜尋標籤（增加搜尋時的觸及關鍵字，不限次數）",
-      tagValue: [
-        {"index": "體驗活動", "isChecked": false},
-        {"index": "實習就業", "isChecked": false},
-        {"index": "語言學習", "isChecked": false},
-        {"index": "志工服務", "isChecked": false},
-        {"index": "藝文欣賞", "isChecked": false},
-        {"index": "DIY手作", "isChecked": false},
-        {"index": "電腦軟體", "isChecked": false},
-        {"index": "程式語言", "isChecked": false},
-        {"index": "戶外活動", "isChecked": false},
-        {"index": "系學會", "isChecked": false},
-        {"index": "運動", "isChecked": false},
-        {"index": "大自然", "isChecked": false},
-        {"index": "文化交流", "isChecked": false},
-        {"index": "營隊", "isChecked": false},
-        {"index": "藝術人文", "isChecked": false},
-      ],
-    ),
-  ];
 
   //選取照片
   // File? _image;
@@ -198,14 +107,15 @@ class CreateStep1Bloc {
   deleteCustomTag(String text) async {
     // 元數據刪除標籤
     tagList[2].tagValue.removeWhere((e) => e["index"] == text);
-    // 電腦刪除標籤
-    List<String> _list = UserSimplePreference.getCustomTags() ?? [];
+    // 刪好標籤的放進firestore
+    List<String> _list = _organizer.myTags ?? [];
     _list.removeWhere((e) => e == text);
-    await UserSimplePreference.setCustomTags(_list);
+    FirestoreMethods().updateMyTags(_organizer.uid, _list);
     // valueNotifier刪除
     if (valueNotifier.value.tags!.contains(text)) {
       valueNotifier.value.tags!.removeWhere((e) => e == text);
     }
+    // 刷新頁面
     valueNotifier.notifyListeners();
   }
 
@@ -213,10 +123,10 @@ class CreateStep1Bloc {
     // 元數據新增標籤
     Map _map = {"index": text, "isChecked": true, "isCustom": true};
     tagList[2].tagValue.insert(0, _map);
-    // 新增標籤加到電腦
-    List<String> _list = UserSimplePreference.getCustomTags() ?? [];
+    // 新增好標籤的放進firestore
+    List<String> _list = _organizer.myTags ?? [];
     _list.add(text);
-    await UserSimplePreference.setCustomTags(_list);
+    FirestoreMethods().updateMyTags(_organizer.uid, _list);
     // 加到valueNotifier
     tagPick(2, text);
     valueNotifier.notifyListeners();
@@ -346,4 +256,108 @@ class CreateStep1Bloc {
     }
     return text;
   }
+
+  List createInformList = [
+    {
+      "title": "活動名稱",
+      "index": "title",
+      "type": "normal",
+    },
+    {
+      "title": "活動地點",
+      "index": "location",
+      "type": "normal",
+    },
+    {
+      "title": "活動負責人（稱謂）",
+      "index": "contact",
+      "type": "normal",
+    },
+    {
+      "title": "聯絡方式",
+      "index": "phoneNumber",
+      "type": "normal",
+    },
+    {
+      "title": "活動名額（限阿拉伯數字 如：10,20,30）",
+      "index": "capacity",
+      "type": "checkNull",
+    },
+    {
+      "title": "活動獎勵",
+      "index": "reward",
+      "type": "checkNull",
+    },
+    {
+      "title": "其他參考連結",
+      "index": "link",
+      "type": "checkNull",
+    },
+    {
+      "title": "活動開始日期",
+      "index": "startDate",
+      "type": "date",
+    },
+    {
+      "title": "活動結束日期",
+      "index": "endDate",
+      "type": "date",
+    },
+    {
+      "title": "活動簡介",
+      "index": "introduction",
+      "type": "normal",
+    },
+  ];
+
+  List<TagModel> tagList = [
+    TagModel(
+      type: "postType",
+      title: "活動類別（APP內活動分類）",
+      tagValue: [
+        {"index": "演講講座", "isChecked": false},
+        {"index": "實習就業", "isChecked": false},
+        {"index": "志工服務", "isChecked": false},
+        {"index": "藝術人文", "isChecked": false},
+        {"index": "資訊科技", "isChecked": false},
+        {"index": "學習成長", "isChecked": false},
+        {"index": "戶外探索", "isChecked": false},
+        {"index": "競賽活動", "isChecked": false},
+      ],
+    ),
+    TagModel(
+      type: "rewardTag",
+      title: "獎勵標籤（限選1項）",
+      tagValue: [
+        {"index": "無", "id": null, "isChecked": false},
+        {"index": "中式便當", "id": "002", "isChecked": false},
+        {"index": "麵包餐盒", "id": "004", "isChecked": false},
+        {"index": "麥當勞", "id": "001", "isChecked": false},
+        {"index": "附餐", "id": "003", "isChecked": false},
+        {"index": "飲料", "id": "005", "isChecked": false},
+        {"index": "獎金", "id": "006", "isChecked": false},
+      ],
+    ),
+    TagModel(
+      type: "tags",
+      title: "搜尋標籤（增加搜尋時的觸及關鍵字，不限次數）",
+      tagValue: [
+        {"index": "體驗活動", "isChecked": false},
+        {"index": "實習就業", "isChecked": false},
+        {"index": "語言學習", "isChecked": false},
+        {"index": "志工服務", "isChecked": false},
+        {"index": "藝文欣賞", "isChecked": false},
+        {"index": "DIY手作", "isChecked": false},
+        {"index": "電腦軟體", "isChecked": false},
+        {"index": "程式語言", "isChecked": false},
+        {"index": "戶外活動", "isChecked": false},
+        {"index": "系學會", "isChecked": false},
+        {"index": "運動", "isChecked": false},
+        {"index": "大自然", "isChecked": false},
+        {"index": "文化交流", "isChecked": false},
+        {"index": "營隊", "isChecked": false},
+        {"index": "藝術人文", "isChecked": false},
+      ],
+    ),
+  ];
 }
