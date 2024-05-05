@@ -65,7 +65,7 @@ class CenterPostBarLayout extends StatelessWidget {
                   size: 14,
                   text: "此活動無需報名",
                 )
-              : LinkField(formUrl: formUrl),
+              : LinkField(url: formUrl, title: "報名連結"),
           const SizedBox(height: 16),
           // 報名資訊按鈕
           TapHoverContainer(

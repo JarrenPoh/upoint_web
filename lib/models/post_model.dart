@@ -27,6 +27,7 @@ class PostModel {
   var datePublished;
   String? organizerPic;
   String? taskId;
+  bool? isVisible;
 
   PostModel({
     this.photo,
@@ -54,6 +55,7 @@ class PostModel {
     this.phoneNumber,
     this.postType,
     this.taskId,
+    this.isVisible,
   });
 
   static Map toMap(PostModel cart) {
@@ -83,6 +85,7 @@ class PostModel {
       "phoneNumber": cart.phoneNumber,
       "postType": cart.postType,
       "taskId": cart.taskId,
+      "isVisible": cart.isVisible,
     };
   }
 
@@ -115,6 +118,7 @@ class PostModel {
       phoneNumber: snapshot["phoneNumber"],
       postType: snapshot["postType"],
       taskId: snapshot["taskId"],
+      isVisible: snapshot["isVisible"],
     );
   }
 
@@ -144,6 +148,7 @@ class PostModel {
         "phoneNumber": phoneNumber,
         "postType": postType,
         "taskId": taskId,
+        "≈": isVisible,
       };
 
   static PostModel fromMap(Map map) {
@@ -173,6 +178,7 @@ class PostModel {
       phoneNumber: map["phoneNumber"],
       postType: map["postType"],
       taskId: map["taskId"],
+      isVisible: map["isVisible"],
     );
   }
 }

@@ -30,7 +30,7 @@ class _CenterPageState extends State<CenterPage> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 48),
             child: Container(
-              height: widget.isWeb ? 1230 : null,
+              height: widget.isWeb ? 1240 : null,
               width: widget.isWeb ? 1076 : 543,
               decoration: BoxDecoration(
                 color: Colors.white,

@@ -270,10 +270,22 @@ class FirestoreMethods {
   }
 
   // 更新主辦方自定義搜尋標前
-  Future<void> updateMyTags(String uid,List<String>? myTags) async {
+  Future<void> updateMyTags(String uid, List<String>? myTags) async {
     try {
       await _firestore.collection("organizers").doc(uid).update(
         {"myTags": myTags},
+      );
+    } catch (e) {
+      debugPrint('err${e.toString()}');
+    }
+  }
+
+  // 更新貼文是否隱藏
+  Future<void> updateIsVisible(PostModel post) async {
+    bool isVisible = (post.isVisible == true);
+    try {
+      await _firestore.collection("posts").doc(post.postId).update(
+        {"isVisible": isVisible},
       );
     } catch (e) {
       debugPrint('err${e.toString()}');

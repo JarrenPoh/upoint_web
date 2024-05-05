@@ -24,7 +24,7 @@
     ],
     "appAssociation": "AUTO",
     "rewrites": [
-      { "source": "/activity/**", "dynamicLinks": true},
+      { "source": "/post/**", "dynamicLinks": true},
       {
         "source": "**",
         "destination": "/index.html"

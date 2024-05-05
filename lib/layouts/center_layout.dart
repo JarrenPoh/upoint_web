@@ -120,6 +120,7 @@ class CenterLayout extends StatelessWidget {
                   return Column(
                     children: [
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
                             child: Row(
@@ -141,13 +142,7 @@ class CenterLayout extends StatelessWidget {
                             ),
                           ),
                           if (v[index].form != null)
-                            SizedBox(
-                              width: 120,
-                              height: 120,
-                              child: CenterBarLayout(
-                                post: v[index],
-                              ),
-                            ),
+                            CenterBarLayout(post: v[index]),
                         ],
                       ),
                       const SizedBox(height: 30),

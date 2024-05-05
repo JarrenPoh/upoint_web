@@ -7,10 +7,12 @@ import 'package:upoint_web/globals/regular_text.dart';
 import '../../tap_hover_container.dart';
 
 class LinkField extends StatefulWidget {
-  final String? formUrl;
+  final String? url;
+  final String title;
   const LinkField({
     super.key,
-    required this.formUrl,
+    required this.url,
+    required this.title,
   });
 
   @override
@@ -23,7 +25,7 @@ class _LinkFieldState extends State<LinkField> {
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController(text: widget.formUrl);
+    controller = TextEditingController(text: widget.url);
   }
 
   bool isTap = false;
@@ -60,7 +62,7 @@ class _LinkFieldState extends State<LinkField> {
               child: RegularText(
                 color: grey500,
                 size: 14,
-                text: "報名連結",
+                text: widget.title,
               ),
             ),
           ),

@@ -79,7 +79,8 @@ class CreateStep3Layout extends StatelessWidget {
                   isSuccess ? "創建成功" : "創建失敗，請聯絡service.upoint@gmail.com：$res",
             ),
             const SizedBox(height: 50),
-            if (isSuccess && formUrl != null) LinkField(formUrl: formUrl),
+            if (isSuccess && formUrl != null)
+              LinkField(url: formUrl, title: "報名連結"),
           ],
         ),
       ),
@@ -122,7 +123,8 @@ class CreateStep3Layout extends StatelessWidget {
                   isSuccess ? "創建成功" : "創建失敗，請聯絡service.upoint@gmail.com：$res",
             ),
             const SizedBox(height: 50),
-            if (isSuccess && formUrl != null) LinkField(formUrl: formUrl),
+            if (isSuccess && formUrl != null)
+              LinkField(url: formUrl, title: "報名連結"),
           ],
         ),
       ),
