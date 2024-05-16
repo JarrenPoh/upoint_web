@@ -142,7 +142,7 @@ class CenterLayout extends StatelessWidget {
                             ),
                           ),
                           if (v[index].form != null)
-                            CenterBarLayout(post: v[index]),
+                            CenterBarLayout(post: v[index], showVisible: true),
                         ],
                       ),
                       const SizedBox(height: 30),

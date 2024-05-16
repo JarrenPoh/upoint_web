@@ -14,6 +14,7 @@ class ApplyOrganizerBloc {
   OrganizerModel organizer = OrganizerModel(
     uid: FirebaseAuth.instance.currentUser!.uid,
     email: FirebaseAuth.instance.currentUser!.email!,
+    myTags: [],
     postLength: 0,
     unit: "中原大學"
   );
@@ -90,8 +91,9 @@ class ApplyOrganizerBloc {
     for (String key in organizer.toJson().keys) {
       var value = organizer.toJson()[key];
       if (value == null || value == "") {
+        print("value:$key");
         Messenger.dialog(
-          "尚有欄位未填寫完畢",
+          "尚有欄位未填寫完畢：'$key'",
           "請檢查所有欄位是否都填寫，如有問題請洽詢：service.upoint@gmail.com",
           context,
         );

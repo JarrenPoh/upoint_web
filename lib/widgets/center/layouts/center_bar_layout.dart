@@ -10,9 +10,11 @@ import '../../../models/post_model.dart';
 // ignore: must_be_immutable
 class CenterBarLayout extends StatefulWidget {
   final PostModel post;
+  final bool? showVisible;
   const CenterBarLayout({
     super.key,
     required this.post,
+    this.showVisible,
   });
 
   @override
@@ -92,33 +94,35 @@ class _CenterBarLayoutState extends State<CenterBarLayout> {
           ),
         ),
         const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            RegularText(color: grey400, size: 12, text: "典藏"),
-            Transform.scale(
-              scale: 0.8,
-              child: Theme(
-                data: ThemeData(
-                  useMaterial3: true,
-                ).copyWith(
-                    colorScheme: Theme.of(context).colorScheme.copyWith(
-                        outline: (widget.post.isVisible == true)
-                            ? primaryColor
-                            : grey400)),
-                child: Switch(
-                  value: (widget.post.isVisible == true),
-                  activeColor: Colors.white,
-                  activeTrackColor: primaryColor,
-                  inactiveThumbColor: grey400,
-                  inactiveTrackColor: Colors.white,
-                  onChanged: (e) => onChanged(e),
+        // 活動是否可見
+        if (widget.showVisible == true)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              RegularText(color: grey400, size: 12, text: "典藏"),
+              Transform.scale(
+                scale: 0.8,
+                child: Theme(
+                  data: ThemeData(
+                    useMaterial3: true,
+                  ).copyWith(
+                      colorScheme: Theme.of(context).colorScheme.copyWith(
+                          outline: (widget.post.isVisible == true)
+                              ? primaryColor
+                              : grey400)),
+                  child: Switch(
+                    value: (widget.post.isVisible == true),
+                    activeColor: Colors.white,
+                    activeTrackColor: primaryColor,
+                    inactiveThumbColor: grey400,
+                    inactiveTrackColor: Colors.white,
+                    onChanged: (e) => onChanged(e),
+                  ),
                 ),
               ),
-            ),
-            MediumText(color: grey500, size: 12, text: "公開"),
-          ],
-        ),
+              MediumText(color: grey500, size: 12, text: "公開"),
+            ],
+          ),
       ],
     );
   }
