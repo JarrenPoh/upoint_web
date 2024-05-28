@@ -7,11 +7,12 @@ import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:upoint_web/firebase/firestore_methods.dart';
 import 'package:upoint_web/secret.dart';
-
 import '../globals/custom_messengers.dart';
+import 'storage_methods.dart';
 
 class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   //註冊用戶
   Future<String> signUpUser({
@@ -173,7 +174,7 @@ class AuthMethods {
   }
 
   //重至密碼
-  Future<String> resetPassword(String email,BuildContext context) async {
+  Future<String> resetPassword(String email, BuildContext context) async {
     String res = 'some error occur';
     try {
       await _auth.sendPasswordResetEmail(email: email);
@@ -192,6 +193,28 @@ class AuthMethods {
       }
     } catch (e) {
       res = e.toString();
+    }
+    return res;
+  }
+
+  //刪除管理帳號
+  Future<String> deleteAccount(String childname, String uid) async {
+    String res = 'some error occur';
+    try {
+      if (childname == "users") {
+        await _auth.currentUser!.delete();
+      }
+      await _firestore.collection(childname).doc(uid).delete();
+      await StorageMethods().deleteImageToStorage(null, childname, false);
+      res = 'success';
+      // 成功删除账户后的操作，比如返回登录页面
+    } on FirebaseAuthException catch (e) {
+      // 处理错误，可能是因为用户最近没有登录
+      debugPrint('删除账户出错: ${e.message}');
+      res = e.toString();
+      // 可以提示用户重新登录后再尝试删除账户
+    } catch (err) {
+      res = err.toString();
     }
     return res;
   }

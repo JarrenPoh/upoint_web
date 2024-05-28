@@ -4,17 +4,18 @@ import 'package:upoint_web/color.dart';
 import 'package:upoint_web/firebase/auth_methods.dart';
 import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/globals/medium_text.dart';
+import 'package:upoint_web/widgets/responsive_layout.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
 import '../bloc/apply_organizer_bloc.dart';
 import '../widgets/circular_loading.dart';
 
 class ApplyOrganizerPage extends StatefulWidget {
-  final bool isWeb;
+  final LayoutType layoutType;
   final Widget child;
   final ApplyOrganizerBloc bloc;
   const ApplyOrganizerPage({
     super.key,
-    required this.isWeb,
+    required this.layoutType,
     required this.child,
     required this.bloc,
   });
@@ -27,6 +28,12 @@ class _ApplyOrganizerPageState extends State<ApplyOrganizerPage> {
   bool _isSend = false;
   bool? _isSuccess;
   String? _res;
+  double _width = 0, _btnPad = 0, _hor = 0;
+  @override
+  void initState() {
+    super.initState();
+  }
+
   onTap() async {
     // 上傳organizer firestore
     bool correctEdit = widget.bloc.isEditComplete(context);
@@ -54,6 +61,19 @@ class _ApplyOrganizerPageState extends State<ApplyOrganizerPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.layoutType == LayoutType.mobile) {
+      _width = MediaQuery.of(context).size.width - 32;
+      _btnPad = 22;
+      _hor = 32;
+    } else if (widget.layoutType == LayoutType.tablet) {
+      _width = 543;
+      _btnPad = 22;
+      _hor = 145;
+    } else if (widget.layoutType == LayoutType.web) {
+      _width = 1076;
+      _btnPad = 84;
+      _hor = 145;
+    }
     if (_isSuccess != null) {
       return Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -62,7 +82,7 @@ class _ApplyOrganizerPageState extends State<ApplyOrganizerPage> {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 48),
               child: Container(
-                width: widget.isWeb ? 1076 : 543,
+                width: _width,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -107,7 +127,7 @@ class _ApplyOrganizerPageState extends State<ApplyOrganizerPage> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 48),
             child: Container(
-              width: widget.isWeb ? 1076 : 543,
+              width: _width,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -141,7 +161,7 @@ class _ApplyOrganizerPageState extends State<ApplyOrganizerPage> {
                         children: [
                           Padding(
                             padding:
-                                const EdgeInsets.symmetric(horizontal: 145),
+                                 EdgeInsets.symmetric(horizontal: _hor),
                             child: widget.child,
                           ),
                         ],
@@ -151,7 +171,7 @@ class _ApplyOrganizerPageState extends State<ApplyOrganizerPage> {
                         children: [
                           TapHoverContainer(
                             text: "提交申請",
-                            padding: widget.isWeb ? 84 : 22,
+                            padding: _btnPad,
                             hoverColor: secondColor,
                             borderColor: Colors.transparent,
                             textColor: Colors.white,
@@ -164,8 +184,7 @@ class _ApplyOrganizerPageState extends State<ApplyOrganizerPage> {
                     ],
                   ),
                   // 轉圈圈
-                  if (_isSend == true)
-                    const CircularLoading()
+                  if (_isSend == true) const CircularLoading()
                 ],
               ),
             ),

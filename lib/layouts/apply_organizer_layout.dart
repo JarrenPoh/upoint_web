@@ -6,20 +6,57 @@ import 'package:upoint_web/widgets/apply_organizer/apply_organizer_common_layout
 import 'package:upoint_web/widgets/apply_organizer/apply_organizer_contact_layout.dart';
 import 'package:upoint_web/widgets/responsive_layout.dart';
 
-class ApplyLayout extends StatelessWidget {
-  ApplyLayout({super.key});
-  final ApplyOrganizerBloc bloc = ApplyOrganizerBloc();
+class ApplyLayout extends StatefulWidget {
+  ApplyLayout({
+    super.key,
+    required this.referralCode,
+  });
+  final String? referralCode;
+
+  @override
+  State<ApplyLayout> createState() => _ApplyLayoutState();
+}
+
+class _ApplyLayoutState extends State<ApplyLayout> {
+  late ApplyOrganizerBloc bloc = ApplyOrganizerBloc(widget.referralCode);
+
   @override
   Widget build(BuildContext context) {
     return ResponsiveLayout(
+      mobileLayout: mobileLayout(),
       tabletLayout: tabletLayout(),
       webLayout: webLayout(),
     );
   }
 
+  Widget mobileLayout() {
+    return ApplyOrganizerPage(
+      layoutType: LayoutType.mobile,
+      bloc: bloc,
+      child: Column(
+        children: [
+          //頭像
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _avaterLayout(),
+            ],
+          ),
+          const SizedBox(height: 30),
+          //基本資料
+          _commonLayout(false),
+          const SizedBox(height: 30),
+          //第二列
+          _contactLayout(false),
+          const SizedBox(height: 40),
+        ],
+      ),
+    );
+  }
+
   Widget tabletLayout() {
     return ApplyOrganizerPage(
-      isWeb: false,
+      layoutType: LayoutType.tablet,
       bloc: bloc,
       child: Column(
         children: [
@@ -43,7 +80,7 @@ class ApplyLayout extends StatelessWidget {
 
   Widget webLayout() {
     return ApplyOrganizerPage(
-      isWeb: true,
+      layoutType: LayoutType.web,
       bloc: bloc,
       child: Column(
         children: [

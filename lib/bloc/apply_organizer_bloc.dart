@@ -11,12 +11,17 @@ import '../firebase/firestore_methods.dart';
 import '../firebase/storage_methods.dart';
 
 class ApplyOrganizerBloc {
+  String? referralCode;
+  ApplyOrganizerBloc(String? _referralCode) {
+    referralCode = _referralCode;
+    organizer.referralCode = "無";
+  }
   OrganizerModel organizer = OrganizerModel(
     uid: FirebaseAuth.instance.currentUser!.uid,
     email: FirebaseAuth.instance.currentUser!.email!,
     myTags: [],
     postLength: 0,
-    unit: "中原大學"
+    unit: "中原大學",
   );
   List<Map> commonList = [
     {
@@ -112,6 +117,9 @@ class ApplyOrganizerBloc {
       String ppic = await StorageMethods()
           .uploadImageToStorage('organizers', file, false, null);
       organizer.pic = ppic;
+      if (referralCode != null) {
+        organizer.referralCode = referralCode;
+      }
       // 上傳organizer firestore
       await FirestoreMethods().signUpOrganizerToStore(organizer);
       res = "success";

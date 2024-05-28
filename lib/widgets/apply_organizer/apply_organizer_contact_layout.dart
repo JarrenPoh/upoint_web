@@ -47,6 +47,24 @@ class _ApplyOrganizerContactLayoutState
               ),
             ],
           ),
+        const SizedBox(height: 32),
+        // 邀請碼
+        MediumText(
+          color: grey500,
+          size: 18,
+          text: "推薦碼",
+        ),
+        Column(
+          children: [
+            const SizedBox(height: 24),
+            UnderscoreTextField(
+              text: widget.bloc.referralCode,
+              padLeft: widget.isWeb ? 22 : 6,
+              hintText: "推薦人代碼",
+              onChanged: (String e) {},
+            ),
+          ],
+        ),
       ],
     );
   }

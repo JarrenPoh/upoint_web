@@ -54,7 +54,11 @@ class OrganizerLocation extends BeamLocation {
     }
     if (uri.pathSegments.contains('inform')) {
       // 個人簡介
-      page = (o) => o == null ? ApplyLayout() : InformLayout(organizer: o);
+      String? referralCode = uri.queryParameters['rc'];
+      debugPrint("推薦碼：$referralCode");
+      page = (o) => o == null
+          ? ApplyLayout(referralCode: referralCode)
+          : InformLayout(organizer: o);
     } else if (uri.pathSegments.contains('post')) {
       // 活動中心點進去的貼文頁面
       final id = uri.queryParameters['id'];

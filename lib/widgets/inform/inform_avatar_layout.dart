@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:upoint_web/bloc/inform_bloc.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/models/organizer_model.dart';
+import 'package:upoint_web/widgets/center/components/link_field.dart';
 
 import '../tap_hover_container.dart';
 
@@ -26,6 +27,7 @@ class _InformAvatarLayoutState extends State<InformAvatarLayout> {
       height: 349,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CircleAvatar(
             radius: 90,
@@ -57,6 +59,14 @@ class _InformAvatarLayoutState extends State<InformAvatarLayout> {
                 pic = res["pic"];
               });
             },
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: 200,
+            child: LinkField(
+              url: "https://upoint.tw/organizer/inform?rc=${widget.organizer.uid}",
+              title: "推薦連結",
+            ),
           ),
         ],
       ),

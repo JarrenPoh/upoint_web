@@ -28,4 +28,19 @@ class StorageMethods {
     }
     return "";
   }
+
+  Future deleteImageToStorage(
+      String? postId, String childname, bool isPost) async {
+    try {
+      Reference ref =
+          _storage.ref().child(childname).child(_auth.currentUser!.uid);
+      if (isPost) {
+        ref = ref.child(postId!);
+      }
+      debugPrint('ref: $ref');
+      ref.delete();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 }

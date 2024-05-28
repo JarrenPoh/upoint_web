@@ -11,6 +11,7 @@ class OrganizerModel {
   String email;
   int postLength;
   List<String>? myTags;
+  String? referralCode;
 
   OrganizerModel({
     this.username,
@@ -23,6 +24,7 @@ class OrganizerModel {
     this.contact,
     this.myTags,
     required this.postLength,
+     this.referralCode,
   });
 
   static Map toMap(OrganizerModel cart) {
@@ -36,6 +38,7 @@ class OrganizerModel {
       "unit": cart.unit,
       "contact": cart.contact,
       "myTags": cart.myTags,
+      "referralCode":cart.referralCode,
     };
   }
 
@@ -53,6 +56,7 @@ class OrganizerModel {
       contact: snapshot['contact'],
       postLength: snapshot['postLength'],
       myTags: snapshot["myTags"],
+      referralCode:snapshot["referralCode"],
     );
   }
 
@@ -67,6 +71,7 @@ class OrganizerModel {
         "contact": contact,
         "postLength": postLength,
         "myTags": myTags,
+        "referralCode":referralCode,
       };
 
   static OrganizerModel? fromMap(Map? map) {
@@ -84,6 +89,7 @@ class OrganizerModel {
         contact: map['contact'],
         postLength: map['postLength'],
         myTags: map['myTags'] != null ? List<String>.from(map['myTags']) : null,
+        referralCode:map["referralCode"],
       );
     }
   }
