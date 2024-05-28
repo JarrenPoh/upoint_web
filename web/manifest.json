@@ -1,11 +1,11 @@
 {
-    "name": "upoint_web",
-    "short_name": "upoint_web",
+    "name": "UPoint 網頁歡迎您",
+    "short_name": "UPoint 網頁歡迎您",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Welcome to UPoint Website.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

@@ -51,7 +51,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
     super.initState();
     pic = widget.inform["pic"];
     username = widget.inform["username"];
-    email = FirebaseAuth.instance.currentUser!.email;
+    email = FirebaseAuth.instance.currentUser?.email;
     childname = widget.isForm ? "users" : "organizers";
   }
 

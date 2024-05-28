@@ -9,11 +9,11 @@ import '../../../globals/regular_text.dart';
 import '../../../models/form_model.dart';
 import '../components/option_row.dart';
 
-class SignFormRightLayout extends StatefulWidget {
+class SignFormRightLayout extends StatelessWidget {
   final List<FormModel> formList;
   final SignFormBloc bloc;
   final String postId;
-  const SignFormRightLayout({
+  SignFormRightLayout({
     super.key,
     required this.formList,
     required this.bloc,
@@ -21,22 +21,18 @@ class SignFormRightLayout extends StatefulWidget {
   });
 
   @override
-  State<SignFormRightLayout> createState() => _SignFormRightLayoutState();
-}
-
-class _SignFormRightLayoutState extends State<SignFormRightLayout> {
-  var _count = 0;
-  onTap() {
-    String? errorText = widget.bloc.checkFunc(widget.formList);
-    if (errorText != null) {
-      Messenger.dialog("有欄位尚未填寫完畢", errorText, context);
-    } else {
-      widget.bloc.confirmSend(widget.postId, context);
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
+    onTap() {
+      String? errorText = bloc.checkFunc(formList);
+      if (errorText != null) {
+        Messenger.dialog("有欄位尚未填寫完畢", errorText, context);
+      } else {
+        bloc.confirmSend(postId, context);
+      }
+    }
+
+    var _count = 0;
+
     return Container(
       width: 543,
       decoration: BoxDecoration(
@@ -49,10 +45,11 @@ class _SignFormRightLayoutState extends State<SignFormRightLayout> {
           Container(
             height: 73,
             decoration: BoxDecoration(
-                borderRadius: const BorderRadius.vertical(
-                  top: Radius.circular(10),
-                ),
-                color: grey100),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(10),
+              ),
+              color: grey100,
+            ),
             child: Center(
               child: MediumText(
                 color: grey500,
@@ -66,21 +63,21 @@ class _SignFormRightLayoutState extends State<SignFormRightLayout> {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
               children: List.generate(
-                widget.formList.length,
+                formList.length,
                 (index) {
                   return Column(
                     children: [
                       const SizedBox(height: 36),
-                      _title(widget.formList[index].title),
+                      _title(formList[index].title),
                       const SizedBox(height: 8),
                       Column(
                         children: List.generate(
-                          widget.formList[index].options.length,
+                          formList[index].options.length,
                           (i) {
                             _count++;
                             return OptionRow(
-                              option: widget.formList[index].options[i],
-                              bloc: widget.bloc,
+                              option: formList[index].options[i],
+                              bloc: bloc,
                               index: _count - 1,
                             );
                           },
@@ -109,31 +106,30 @@ class _SignFormRightLayoutState extends State<SignFormRightLayout> {
                   ),
                 ),
                 ValueListenableBuilder(
-                  valueListenable: widget.bloc.loginBtnValue,
-                  builder: (context,value,child) {
-                    int? v = value;
-                    return Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.start,
-                      alignment: WrapAlignment.start,
-                      runSpacing: 15,
-                      children: List.generate(
-                        widget.bloc.choseLoginButtonGroup.length,
-                        (index) {
-                          Map ref = widget.bloc.choseLoginButtonGroup[index];
-                          return ChoseLoginButton(
-                            user: widget.bloc.user,
-                            text: ref["text"],
-                            isActive: v==index,
-                            onTap: () => widget.bloc.tapLoginBtn(
-                              index: ref["index"],
-                              context: context,
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  }
-                ),
+                    valueListenable: bloc.loginBtnValue,
+                    builder: (context, value, child) {
+                      int? v = value;
+                      return Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        alignment: WrapAlignment.start,
+                        runSpacing: 15,
+                        children: List.generate(
+                          bloc.choseLoginButtonGroup.length,
+                          (index) {
+                            Map ref = bloc.choseLoginButtonGroup[index];
+                            return ChoseLoginButton(
+                              user: bloc.user,
+                              text: ref["text"],
+                              isActive: v == index,
+                              onTap: () => bloc.tapLoginBtn(
+                                index: ref["index"],
+                                context: context,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    }),
               ],
             ),
           ),

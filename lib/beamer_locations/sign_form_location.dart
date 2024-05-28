@@ -100,9 +100,7 @@ class SignFormLocation extends BeamLocation {
                           isForm: true,
                         ),
                       ),
-                      body: SingleChildScrollView(
-                        child: page(userModel),
-                      ),
+                      body: SingleChildScrollView(child: page(userModel)),
                     );
                   }
                 },

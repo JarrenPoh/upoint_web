@@ -7,9 +7,10 @@
 
 # The following line activates a set of recommended lints for Flutter apps,
 # packages, and plugins designed to encourage good coding practices.
-analyzer: ignore
-  errors:
-    must_be_immutable: ignore
+analyzer:
+  errors: ignore
+    must_be_immutable: ignore ignore
+must_be_immutable: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:

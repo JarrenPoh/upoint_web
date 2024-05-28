@@ -5,12 +5,14 @@ import 'package:upoint_web/globals/global.dart';
 import 'package:upoint_web/globals/regular_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../widgets/responsive_layout.dart';
+
 class SignFormPage extends StatefulWidget {
-  final bool isWeb;
+  final LayoutType layoutType;
   final Widget child;
   const SignFormPage({
     super.key,
-    required this.isWeb,
+    required this.layoutType,
     required this.child,
   });
 
@@ -19,8 +21,19 @@ class SignFormPage extends StatefulWidget {
 }
 
 class _SignFormPageState extends State<SignFormPage> {
+  double _width = 0, _hor = 0;
   @override
   Widget build(BuildContext context) {
+    if (widget.layoutType == LayoutType.mobile) {
+      _width = MediaQuery.of(context).size.width - 32;
+      _hor = 24;
+    } else if (widget.layoutType == LayoutType.tablet) {
+      _width = 543;
+      _hor = 64;
+    } else if (widget.layoutType == LayoutType.web) {
+      _width = 1076;
+      _hor = 64;
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -29,9 +42,9 @@ class _SignFormPageState extends State<SignFormPage> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 48),
               child: Container(
-                width: widget.isWeb ? 1076 : 543,
+                width: _width,
                 padding:
-                    const EdgeInsets.symmetric(vertical: 48, horizontal: 64),
+                     EdgeInsets.symmetric(vertical: 48, horizontal: _hor),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
@@ -41,6 +54,7 @@ class _SignFormPageState extends State<SignFormPage> {
             ),
             // 點擊連結下載
             RichText(
+              textAlign: TextAlign.center,
               text: TextSpan(
                 style: TextStyle(
                   color: grey500,
@@ -52,7 +66,7 @@ class _SignFormPageState extends State<SignFormPage> {
                     text: "掃描或",
                   ),
                   const TextSpan(
-                    text: "Upoint App 獲取更多活動資訊！",
+                    text: "Upoint App 獲取更多活動資訊！\n",
                   ),
                   TextSpan(
                     text: "iOS點此下載  ",

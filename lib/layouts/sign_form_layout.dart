@@ -25,6 +25,10 @@ class SignFormLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     final SignFormBloc _bloc = SignFormBloc(postId, user);
     return ResponsiveLayout(
+      mobileLayout: valueWidget(
+        (v) => mobileLayout(v['post'], v['form'], _bloc),
+        _bloc,
+      ),
       tabletLayout: valueWidget(
         (v) => tabletLayout(v['post'], v['form'], _bloc),
         _bloc,
@@ -36,29 +40,28 @@ class SignFormLayout extends StatelessWidget {
     );
   }
 
-  Widget valueWidget(
-    Widget Function(Map) child,
+  Widget mobileLayout(
+    PostModel post,
+    List<FormModel> formList,
     SignFormBloc bloc,
   ) {
-    return ValueListenableBuilder<Map>(
-      valueListenable: bloc.postValueNotifier,
-      builder: (context, value, cchild) {
-        bool isLoading = value["isLoading"];
-        PostModel? post = value["post"];
-        bool isForm = value["isForm"];
-        List<FormModel>? form = value["form"];
-        if (isLoading == true) {
-          return const Center(
-            child: CircularLoading(),
-          );
-        } else {
-          if (post == null || isForm == false) {
-            return const Center(child: Text("page not found"));
-          } else {
-            return child({"post": post, "form": form});
-          }
-        }
-      },
+    debugPrint('切換到 mobileLayout');
+    return SignFormPage(
+      layoutType: LayoutType.mobile,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SignFormLeftLayout(post: post),
+          const SizedBox(height: 32),
+          (post.formDateTime as Timestamp).toDate().isBefore(DateTime.now())
+              ? overtimeWidget()
+              : SignFormRightLayout(
+                  formList: formList,
+                  bloc: bloc,
+                  postId: postId,
+                ),
+        ],
+      ),
     );
   }
 
@@ -69,7 +72,7 @@ class SignFormLayout extends StatelessWidget {
   ) {
     debugPrint('切換到 tabletLayout');
     return SignFormPage(
-      isWeb: false,
+     layoutType: LayoutType.tablet,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -94,7 +97,7 @@ class SignFormLayout extends StatelessWidget {
   ) {
     debugPrint('切換到 desktopLayout');
     return SignFormPage(
-      isWeb: true,
+      layoutType: LayoutType.web,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -135,6 +138,32 @@ class SignFormLayout extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget valueWidget(
+    Widget Function(Map) child,
+    SignFormBloc bloc,
+  ) {
+    return ValueListenableBuilder<Map>(
+      valueListenable: bloc.postValueNotifier,
+      builder: (context, value, cchild) {
+        bool isLoading = value["isLoading"];
+        PostModel? post = value["post"];
+        bool isForm = value["isForm"];
+        List<FormModel>? form = value["form"];
+        if (isLoading == true) {
+          return const Center(
+            child: CircularLoading(),
+          );
+        } else {
+          if (post == null || isForm == false) {
+            return const Center(child: Text("page not found"));
+          } else {
+            return child({"post": post, "form": form});
+          }
+        }
+      },
     );
   }
 }

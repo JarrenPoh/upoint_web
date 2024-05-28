@@ -27,7 +27,7 @@ class SignFormFinishLayout extends StatelessWidget {
   Widget tabletLayout(String image, String text) {
     debugPrint('切換到 tabletLayout');
     return SignFormPage(
-      isWeb: false,
+      layoutType: LayoutType.tablet,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -56,7 +56,7 @@ class SignFormFinishLayout extends StatelessWidget {
   Widget webLayout(String image, String text) {
     debugPrint('切換到 desktopLayout');
     return SignFormPage(
-      isWeb: true,
+      layoutType: LayoutType.web,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
