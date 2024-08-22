@@ -22,6 +22,7 @@ import '../layouts/center_sign_form_layout.dart';
 import '../widgets/tap_hover_container.dart';
 
 class OrganizerLocation extends BeamLocation {
+  int activeIndex = 0;
   final GlobalKey<CustomNavigationBarState> _navBarKey =
       GlobalKey<CustomNavigationBarState>();
   List<String> get pathBluedebugPrints => [
@@ -45,6 +46,7 @@ class OrganizerLocation extends BeamLocation {
       } else {
         url = "/create";
       }
+      activeIndex = index;
       Beamer.of(context).beamToNamed('/organizer$url');
     }
 
@@ -123,7 +125,7 @@ class OrganizerLocation extends BeamLocation {
       BeamPage(
         key: ValueKey(uri),
         child: GestureDetector(
-          onTap: () => _navBarKey.currentState?.toggleOverlay(),
+          onTap: () => _navBarKey.currentState?.removeOverlay(),
           child: Scaffold(
             body: StreamBuilder<User?>(
               stream: FirebaseAuth.instance.authStateChanges(),
@@ -155,6 +157,7 @@ class OrganizerLocation extends BeamLocation {
                                 preferredSize: Size(screenSize.width, 80),
                                 child: CustomNavigationBar(
                                   key: _navBarKey,
+                                  activeIndex: activeIndex,
                                   onIconTapped: onIconTapped,
                                   inform: {
                                     "pic": organizer?.pic,

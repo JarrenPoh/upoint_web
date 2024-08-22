@@ -12,11 +12,13 @@ class CustomNavigationBar extends StatefulWidget {
   final bool isForm; //學生的報名表單
   final Map inform;
   final Function onIconTapped;
+  final int activeIndex;
   const CustomNavigationBar({
     super.key,
     required this.onIconTapped,
     required this.isForm,
     required this.inform,
+    required this.activeIndex,
     // required this.opacity,
   });
 
@@ -25,21 +27,21 @@ class CustomNavigationBar extends StatefulWidget {
 }
 
 class CustomNavigationBarState extends State<CustomNavigationBar> {
-  final List<Map> tapContainerList = [
+  late final List<Map> tapContainerList = [
     {
       "title": "主辦資訊",
       "isHover": false,
-      "isSelected": true,
+      "isSelected": widget.activeIndex == 0,
     },
     {
       "title": "活動中心",
       "isHover": false,
-      "isSelected": false,
+      "isSelected": widget.activeIndex == 1,
     },
     {
       "title": "建活動",
       "isHover": false,
-      "isSelected": false,
+      "isSelected": widget.activeIndex == 2,
     },
   ];
   String? pic;
@@ -183,13 +185,19 @@ class CustomNavigationBarState extends State<CustomNavigationBar> {
       ),
     );
   });
-  void toggleOverlay() {
+  void _toggleOverlay() {
     if (_isOverlayShown == false) {
       Overlay.of(context).insert(_overlayEntry);
       setState(() {
         _isOverlayShown = true;
       });
     } else {
+      removeOverlay();
+    }
+  }
+
+  removeOverlay() {
+    if (_isOverlayShown == true) {
       _overlayEntry.remove();
       setState(() {
         _isOverlayShown = false;
@@ -265,7 +273,7 @@ class CustomNavigationBarState extends State<CustomNavigationBar> {
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () {
-                  toggleOverlay();
+                  _toggleOverlay();
                 },
                 child: SizedBox(
                   height: 40,
@@ -372,7 +380,7 @@ class CustomNavigationBarState extends State<CustomNavigationBar> {
                           cursor: SystemMouseCursors.click,
                           child: GestureDetector(
                             onTap: () {
-                              toggleOverlay();
+                              _toggleOverlay();
                             },
                             child: SizedBox(
                               height: 40,
@@ -424,13 +432,13 @@ class CustomNavigationBarState extends State<CustomNavigationBar> {
         setState(() {
           for (var i = 0; i < list.length; i++) {
             if (i == index) {
-              list[index]['isSelected'] = true;
+              list[i]['isSelected'] = true;
             } else {
               list[i]['isSelected'] = false;
             }
           }
           widget.onIconTapped(index);
-          toggleOverlay();
+          removeOverlay();
         });
       },
       child: Container(
@@ -444,9 +452,9 @@ class CustomNavigationBarState extends State<CustomNavigationBar> {
                   ? secondColor
                   : primaryColor
               : list[index]['isSelected']
-                  ? grey100
+                  ? grey200
                   : list[index]['isHover']
-                      ? grey100
+                      ? grey200
                       : Colors.white,
         ),
         child: Center(

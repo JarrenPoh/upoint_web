@@ -90,6 +90,7 @@ class SignFormLocation extends BeamLocation {
                       appBar: PreferredSize(
                         preferredSize: Size(screenSize.width, 80),
                         child: CustomNavigationBar(
+                          activeIndex: 0,
                           inform: {
                             "pic": userModel?.pic,
                             "username": userModel?.username ?? "",
@@ -111,6 +112,7 @@ class SignFormLocation extends BeamLocation {
                 appBar: PreferredSize(
                   preferredSize: Size(screenSize.width, 80),
                   child: CustomNavigationBar(
+                    activeIndex: 0,
                     inform: const {
                       "pic": null,
                       "username": "",
