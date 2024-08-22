@@ -21,10 +21,10 @@ class CustomNavigationBar extends StatefulWidget {
   });
 
   @override
-  State<CustomNavigationBar> createState() => _CustomNavigationBarState();
+  State<CustomNavigationBar> createState() => CustomNavigationBarState();
 }
 
-class _CustomNavigationBarState extends State<CustomNavigationBar> {
+class CustomNavigationBarState extends State<CustomNavigationBar> {
   final List<Map> tapContainerList = [
     {
       "title": "主辦資訊",
@@ -183,15 +183,18 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       ),
     );
   });
-  void _showOverlay(BuildContext context) {
+  void toggleOverlay() {
     if (_isOverlayShown == false) {
       Overlay.of(context).insert(_overlayEntry);
+      setState(() {
+        _isOverlayShown = true;
+      });
     } else {
       _overlayEntry.remove();
+      setState(() {
+        _isOverlayShown = false;
+      });
     }
-    setState(() {
-      _isOverlayShown = !_isOverlayShown;
-    });
   }
 
   @override
@@ -262,7 +265,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () {
-                  _showOverlay(context);
+                  toggleOverlay();
                 },
                 child: SizedBox(
                   height: 40,
@@ -369,7 +372,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
                           cursor: SystemMouseCursors.click,
                           child: GestureDetector(
                             onTap: () {
-                              _showOverlay(context);
+                              toggleOverlay();
                             },
                             child: SizedBox(
                               height: 40,
@@ -427,6 +430,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
             }
           }
           widget.onIconTapped(index);
+          toggleOverlay();
         });
       },
       child: Container(

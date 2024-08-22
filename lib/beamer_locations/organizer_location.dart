@@ -22,6 +22,8 @@ import '../layouts/center_sign_form_layout.dart';
 import '../widgets/tap_hover_container.dart';
 
 class OrganizerLocation extends BeamLocation {
+  final GlobalKey<CustomNavigationBarState> _navBarKey =
+      GlobalKey<CustomNavigationBarState>();
   List<String> get pathBluedebugPrints => [
         '/organizer',
         '/organizer/inform',
@@ -120,69 +122,74 @@ class OrganizerLocation extends BeamLocation {
     return [
       BeamPage(
         key: ValueKey(uri),
-        child: Scaffold(
-          body: StreamBuilder<User?>(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              debugPrint("監測到更改");
-              if (snapshot.hasData) {
-                User? user = snapshot.data;
-                return FutureBuilder(
-                  future: FirebaseFirestore.instance
-                      .collection('organizers')
-                      .doc(FirebaseAuth.instance.currentUser!.uid)
-                      .get(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const CircularLoading();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      if (user != null) {
-                        debugPrint("用戶驗證過");
-                        // 用戶驗證過
-                        if (user.emailVerified) {
-                          OrganizerModel? organizer =
-                              OrganizerModel.fromMap(snapshot.data?.data());
-                          debugPrint('拿了身份：${organizer?.toJson()}');
-                          return Scaffold(
-                            backgroundColor: bgColor,
-                            appBar: PreferredSize(
-                              preferredSize: Size(screenSize.width, 80),
-                              child: CustomNavigationBar(
-                                onIconTapped: onIconTapped,
-                                inform: {
-                                  "pic": organizer?.pic,
-                                  "username": organizer?.username ?? "",
-                                  "email": organizer?.email ??
-                                      FirebaseAuth.instance.currentUser?.email,
-                                },
-                                isForm: false,
-                              ),
-                            ),
-                            body: page(organizer),
-                          );
-                        } else {
-                          debugPrint("用戶尚未驗證");
-                          // 尚未驗證
-                          return VerifyEmailPage(
-                            email: user.email ?? "",
-                            role: "organizer",
-                          );
-                        }
+        child: GestureDetector(
+          onTap: () => _navBarKey.currentState?.toggleOverlay(),
+          child: Scaffold(
+            body: StreamBuilder<User?>(
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                debugPrint("監測到更改");
+                if (snapshot.hasData) {
+                  User? user = snapshot.data;
+                  return FutureBuilder(
+                    future: FirebaseFirestore.instance
+                        .collection('organizers')
+                        .doc(FirebaseAuth.instance.currentUser!.uid)
+                        .get(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const CircularLoading();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
                       } else {
-                        return Center(child: LoginLayout(role: "organizer"));
+                        if (user != null) {
+                          debugPrint("用戶驗證過");
+                          // 用戶驗證過
+                          if (user.emailVerified) {
+                            OrganizerModel? organizer =
+                                OrganizerModel.fromMap(snapshot.data?.data());
+                            debugPrint('拿了身份：${organizer?.toJson()}');
+                            return Scaffold(
+                              backgroundColor: bgColor,
+                              appBar: PreferredSize(
+                                preferredSize: Size(screenSize.width, 80),
+                                child: CustomNavigationBar(
+                                  key: _navBarKey,
+                                  onIconTapped: onIconTapped,
+                                  inform: {
+                                    "pic": organizer?.pic,
+                                    "username": organizer?.username ?? "",
+                                    "email": organizer?.email ??
+                                        FirebaseAuth
+                                            .instance.currentUser?.email,
+                                  },
+                                  isForm: false,
+                                ),
+                              ),
+                              body: page(organizer),
+                            );
+                          } else {
+                            debugPrint("用戶尚未驗證");
+                            // 尚未驗證
+                            return VerifyEmailPage(
+                              email: user.email ?? "",
+                              role: "organizer",
+                            );
+                          }
+                        } else {
+                          return Center(child: LoginLayout(role: "organizer"));
+                        }
                       }
-                    }
-                  },
-                );
-              } else if (snapshot.hasError) {
-                debugPrint('firebase authState error');
-                return Center(child: Text('${snapshot.error}'));
-              } else {
-                return Center(child: LoginLayout(role: "organizer"));
-              }
-            },
+                    },
+                  );
+                } else if (snapshot.hasError) {
+                  debugPrint('firebase authState error');
+                  return Center(child: Text('${snapshot.error}'));
+                } else {
+                  return Center(child: LoginLayout(role: "organizer"));
+                }
+              },
+            ),
           ),
         ),
       )
