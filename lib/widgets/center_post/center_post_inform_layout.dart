@@ -263,7 +263,6 @@ class CenterPostInformLayout extends StatelessWidget {
             child: QuillEditor.basic(
               configurations: QuillEditorConfigurations(
                 controller: _controller,
-                readOnly: true,
                 sharedConfigurations: const QuillSharedConfigurations(
                   locale: Locale('en'),
                 ),
