@@ -148,7 +148,7 @@ class PostModel {
         "phoneNumber": phoneNumber,
         "postType": postType,
         "taskId": taskId,
-        "≈": isVisible,
+        "isVisible": isVisible,
       };
 
   static PostModel fromMap(Map map) {
