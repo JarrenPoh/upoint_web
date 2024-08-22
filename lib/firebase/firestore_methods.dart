@@ -98,6 +98,7 @@ class FirestoreMethods {
       post.organizerName = organizer.username;
       post.organizerPic = organizer.pic;
       post.organizerUid = organizer.uid;
+      post.isVisible = true;
       post.signFormsLength = 0;
       await _firestore.collection('posts').doc(postId).set(post.toJson());
       res = 'success';
@@ -117,13 +118,15 @@ class FirestoreMethods {
         if (post.remindDateTime != null) {
           String r = await FunctionMethods().createPostReminderTask(
             postId,
-            "活動提醒",
-            "提醒您報名的活動 “${post.title}” 將在${TimeTransfer.timeTrans06(Timestamp.fromDate(post.startDateTime))}開始，活動地點於 “${post.location}進行”",
+            "行前通知",
+            "您報名的活動 “${post.title}” 將在${TimeTransfer.timeTrans06(Timestamp.fromDate(post.startDateTime))}開始，活動地點於 “${post.location}進行”",
             post.remindDateTime,
           );
           res = r;
         }
       }
+      // 觸發通知追蹤者有新貼文
+      await FunctionMethods().sendPostMessaging(organizer, post);
       // 幫organizer的postLength加一
       await _firestore.collection('organizers').doc(organizer.uid).update({
         "postLength": FieldValue.increment(1),

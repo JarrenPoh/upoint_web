@@ -52,7 +52,7 @@ class _FormDatePickFieldState extends State<FormDatePickField> {
                   child: MediumText(
                     color: grey500,
                     size: 18,
-                    text: '時程設定',
+                    text: '時程設定（報名期限與行前通知）',
                   ),
                 ),
               ),

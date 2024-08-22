@@ -9,6 +9,48 @@ const { v1: uuidv1 } = require('uuid');
 
 
 
+exports.sendPostMessaging = functions.region('asia-east1').https.onRequest((req, res) => {
+  cors(req, res, async () => {
+      const { organizerUid, organizerName, title, open_link } = req.body;
+
+      try {
+          const organizerDoc = await admin.firestore().collection('organizers').doc(organizerUid).get();
+          if (!organizerDoc.exists) {
+              throw new Error('Organizer not found');
+          }
+
+          const organizer = organizerDoc.data();
+          const followersFcmTokens = organizer.followersFcm;
+
+          if (!followersFcmTokens || followersFcmTokens.length === 0) {
+              return res.status(200).send('No followers to notify');
+          }
+
+          const message = {
+              notification: {
+                  title: '新活動通知',
+                  body: `"${organizerName} 在剛剛發布了新活動「${title}」"`,
+              },
+              tokens: followersFcmTokens,
+              data: {
+                  click_action: "FLUTTER_NOTIFICATION_CLICK",
+                  id: "1",
+                  status: "done",
+                  open_link: open_link,
+              }
+          };
+
+          const response = await admin.messaging().sendMulticast(message);
+          console.log('Successfully sent message:', response);
+
+          res.status(200).send('Notification sent successfully');
+      } catch (error) {
+          console.error('Error sending notification:', error);
+          res.status(500).send('Error sending notification');
+      }
+  });
+});
+
 exports.createPostReminderTask = functions.region('asia-east1').https.onRequest(async (req, res) => {
   cors(req, res, async() => {
     if (req.method !== 'POST') {
@@ -124,9 +166,9 @@ exports.deletePostReminderTask = functions.region('asia-east1').https.onRequest(
         return;  // 添加返回语句确保函数执行停止
       }
     });
-  });
+});
 
-  exports.sendReminderNotification = functions.region('asia-east1').https.onRequest(async (req, res) => {
+exports.sendReminderNotification = functions.region('asia-east1').https.onRequest(async (req, res) => {
     try {
       // 从请求体中解析出 postId
       const { postId, title, text } = req.body;

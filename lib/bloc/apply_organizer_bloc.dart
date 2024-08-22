@@ -22,6 +22,8 @@ class ApplyOrganizerBloc {
     myTags: [],
     postLength: 0,
     unit: "中原大學",
+    followers: [],
+    followersFcm: []
   );
   List<Map> commonList = [
     {

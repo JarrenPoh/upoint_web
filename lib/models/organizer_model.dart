@@ -12,6 +12,8 @@ class OrganizerModel {
   int postLength;
   List<String>? myTags;
   String? referralCode;
+  List? followers;
+  List? followersFcm;
 
   OrganizerModel({
     this.username,
@@ -24,7 +26,9 @@ class OrganizerModel {
     this.contact,
     this.myTags,
     required this.postLength,
-     this.referralCode,
+    this.referralCode,
+    required this.followers,
+    required this.followersFcm,
   });
 
   static Map toMap(OrganizerModel cart) {
@@ -37,8 +41,8 @@ class OrganizerModel {
       "bio": cart.bio,
       "unit": cart.unit,
       "contact": cart.contact,
-      "myTags": cart.myTags,
-      "referralCode":cart.referralCode,
+      "followers": cart.followers,
+      "followersFcm": cart.followersFcm,
     };
   }
 
@@ -55,8 +59,8 @@ class OrganizerModel {
       unit: snapshot['unit'],
       contact: snapshot['contact'],
       postLength: snapshot['postLength'],
-      myTags: snapshot["myTags"],
-      referralCode:snapshot["referralCode"],
+      followers: snapshot["followers"],
+      followersFcm: snapshot["followersFcm"],
     );
   }
 
@@ -70,8 +74,8 @@ class OrganizerModel {
         "unit": unit,
         "contact": contact,
         "postLength": postLength,
-        "myTags": myTags,
-        "referralCode":referralCode,
+        "followers": followers,
+        "followersFcm": followersFcm,
       };
 
   static OrganizerModel? fromMap(Map? map) {
@@ -88,8 +92,8 @@ class OrganizerModel {
         unit: map['unit'],
         contact: map['contact'],
         postLength: map['postLength'],
-        myTags: map['myTags'] != null ? List<String>.from(map['myTags']) : null,
-        referralCode:map["referralCode"],
+        followers: map["followers"],
+        followersFcm: map["followersFcm"],
       );
     }
   }

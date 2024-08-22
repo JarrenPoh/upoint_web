@@ -93,6 +93,9 @@ flutter:
     - family: NotoSansRegular
       fonts:
         - asset: assets/NotoSansTC-Regular.otf
+    - family: NotoSansBlack
+      fonts:
+        - asset: assets/NotoSansTC-Black.otf
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
