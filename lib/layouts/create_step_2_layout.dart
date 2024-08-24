@@ -105,13 +105,16 @@ class _CreateStep2LayoutState extends State<CreateStep2Layout> {
     if (errorText != null) {
       Messenger.dialog("有欄位尚未填寫完畢", errorText, context);
     } else {
-      String res = await Messenger.dialog(
-        "提示",
-        "確定發送嗎",
+      Map res = await Messenger.showCreatePostDialog(
         context,
       );
-      if (res == "success") {
-        _bloc.confirmSend(context, widget.organizer, widget.jumpToPage);
+      if (res["status"] == "success") {
+        _bloc.confirmSend(
+          context: context,
+          organizer: widget.organizer,
+          jumpToPage: widget.jumpToPage,
+          isVisible: res["isVisible"],
+        );
       }
     }
   }

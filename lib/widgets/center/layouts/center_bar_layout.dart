@@ -4,17 +4,21 @@ import 'package:upoint_web/color.dart';
 import 'package:upoint_web/firebase/firestore_methods.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/globals/regular_text.dart';
+import 'package:upoint_web/models/organizer_model.dart';
 
+import '../../../firebase/function_methods.dart';
 import '../../../models/post_model.dart';
 
 // ignore: must_be_immutable
 class CenterBarLayout extends StatefulWidget {
   final PostModel post;
+  final OrganizerModel organizer;
   final bool? showVisible;
   const CenterBarLayout({
     super.key,
     required this.post,
     this.showVisible,
+    required this.organizer,
   });
 
   @override
@@ -30,6 +34,13 @@ class _CenterBarLayoutState extends State<CenterBarLayout> {
       widget.post.isVisible = v;
     });
     FirestoreMethods().updateIsVisible(widget.post);
+    if (widget.post.isVisible == true &&
+        widget.post.isSendCreateMessaging != true) {
+      await FunctionMethods().sendPostMessaging(widget.organizer, widget.post);
+      setState(() {
+        widget.post.isSendCreateMessaging = true;
+      });
+    }
   }
 
   @override
@@ -106,10 +117,12 @@ class _CenterBarLayoutState extends State<CenterBarLayout> {
                   data: ThemeData(
                     useMaterial3: true,
                   ).copyWith(
-                      colorScheme: Theme.of(context).colorScheme.copyWith(
+                    colorScheme: Theme.of(context).colorScheme.copyWith(
                           outline: (widget.post.isVisible == true)
                               ? primaryColor
-                              : grey400)),
+                              : grey400,
+                        ),
+                  ),
                   child: Switch(
                     value: (widget.post.isVisible == true),
                     activeColor: Colors.white,

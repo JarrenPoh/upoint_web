@@ -169,20 +169,26 @@ class CreateStep2Bloc {
     return errorText;
   }
 
-  //送出
-  confirmSend(
-    BuildContext context,
-    OrganizerModel organizer,
-    Function(int) jumpToPage,
-  ) async {
+  // 送出
+  confirmSend({
+    required BuildContext context,
+    required OrganizerModel organizer,
+    required Function(int) jumpToPage,
+    required bool isVisible,
+  }) async {
     await _checkType();
+    PostModel post =
+        PostModel.fromMap(jsonDecode(UserSimplePreference.getpost()));
+    post.isVisible = isVisible;
+    post.isSendCreateMessaging = isVisible == true;
+    UserSimplePreference.setpost(jsonEncode(PostModel.toMap(post)));
     //到完成頁
     // ignore: use_build_context_synchronously
     Navigator.of(context).pop(true);
     jumpToPage(2);
   }
 
-  //確認是選什麼類型，link的話要換一下userSimplePreference
+  // 確認是選什麼類型，link的話要換一下userSimplePreference
   _checkType() async {
     String type = formOptionValue.value;
     if (type == "link") {

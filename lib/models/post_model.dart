@@ -28,6 +28,7 @@ class PostModel {
   String? organizerPic;
   String? taskId;
   bool? isVisible;
+  bool? isSendCreateMessaging;
 
   PostModel({
     this.photo,
@@ -56,6 +57,7 @@ class PostModel {
     this.postType,
     this.taskId,
     this.isVisible,
+    this.isSendCreateMessaging,
   });
 
   static Map toMap(PostModel cart) {
@@ -86,6 +88,7 @@ class PostModel {
       "postType": cart.postType,
       "taskId": cart.taskId,
       "isVisible": cart.isVisible,
+      "isSendCreateMessaging": cart.isSendCreateMessaging,
     };
   }
 
@@ -119,6 +122,7 @@ class PostModel {
       postType: snapshot["postType"],
       taskId: snapshot["taskId"],
       isVisible: snapshot["isVisible"],
+      isSendCreateMessaging: snapshot["isSendCreateMessaging"],
     );
   }
 
@@ -149,6 +153,7 @@ class PostModel {
         "postType": postType,
         "taskId": taskId,
         "isVisible": isVisible,
+        "isSendCreateMessaging": isSendCreateMessaging,
       };
 
   static PostModel fromMap(Map map) {
@@ -179,6 +184,7 @@ class PostModel {
       postType: map["postType"],
       taskId: map["taskId"],
       isVisible: map["isVisible"],
+      isSendCreateMessaging:map["isSendCreateMessaging"],
     );
   }
 }

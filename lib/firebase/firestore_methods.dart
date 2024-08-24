@@ -98,7 +98,6 @@ class FirestoreMethods {
       post.organizerName = organizer.username;
       post.organizerPic = organizer.pic;
       post.organizerUid = organizer.uid;
-      post.isVisible = true;
       post.signFormsLength = 0;
       await _firestore.collection('posts').doc(postId).set(post.toJson());
       res = 'success';
@@ -126,7 +125,9 @@ class FirestoreMethods {
         }
       }
       // 觸發通知追蹤者有新貼文
-      await FunctionMethods().sendPostMessaging(organizer, post);
+      if (post.isVisible == true) {
+        await FunctionMethods().sendPostMessaging(organizer, post);
+      }
       // 幫organizer的postLength加一
       await _firestore.collection('organizers').doc(organizer.uid).update({
         "postLength": FieldValue.increment(1),

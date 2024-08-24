@@ -4,6 +4,7 @@ import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/custom_messengers.dart';
 import 'package:upoint_web/globals/regular_text.dart';
 import 'package:upoint_web/globals/time_transfer.dart';
+import 'package:upoint_web/models/organizer_model.dart';
 import 'package:upoint_web/models/post_model.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
 
@@ -12,9 +13,11 @@ import '../center/layouts/center_bar_layout.dart';
 
 class CenterPostBarLayout extends StatelessWidget {
   final PostModel post;
+  final OrganizerModel organizer;
   const CenterPostBarLayout({
     super.key,
     required this.post,
+    required this.organizer,
   });
 
   @override
@@ -48,7 +51,7 @@ class CenterPostBarLayout extends StatelessWidget {
           SizedBox(
             width: 137,
             height: 137,
-            child: CenterBarLayout(post: post),
+            child: CenterBarLayout(post: post,organizer: organizer),
           ),
           const SizedBox(height: 16),
           // 截止時間

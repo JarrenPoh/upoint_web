@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/pages/login_page.dart';
+import 'package:upoint_web/widgets/dialogs/create_post_dialog.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
 
 import '../pages/register_page.dart';
@@ -75,6 +76,21 @@ class Messenger {
         'dismissed'; // Return 'dismissed' if the dialog is dismissed without selection
   }
 
+  // 創建貼文確認Dialog
+  static Future<Map> showCreatePostDialog(
+    BuildContext context,
+  ) async {
+    Map res = await showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: CreatePostDialog(),
+        );
+      },
+    );
+    return res;
+  }
+
   //彈窗Dialog
   static Future<Map> addTagsDialog(String title, BuildContext context) async {
     final TextEditingController controller = TextEditingController();
@@ -112,7 +128,7 @@ class Messenger {
                 text: "取消",
               ),
               onPressed: () => Navigator.of(context)
-                  .pop({"status": 'cancel'}), // Return 'cancel' when cancelled
+                  .pop({"status": 'cancel'}),
             ),
             TextButton(
               child: MediumText(
@@ -123,7 +139,7 @@ class Messenger {
               onPressed: () => Navigator.of(context).pop({
                 "status": 'success',
                 "value": controller.text.trim()
-              }), // Return 'success' when confirmed
+              }),
             ),
           ],
         );

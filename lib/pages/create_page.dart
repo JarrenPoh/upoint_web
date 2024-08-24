@@ -82,7 +82,7 @@ class _CreatePageState extends State<CreatePage> {
                           text: widget.step == 1
                               ? "下一步"
                               : widget.step == 2
-                                  ? "送出"
+                                  ? "創建"
                                   : "查看活動詳情",
                           color: primaryColor,
                           hoverColor: secondColor,
