@@ -4,6 +4,7 @@ import 'package:upoint_web/pages/apply_organizer_page.dart';
 import 'package:upoint_web/widgets/apply_organizer/apply_organizer_avatar_layout.dart';
 import 'package:upoint_web/widgets/apply_organizer/apply_organizer_common_layout.dart';
 import 'package:upoint_web/widgets/apply_organizer/apply_organizer_contact_layout.dart';
+import 'package:upoint_web/widgets/apply_organizer/apply_organizer_unit_layout.dart';
 import 'package:upoint_web/widgets/responsive_layout.dart';
 
 class ApplyLayout extends StatefulWidget {
@@ -46,6 +47,9 @@ class _ApplyLayoutState extends State<ApplyLayout> {
           //基本資料
           _commonLayout(false),
           const SizedBox(height: 30),
+          // 單位資料
+          _unitLayout(true),
+          const SizedBox(height: 30),
           //第二列
           _contactLayout(false),
           const SizedBox(height: 40),
@@ -62,6 +66,7 @@ class _ApplyLayoutState extends State<ApplyLayout> {
         children: [
           //頭像
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _avaterLayout(),
             ],
@@ -69,6 +74,9 @@ class _ApplyLayoutState extends State<ApplyLayout> {
           const SizedBox(height: 30),
           //基本資料
           _commonLayout(false),
+          const SizedBox(height: 30),
+          // 單位資料
+          _unitLayout(true),
           const SizedBox(height: 30),
           //第二列
           _contactLayout(false),
@@ -96,7 +104,9 @@ class _ApplyLayoutState extends State<ApplyLayout> {
             ],
           ),
           const SizedBox(height: 57),
+          _unitLayout(true),
           //第二列
+          const SizedBox(height: 57),
           _contactLayout(true),
           const SizedBox(height: 96),
         ],
@@ -110,6 +120,10 @@ class _ApplyLayoutState extends State<ApplyLayout> {
 
   Widget _commonLayout(bool isWeb) {
     return ApplyOrganizerCommonLayout(isWeb: isWeb, bloc: bloc);
+  }
+
+  Widget _unitLayout(bool isWeb) {
+    return ApplyOrganizerUnitLayout(bloc: bloc, isWeb: isWeb);
   }
 
   Widget _contactLayout(bool isWeb) {

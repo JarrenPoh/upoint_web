@@ -5,6 +5,7 @@ import 'package:upoint_web/pages/inform_page.dart';
 import 'package:upoint_web/widgets/inform/inform_avatar_layout.dart';
 import 'package:upoint_web/widgets/inform/inform_common_layout.dart';
 import 'package:upoint_web/widgets/inform/inform_contact_layout.dart';
+import 'package:upoint_web/widgets/inform/inform_unit_layout.dart';
 import 'package:upoint_web/widgets/responsive_layout.dart';
 
 class InformLayout extends StatelessWidget {
@@ -31,6 +32,7 @@ class InformLayout extends StatelessWidget {
         children: [
           //頭像
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               InformAvatarLayout(organizer: organizer, bloc: _bloc),
             ],
@@ -42,7 +44,14 @@ class InformLayout extends StatelessWidget {
             isWeb: false,
           ),
           const SizedBox(height: 30),
-          //第二列
+
+          // 第二列-單位資料
+          InformUnitLayout(
+            bloc: _bloc,
+            isWeb: false,
+          ),
+          const SizedBox(height: 30),
+          //第三列
           InformContactLayout(
             bloc: _bloc,
             isWeb: false,
@@ -69,16 +78,22 @@ class InformLayout extends StatelessWidget {
               Expanded(
                 child: InformCommonLayout(
                   bloc: _bloc,
-                  isWeb: false,
+                  isWeb: true,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 57),
-          //第二列
+          const SizedBox(height: 32),
+          // 第二列-單位資料
+          InformUnitLayout(
+            bloc: _bloc,
+            isWeb: true,
+          ),
+          const SizedBox(height: 32),
+          //第三列-聯絡人資料
           InformContactLayout(
             bloc: _bloc,
-            isWeb: false,
+            isWeb: true,
           ),
           const SizedBox(height: 96),
         ],

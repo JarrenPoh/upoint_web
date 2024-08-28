@@ -62,7 +62,9 @@ class _InformPageState extends State<InformPage> {
                   Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 145),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: widget.isWeb ? 145 : 80,
+                        ),
                         child: widget.child,
                       ),
                     ],

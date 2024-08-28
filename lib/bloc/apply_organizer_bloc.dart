@@ -23,7 +23,11 @@ class ApplyOrganizerBloc {
     postLength: 0,
     unit: "中原大學",
     followers: [],
-    followersFcm: []
+    followersFcm: [],
+    actBio: "",
+    actLocation: "",
+    actTime: "",
+    links: [],
   );
   List<Map> commonList = [
     {
@@ -53,6 +57,20 @@ class ApplyOrganizerBloc {
       "index": "email",
     },
   ];
+  List<Map> unitList = [
+    {
+      "title": "主要活動時間",
+      "index": "actTime",
+    },
+    {
+      "title": "主要活動舉辦地點",
+      "index": "actLocation",
+    },
+    {
+      "title": "主要活動內容介紹",
+      "index": "actBio",
+    },
+  ];
 
   Timer? debounce01;
   void onTextChanged(String index, String text) {
@@ -73,6 +91,15 @@ class ApplyOrganizerBloc {
           break;
         case "email":
           organizer.email = text;
+          break;
+        case "actTime":
+          organizer.actTime = text;
+          break;
+        case "actLocation":
+          organizer.actLocation = text;
+          break;
+        case "actBio":
+          organizer.actBio = text;
           break;
       }
       print('organizer:${organizer.toJson()}}');

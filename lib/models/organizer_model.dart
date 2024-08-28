@@ -14,6 +14,10 @@ class OrganizerModel {
   String? referralCode;
   List? followers;
   List? followersFcm;
+  String? actTime; // 主要活動時間
+  String? actLocation; // 主要活動舉辦地點
+  String? actBio; // 主要活動內容介紹
+  List? links; // 相關連結
 
   OrganizerModel({
     this.username,
@@ -29,6 +33,10 @@ class OrganizerModel {
     this.referralCode,
     required this.followers,
     required this.followersFcm,
+    required this.actTime,
+    required this.actLocation,
+    required this.links,
+    required this.actBio,
   });
 
   static Map toMap(OrganizerModel cart) {
@@ -43,6 +51,10 @@ class OrganizerModel {
       "contact": cart.contact,
       "followers": cart.followers,
       "followersFcm": cart.followersFcm,
+      "actTime": cart.actTime,
+      "actLocation": cart.actLocation,
+      "links": cart.links,
+      "actBio": cart.actBio,
     };
   }
 
@@ -61,6 +73,10 @@ class OrganizerModel {
       postLength: snapshot['postLength'],
       followers: snapshot["followers"],
       followersFcm: snapshot["followersFcm"],
+      actTime: snapshot["actTime"],
+      actLocation: snapshot["actLocation"],
+      links: snapshot["links"],
+      actBio: snapshot["actBio"],
     );
   }
 
@@ -76,6 +92,10 @@ class OrganizerModel {
         "postLength": postLength,
         "followers": followers,
         "followersFcm": followersFcm,
+        "actTime": actTime,
+        "actLocation": actLocation,
+        "links": links,
+        "actBio": actBio,
       };
 
   static OrganizerModel? fromMap(Map? map) {
@@ -94,6 +114,10 @@ class OrganizerModel {
         postLength: map['postLength'],
         followers: map["followers"],
         followersFcm: map["followersFcm"],
+        actTime: map["actTime"],
+        actLocation: map["actLocation"],
+        links: map["links"],
+        actBio: map["actBio"],
       );
     }
   }

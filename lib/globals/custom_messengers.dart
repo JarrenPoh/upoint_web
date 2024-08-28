@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:upoint_web/color.dart';
 import 'package:upoint_web/globals/medium_text.dart';
 import 'package:upoint_web/pages/login_page.dart';
+import 'package:upoint_web/widgets/dialogs/add_links_dialog.dart';
 import 'package:upoint_web/widgets/dialogs/create_post_dialog.dart';
 import 'package:upoint_web/widgets/tap_hover_container.dart';
 
@@ -92,6 +93,23 @@ class Messenger {
   }
 
   //彈窗Dialog
+  static Future<Map> addLinksDialog({
+    required BuildContext context,
+    required String text,
+    required String url,
+  }) async {
+    Map res = await showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          child: AddLinkDialog(text: text, url: url),
+        );
+      },
+    );
+    return res;
+  }
+
+  //彈窗Dialog
   static Future<Map> addTagsDialog(String title, BuildContext context) async {
     final TextEditingController controller = TextEditingController();
     final Map? result = await showDialog<Map>(
@@ -127,8 +145,7 @@ class Messenger {
                 size: 16,
                 text: "取消",
               ),
-              onPressed: () => Navigator.of(context)
-                  .pop({"status": 'cancel'}),
+              onPressed: () => Navigator.of(context).pop({"status": 'cancel'}),
             ),
             TextButton(
               child: MediumText(
@@ -136,10 +153,8 @@ class Messenger {
                 size: 16,
                 text: "確定",
               ),
-              onPressed: () => Navigator.of(context).pop({
-                "status": 'success',
-                "value": controller.text.trim()
-              }),
+              onPressed: () => Navigator.of(context)
+                  .pop({"status": 'success', "value": controller.text.trim()}),
             ),
           ],
         );

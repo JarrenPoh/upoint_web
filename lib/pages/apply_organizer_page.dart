@@ -68,7 +68,7 @@ class _ApplyOrganizerPageState extends State<ApplyOrganizerPage> {
     } else if (widget.layoutType == LayoutType.tablet) {
       _width = 543;
       _btnPad = 22;
-      _hor = 145;
+      _hor = 80;
     } else if (widget.layoutType == LayoutType.web) {
       _width = 1076;
       _btnPad = 84;

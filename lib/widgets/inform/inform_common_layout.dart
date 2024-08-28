@@ -36,7 +36,8 @@ class InformCommonLayout extends StatelessWidget {
                     children: List.generate(
                       value.length,
                       (index) {
-                        double height = index == 2 ? 184 : 34;
+                        double height =
+                            value[index]["index"] == "bio" ? 184 : 34;
                         return Container(
                           height: height,
                           decoration: BoxDecoration(
@@ -77,7 +78,7 @@ class InformCommonLayout extends StatelessWidget {
                                         child: TextField(
                                           controller: value[index]
                                               ["controller"],
-                                          maxLines: index == 2 ? 30 : 1,
+                                          maxLines: value[index]["index"] == "bio" ? 30 : 1,
                                           style: TextStyle(
                                             color: grey500,
                                             fontSize: 14,
@@ -86,7 +87,7 @@ class InformCommonLayout extends StatelessWidget {
                                           decoration: InputDecoration(
                                             contentPadding: EdgeInsets.only(
                                               bottom: 17,
-                                              top: index == 2 ? 17 : 0,
+                                              top: value[index]["index"] == "bio" ? 17 : 0,
                                             ),
                                             enabledBorder: InputBorder.none,
                                             disabledBorder: InputBorder.none,

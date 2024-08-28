@@ -74,17 +74,20 @@ class CustomNavigationBarState extends State<CustomNavigationBar> {
         "index": "delete_account",
         "text": "註銷",
         "onTap": () async {
-          String _rr = await AuthMethods().deleteAccount(
-            childname,
-            FirebaseAuth.instance.currentUser!.uid,
-          );
-          if (_rr == "success") {
-            Messenger.snackBar(context, "註銷成功");
-            window.location.reload();
-          } else {
-            Messenger.snackBar(context, "註銷失敗");
-            Messenger.dialog(
-                "註銷失敗", "$_rr 有問題請洽詢官方：service.upoint@gmail.com", context);
+          String res = await Messenger.dialog("警告", "註銷後將永久刪除紀錄無法再恢復", context);
+          if (res == "success") {
+            String _rr = await AuthMethods().deleteAccount(
+              childname,
+              FirebaseAuth.instance.currentUser!.uid,
+            );
+            if (_rr == "success") {
+              Messenger.snackBar(context, "註銷成功");
+              window.location.reload();
+            } else {
+              Messenger.snackBar(context, "註銷失敗");
+              Messenger.dialog(
+                  "註銷失敗", "$_rr 有問題請洽詢官方：service.upoint@gmail.com", context);
+            }
           }
         },
         "icon": Icons.key_off_outlined,
