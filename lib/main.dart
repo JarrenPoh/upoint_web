@@ -10,6 +10,7 @@ import 'package:upoint_web/secret.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 import 'beamer_locations/game_location.dart';
+import 'beamer_locations/privacy_location.dart';
 import 'globals/user_simple_preference.dart';
 
 void main() async {
@@ -60,6 +61,7 @@ class MyApp extends StatelessWidget {
             SignFormLocation(),
             OrganizerLocation(),
             GameLocation(),
+            PrivacyLocation(),
           ],
         ),
       ),
